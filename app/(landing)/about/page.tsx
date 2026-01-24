@@ -10,7 +10,7 @@ import CoreValues from "@/components/pages/aboutpage/corevalues";
 import OurMission from "@/components/pages/aboutpage/OurMission";
 import TeamSection from "@/components/pages/aboutpage/OurTeam";
 
-export function About() {
+export default function About() {
 	const [activeSection, setActiveSection] = useState("mission");
 	const { scrollYProgress } = useScroll();
 	const scaleX = useSpring(scrollYProgress, {

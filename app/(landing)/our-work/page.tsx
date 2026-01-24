@@ -39,7 +39,7 @@ const services = [
 	},
 ];
 
-export function OurWork() {
+export default function OurWork() {
 	const [activeSection, setActiveSection] = useState(services[0].id);
 	const { scrollYProgress } = useScroll();
 	const scaleX = useSpring(scrollYProgress, {

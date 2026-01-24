@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 
 export default function HomeAbout() {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -13,7 +13,7 @@ export default function HomeAbout() {
 	const clipPath = useTransform(
 		scrollYProgress,
 		[0.2, 0.6],
-		["inset(0 100% 0 0)", "inset(0 0% 0 0)"]
+		["inset(0 100% 0 0)", "inset(0 0% 0 0)"],
 	);
 
 	return (

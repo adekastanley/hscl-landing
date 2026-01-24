@@ -1,30 +1,11 @@
 import { TextGradientScroll } from "@/components/ui/scrollingText";
-// import { MoveRight } from "lucide-react";
-
-// const sectionOneLinks = [
-// 	{
-// 		title: "Why We Exist",
-// 		link: "#why-we-exist",
-// 		icon: "",
-// 	},
-// 	{
-// 		title: "Our Mission",
-// 		link: "#our-mission",
-// 		icon: "",
-// 	},
-// 	{
-// 		title: "Our Vision",
-// 		link: "#our-vision",
-// 		icon: "",
-// 	},
-// ];
 
 export default function SectionOne() {
 	const whyWeExist = `At HSCL, our cross-cutting and varied experience in providing solutions provides us 
 	with a holistic and deep knowledge of the health and development sector in Africa.`;
 
 	return (
-		<section className="text-center min-h-[80vh] justify-center lg:px-[20rem] mx-auto flex-col  flex  w-full  bg-white px-5">
+		<section className="text-center min-h-[80vh] justify-center  mx-auto flex-col  flex  w-full  bg-white px-5">
 			<div className="flex  w-full  mx-auto  ">
 				<div className=" text-black max-w-7xl lg:px-42 mx-auto  h-full">
 					<TextGradientScroll

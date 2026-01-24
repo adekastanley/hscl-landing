@@ -5,22 +5,22 @@ import { motion } from "motion/react";
 export default function ServicesSection() {
 	const services = [
 		{
-			title: "more texr",
+			title: "more text",
 			description: "description of service",
 			image: "/placeholder.svg?height=400&width=600",
 		},
 		{
-			title: "more texr",
+			title: "more text",
 			description: "description of service",
 			image: "/placeholder.svg?height=400&width=600",
 		},
 		{
-			title: "more texr",
+			title: "more text",
 			description: "description of service",
 			image: "/placeholder.svg?height=400&width=600",
 		},
 		{
-			title: "more texr",
+			title: "more text",
 			description: "description of service",
 			image: "/placeholder.svg?height=400&width=600",
 		},
@@ -35,7 +35,7 @@ export default function ServicesSection() {
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-100px" }}
 						transition={{ duration: 0.8 }}
-						className="font-serif text-4xl md:text-5xl font-bold mb-4 text-primary"
+						className="font-sans text-4xl md:text-5xl font-bold mb-4 text-primary"
 					>
 						Expertise
 					</motion.h2>

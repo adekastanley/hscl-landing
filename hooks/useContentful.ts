@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 // import { client } from "@/lib/contentful";
 import { client } from "@/lib/contentful";
 // import { EntryCollection, EntrySkeletonType } from "contentful";
-import { EntryCollection, EntrySkeletonType } from "@/lib/contentful";
+import { EntryCollection, EntrySkeletonType } from "contentful";
 
 interface UseContentfulOptions {
 	contentType?: string;

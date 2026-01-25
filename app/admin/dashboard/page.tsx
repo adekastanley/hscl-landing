@@ -1,31 +1,14 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import DashboardContent from "@/components/ui/dashboardContent";
-
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-export default function Page() {
+export default function DashboardPage() {
 	return (
-		<SidebarProvider
-			style={
-				{
-					"--sidebar-width": "calc(var(--spacing) * 72)",
-					"--header-height": "calc(var(--spacing) * 12)",
-				} as React.CSSProperties
-			}
-		>
-			<AppSidebar variant="inset" />
-			<SidebarInset>
-				<SiteHeader />
-				<div className="flex flex-1 flex-col">
-					<div className="@container/main flex flex-1 flex-col gap-2">
-						<div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-							<div className="px-4 lg:px-6"></div>
-							<DashboardContent />
-						</div>
-					</div>
+		<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+			<div className="grid auto-rows-min gap-4 md:grid-cols-3">
+				<div className="aspect-video rounded-xl bg-muted/50 flex items-center justify-center">
+					Dashboard Overview
 				</div>
-			</SidebarInset>
-		</SidebarProvider>
+				<div className="aspect-video rounded-xl bg-muted/50" />
+				<div className="aspect-video rounded-xl bg-muted/50" />
+			</div>
+			<div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+		</div>
 	);
 }

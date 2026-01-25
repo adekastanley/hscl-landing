@@ -42,27 +42,27 @@ const data = {
 	navMain: [
 		{
 			title: "Dashboard",
-			url: "#",
+			url: "/admin/dashboard",
 			icon: IconDashboard,
 		},
 		{
 			title: "Landing Page",
-			url: "/",
+			url: "/admin/dashboard/landing",
 			icon: IconListDetails,
 		},
 		{
 			title: "Careers",
-			url: "#",
+			url: "/admin/dashboard/careers",
 			icon: IconChartBar,
 		},
 		{
 			title: "Projects",
-			url: "#",
+			url: "/admin/dashboard/projects",
 			icon: IconFolder,
 		},
 		{
 			title: "Team",
-			url: "#",
+			url: "/admin/dashboard/team",
 			icon: IconUsers,
 		},
 	],
@@ -131,23 +131,6 @@ const data = {
 			icon: IconSearch,
 		},
 	],
-	documents: [
-		{
-			name: "Data Library",
-			url: "#",
-			icon: IconDatabase,
-		},
-		{
-			name: "Reports",
-			url: "#",
-			icon: IconReport,
-		},
-		{
-			name: "Word Assistant",
-			url: "#",
-			icon: IconFileWord,
-		},
-	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -170,7 +153,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={data.navMain} />
-				<NavDocuments items={data.documents} />
+
 				<NavSecondary items={data.navSecondary} className="mt-auto" />
 			</SidebarContent>
 			<SidebarFooter>

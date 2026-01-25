@@ -31,7 +31,7 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 			args: [id, data.name, data.role, data.bio],
 		});
 		revalidatePath("/about");
-		revalidatePath("/admin/dashboard");
+		revalidatePath("/admin/dashboard/team");
 		return { id, ...data };
 	} catch (error) {
 		console.error("Failed to add member:", error);
@@ -49,7 +49,7 @@ export async function updateTeamMember(
 			args: [data.name, data.role, data.bio, id],
 		});
 		revalidatePath("/about");
-		revalidatePath("/admin/dashboard");
+		revalidatePath("/admin/dashboard/team");
 		return { id, ...data };
 	} catch (error) {
 		console.error("Failed to update member:", error);
@@ -64,7 +64,7 @@ export async function deleteTeamMember(id: string) {
 			args: [id],
 		});
 		revalidatePath("/about");
-		revalidatePath("/admin/dashboard");
+		revalidatePath("/admin/dashboard/team");
 	} catch (error) {
 		console.error("Failed to delete member:", error);
 		throw error;

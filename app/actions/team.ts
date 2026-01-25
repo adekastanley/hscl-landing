@@ -12,10 +12,10 @@ export interface TeamMember {
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
 	try {
-		const stmt = db.prepare(
+		const result = await db.execute(
 			"SELECT * FROM team_members ORDER BY created_at DESC",
 		);
-		return stmt.all() as TeamMember[];
+		return result.rows as unknown as TeamMember[];
 	} catch (error) {
 		console.error("Database error:", error);
 		return [];
@@ -24,12 +24,12 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 
 export async function addTeamMember(data: Omit<TeamMember, "id">) {
 	const id = Math.random().toString(36).substring(2, 15);
-	const stmt = db.prepare(
-		"INSERT INTO team_members (id, name, role, bio) VALUES (?, ?, ?, ?)",
-	);
 
 	try {
-		stmt.run(id, data.name, data.role, data.bio);
+		await db.execute({
+			sql: "INSERT INTO team_members (id, name, role, bio) VALUES (?, ?, ?, ?)",
+			args: [id, data.name, data.role, data.bio],
+		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard");
 		return { id, ...data };
@@ -39,11 +39,30 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 	}
 }
 
-export async function deleteTeamMember(id: string) {
-	const stmt = db.prepare("DELETE FROM team_members WHERE id = ?");
-
+export async function updateTeamMember(
+	id: string,
+	data: Omit<TeamMember, "id">,
+) {
 	try {
-		stmt.run(id);
+		await db.execute({
+			sql: "UPDATE team_members SET name = ?, role = ?, bio = ? WHERE id = ?",
+			args: [data.name, data.role, data.bio, id],
+		});
+		revalidatePath("/about");
+		revalidatePath("/admin/dashboard");
+		return { id, ...data };
+	} catch (error) {
+		console.error("Failed to update member:", error);
+		throw error;
+	}
+}
+
+export async function deleteTeamMember(id: string) {
+	try {
+		await db.execute({
+			sql: "DELETE FROM team_members WHERE id = ?",
+			args: [id],
+		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard");
 	} catch (error) {

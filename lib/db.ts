@@ -1,12 +1,13 @@
-import Database from "better-sqlite3";
-import path from "path";
+import { createClient } from "@libsql/client";
 
-const dbPath = path.join(process.cwd(), "hcsl.db");
-const db = new Database(dbPath);
+const db = createClient({
+	url: process.env.TURSO_DATABASE_URL || "file:hcsl.db",
+	authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
 // Initialize database schema
-const initDb = () => {
-	db.exec(`
+const initDb = async () => {
+	await db.execute(`
     CREATE TABLE IF NOT EXISTS team_members (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,

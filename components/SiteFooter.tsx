@@ -12,16 +12,20 @@ const navLinks = {
 			link: "/",
 		},
 		{
-			title: "About Us",
+			title: "Who We Are",
 			link: "/about",
 		},
 		{
-			title: "Projects",
+			title: "What We Do",
+			link: "/our-work",
+		},
+		{
+			title: "Our Impact",
 			link: "/projects",
 		},
 		{
-			title: "Blog",
-			link: "/blog",
+			title: "Careers",
+			link: "/careers",
 		},
 	],
 };

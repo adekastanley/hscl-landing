@@ -28,6 +28,7 @@ const pcMenu = [
 				items: [
 					{ label: "Our Mission", href: "/about#mission" },
 					{ label: "Leadership", href: "/about#leadership" },
+					{ label: "Our Team", href: "/about#team" },
 					{ label: "Core Values", href: "/about#values" },
 				],
 			},

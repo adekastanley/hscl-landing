@@ -7,13 +7,13 @@ export default function DashboardContent() {
 		<div className="flex-1 space-y-4">
 			<Tabs defaultValue="team" className="space-y-4">
 				<TabsList>
-					<TabsTrigger value="team">Team Management</TabsTrigger>
+					{/* <TabsTrigger value="team">Team Management</TabsTrigger>
 					<TabsTrigger value="overview" disabled>
 						Overview
 					</TabsTrigger>
 					<TabsTrigger value="settings" disabled>
 						Settings
-					</TabsTrigger>
+					</TabsTrigger> */}
 				</TabsList>
 				<TabsContent value="team" className="space-y-4">
 					<TeamManager />

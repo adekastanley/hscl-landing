@@ -27,9 +27,9 @@ const pcMenu = [
 				title: "WHO WE ARE",
 				items: [
 					{ label: "Our Mission", href: "/about#mission" },
+					{ label: "Core Values", href: "/about#values" },
 					{ label: "Leadership", href: "/about#leadership" },
 					{ label: "Our Team", href: "/about#team" },
-					{ label: "Core Values", href: "/about#values" },
 				],
 			},
 			inFocus: {

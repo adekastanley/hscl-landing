@@ -7,6 +7,7 @@ export default async function DebugPage() {
 	let dbError = null;
 	let tables: string[] = [];
 	let contentItemsColumns: any[] = [];
+	let tableSql: string | null = null;
 
 	try {
 		// Test connection
@@ -21,6 +22,11 @@ export default async function DebugPage() {
 
 		const columnsRes = await db.execute("PRAGMA table_info(content_items)");
 		contentItemsColumns = columnsRes.rows;
+
+		const sqlRes = await db.execute(
+			"SELECT sql FROM sqlite_master WHERE name='content_items'",
+		);
+		tableSql = sqlRes.rows[0]?.sql as string;
 	} catch (e: any) {
 		dbStatus = "Error";
 		dbError = e.message;
@@ -92,6 +98,22 @@ export default async function DebugPage() {
 								</li>
 							))}
 						</ul>
+					</div>
+				)}
+				{tableSql && (
+					<div className="mt-4">
+						<h3 className="font-medium">Table Definition (SQL):</h3>
+						<pre className="text-xs bg-black/10 p-2 rounded overflow-auto mt-1 whitespace-pre-wrap">
+							{tableSql}
+						</pre>
+					</div>
+				)}
+				{tableSql && (
+					<div className="mt-4">
+						<h3 className="font-medium">Table Definition (SQL):</h3>
+						<pre className="text-xs bg-black/10 p-2 rounded overflow-auto mt-1 whitespace-pre-wrap">
+							{tableSql}
+						</pre>
 					</div>
 				)}
 				<div className="mt-6 border-t pt-4">

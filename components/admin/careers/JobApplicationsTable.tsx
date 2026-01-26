@@ -6,6 +6,7 @@ import {
 	ExternalLink,
 	Filter,
 	Calendar as CalendarIcon,
+	Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +20,21 @@ import {
 import {
 	getApplications,
 	updateApplicationStatus,
+	deleteApplication,
 	getJobListings,
 	type JobApplication,
 	type JobListing,
 } from "@/app/actions/careers";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import {
 	Select,
 	SelectContent,
@@ -50,6 +60,7 @@ export function JobApplicationsTable() {
 	const [filterStatus, setFilterStatus] = useState<string>("all");
 	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 	const [isLoading, setIsLoading] = useState(false);
+	const [deleteAppId, setDeleteAppId] = useState<string | null>(null);
 
 	useEffect(() => {
 		loadData();
@@ -78,6 +89,21 @@ export function JobApplicationsTable() {
 		} catch (error) {
 			toast.error("Failed to update status");
 			loadData(); // Revert
+		}
+	};
+
+	const confirmDelete = async () => {
+		if (!deleteAppId) return;
+		setIsLoading(true);
+		try {
+			await deleteApplication(deleteAppId);
+			toast.success("Application deleted");
+			setDeleteAppId(null);
+			loadData();
+		} catch (error) {
+			toast.error("Failed to delete application");
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -193,12 +219,13 @@ export function JobApplicationsTable() {
 							<TableHead>Listing Status</TableHead>
 							<TableHead>Resume</TableHead>
 							<TableHead>Status</TableHead>
+							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{filteredApplications.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={6} className="h-24 text-center">
+								<TableCell colSpan={7} className="h-24 text-center">
 									No applications found.
 								</TableCell>
 							</TableRow>
@@ -251,12 +278,48 @@ export function JobApplicationsTable() {
 											</SelectContent>
 										</Select>
 									</TableCell>
+									<TableCell className="text-right">
+										<Button
+											variant="ghost"
+											size="icon"
+											className="text-destructive hover:bg-destructive/10"
+											onClick={() => setDeleteAppId(app.id)}
+										>
+											<Trash2 className="h-4 w-4" />
+										</Button>
+									</TableCell>
 								</TableRow>
 							))
 						)}
 					</TableBody>
 				</Table>
 			</div>
+
+			<Dialog
+				open={!!deleteAppId}
+				onOpenChange={(open) => !open && setDeleteAppId(null)}
+			>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Delete Application</DialogTitle>
+						<DialogDescription>
+							Are you sure? This action cannot be undone.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button variant="outline" onClick={() => setDeleteAppId(null)}>
+							Cancel
+						</Button>
+						<Button
+							variant="destructive"
+							onClick={confirmDelete}
+							disabled={isLoading}
+						>
+							{isLoading ? "Deleting..." : "Delete"}
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

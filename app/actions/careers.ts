@@ -208,3 +208,16 @@ export async function updateApplicationStatus(id: string, status: string) {
 		throw error;
 	}
 }
+
+export async function deleteApplication(id: string) {
+	try {
+		await db.execute({
+			sql: "DELETE FROM job_applications WHERE id = ?",
+			args: [id],
+		});
+		revalidatePath("/admin/dashboard/careers");
+	} catch (error) {
+		console.error("Failed to delete application:", error);
+		throw error;
+	}
+}

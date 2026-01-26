@@ -58,11 +58,24 @@ const initDb = async () => {
         content TEXT,
         image_url TEXT,
         published_date TEXT,
+        category TEXT,
+        status TEXT DEFAULT 'open',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
 	console.log("Database initialized successfully");
+
+	await db.execute(`
+      CREATE TABLE IF NOT EXISTS event_registrations (
+        id TEXT PRIMARY KEY,
+        event_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (event_id) REFERENCES content_items(id)
+      )
+    `);
 	// Migrations for existing databases
 	try {
 		await db.execute("ALTER TABLE team_members ADD COLUMN image_url TEXT");

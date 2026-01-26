@@ -12,6 +12,8 @@ export interface ContentItem {
 	content: string;
 	image_url: string;
 	published_date: string;
+	category?: "event" | "training";
+	status?: "open" | "closed";
 	created_at: string;
 }
 
@@ -44,6 +46,8 @@ export async function getItems(
 			content: row.content as string,
 			image_url: row.image_url as string,
 			published_date: row.published_date as string,
+			category: row.category as "event" | "training" | undefined,
+			status: row.status as "open" | "closed" | undefined,
 			created_at: String(row.created_at), // Ensure Date/Object is string
 		}));
 	} catch (error) {
@@ -97,7 +101,7 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
 		await db.execute({
-			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date, category, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			args: [
 				id,
 				data.type,
@@ -107,6 +111,8 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 				data.content || "",
 				data.image_url || "",
 				data.published_date,
+				data.category || null,
+				data.status || "open",
 			],
 		});
 		revalidatePath("/admin/dashboard/projects");
@@ -152,6 +158,14 @@ export async function updateItem(
 		if (data.published_date) {
 			fields.push("published_date = ?");
 			args.push(data.published_date);
+		}
+		if (data.category !== undefined) {
+			fields.push("category = ?");
+			args.push(data.category);
+		}
+		if (data.status !== undefined) {
+			fields.push("status = ?");
+			args.push(data.status);
 		}
 
 		if (fields.length === 0) return;

@@ -43,7 +43,10 @@ import {
 	getYears,
 	type ContentItem,
 } from "@/app/actions/content";
+import { getEventRegistrations } from "@/app/actions/events";
 import Image from "next/image";
+import { Users, Download, Lock, LockOpen } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ContentTableProps {
 	type: "project" | "story" | "event";
@@ -61,7 +64,17 @@ export function ContentTable({ type }: ContentTableProps) {
 	const [deleteId, setDeleteId] = useState<string | null>(null);
 
 	// Form State
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<{
+		id: string;
+		title: string;
+		slug: string;
+		summary: string;
+		content: string;
+		image_url: string;
+		published_date: string;
+		category?: "event" | "training";
+		status?: "open" | "closed";
+	}>({
 		id: "",
 		title: "",
 		slug: "",
@@ -69,10 +82,43 @@ export function ContentTable({ type }: ContentTableProps) {
 		content: "",
 		image_url: "",
 		published_date: new Date().toISOString().split("T")[0],
+		status: "open",
 	});
 
 	const inputFileRef = useRef<HTMLInputElement>(null);
 	const [isUploading, setIsUploading] = useState(false);
+
+	// Registration View State
+	const [viewRegId, setViewRegId] = useState<string | null>(null);
+	const [registrations, setRegistrations] = useState<
+		{ id: string; name: string; email: string; created_at: string }[]
+	>([]);
+
+	const handleViewRegistrations = async (eventId: string) => {
+		setViewRegId(eventId);
+		const regs = await getEventRegistrations(eventId);
+		setRegistrations(regs);
+	};
+
+	const downloadCSV = () => {
+		if (!registrations.length) return;
+		const headers = ["Name", "Email", "Date"];
+		const rows = registrations.map((r) => [
+			r.name,
+			r.email,
+			new Date(r.created_at).toLocaleDateString(),
+		]);
+		const csvContent =
+			"data:text/csv;charset=utf-8," +
+			[headers, ...rows].map((e) => e.join(",")).join("\n");
+		const encodedUri = encodeURI(csvContent);
+		const link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "registrations.csv");
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
 	useEffect(() => {
 		loadData();
@@ -143,6 +189,8 @@ export function ContentTable({ type }: ContentTableProps) {
 			content: "",
 			image_url: "",
 			published_date: new Date().toISOString().split("T")[0],
+			category: "event", // Default for type=event
+			status: "open",
 		});
 		setIsDialogOpen(true);
 	};
@@ -157,6 +205,8 @@ export function ContentTable({ type }: ContentTableProps) {
 			content: item.content,
 			image_url: item.image_url,
 			published_date: item.published_date,
+			category: item.category,
+			status: item.status,
 		});
 		setIsDialogOpen(true);
 	};
@@ -173,6 +223,8 @@ export function ContentTable({ type }: ContentTableProps) {
 					content: formData.content,
 					image_url: formData.image_url,
 					published_date: formData.published_date,
+					category: formData.category,
+					status: formData.status,
 				});
 				toast.success("Updated successfully");
 			} else {
@@ -184,6 +236,8 @@ export function ContentTable({ type }: ContentTableProps) {
 					content: formData.content,
 					image_url: formData.image_url,
 					published_date: formData.published_date,
+					category: formData.category,
+					status: formData.status,
 				});
 				toast.success("Created successfully");
 			}
@@ -258,13 +312,17 @@ export function ContentTable({ type }: ContentTableProps) {
 							<TableHead className="w-[80px]">Image</TableHead>
 							<TableHead>Title</TableHead>
 							<TableHead>Date</TableHead>
+							{type === "event" && <TableHead>Status</TableHead>}
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{items.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={4} className="h-24 text-center">
+								<TableCell
+									colSpan={type === "event" ? 5 : 4}
+									className="h-24 text-center"
+								>
 									No items found.
 								</TableCell>
 							</TableRow>
@@ -294,7 +352,33 @@ export function ContentTable({ type }: ContentTableProps) {
 										</div>
 									</TableCell>
 									<TableCell>{item.published_date}</TableCell>
+									{type === "event" && (
+										<TableCell>
+											<Badge
+												variant={
+													item.status === "open" ? "default" : "secondary"
+												}
+											>
+												{item.status === "open" ? (
+													<LockOpen className="h-3 w-3 mr-1" />
+												) : (
+													<Lock className="h-3 w-3 mr-1" />
+												)}
+												{item.status}
+											</Badge>
+										</TableCell>
+									)}
 									<TableCell className="text-right">
+										{type === "event" && (
+											<Button
+												variant="ghost"
+												size="icon"
+												title="View Registrations"
+												onClick={() => handleViewRegistrations(item.id)}
+											>
+												<Users className="h-4 w-4" />
+											</Button>
+										)}
 										<Button
 											variant="ghost"
 											size="icon"
@@ -362,6 +446,45 @@ export function ContentTable({ type }: ContentTableProps) {
 								required
 							/>
 						</div>
+
+						{type === "event" && (
+							<>
+								<div className="space-y-2">
+									<Label>Category</Label>
+									<Select
+										value={formData.category}
+										onValueChange={(val: "event" | "training") =>
+											setFormData({ ...formData, category: val })
+										}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Select Category" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="event">Event</SelectItem>
+											<SelectItem value="training">Training</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
+								<div className="space-y-2">
+									<Label>Status</Label>
+									<Select
+										value={formData.status}
+										onValueChange={(val: "open" | "closed") =>
+											setFormData({ ...formData, status: val })
+										}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Select Status" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="open">Open</SelectItem>
+											<SelectItem value="closed">Closed</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
+							</>
+						)}
 
 						<div className="space-y-2">
 							<Label>Cover Image</Label>
@@ -462,6 +585,56 @@ export function ContentTable({ type }: ContentTableProps) {
 							{isLoading ? "Deleting..." : "Delete"}
 						</Button>
 					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* Registrations Dialog */}
+			<Dialog
+				open={!!viewRegId}
+				onOpenChange={(open) => !open && setViewRegId(null)}
+			>
+				<DialogContent className="max-w-2xl">
+					<DialogHeader>
+						<DialogTitle className="flex justify-between items-center">
+							<span>Event Registrations</span>
+							<Button size="sm" variant="outline" onClick={downloadCSV}>
+								<Download className="mr-2 h-4 w-4" /> Export CSV
+							</Button>
+						</DialogTitle>
+					</DialogHeader>
+					<div className="max-h-[60vh] overflow-y-auto border rounded-md">
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Name</TableHead>
+									<TableHead>Email</TableHead>
+									<TableHead>Date</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{registrations.length === 0 ? (
+									<TableRow>
+										<TableCell
+											colSpan={3}
+											className="text-center py-8 text-muted-foreground"
+										>
+											No registrations yet.
+										</TableCell>
+									</TableRow>
+								) : (
+									registrations.map((reg) => (
+										<TableRow key={reg.id}>
+											<TableCell>{reg.name}</TableCell>
+											<TableCell>{reg.email}</TableCell>
+											<TableCell>
+												{new Date(reg.created_at).toLocaleDateString()}
+											</TableCell>
+										</TableRow>
+									))
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				</DialogContent>
 			</Dialog>
 		</div>

@@ -35,7 +35,17 @@ export async function getItems(
 		args.push(limit, offset);
 
 		const result = await db.execute({ sql, args });
-		return result.rows as unknown as ContentItem[];
+		return result.rows.map((row) => ({
+			id: row.id as string,
+			type: row.type as "project" | "story",
+			title: row.title as string,
+			slug: row.slug as string,
+			summary: row.summary as string,
+			content: row.content as string,
+			image_url: row.image_url as string,
+			published_date: row.published_date as string,
+			created_at: String(row.created_at), // Ensure Date/Object is string
+		}));
 	} catch (error) {
 		console.error(`Failed to get ${type} items:`, error);
 		return [];
@@ -48,7 +58,20 @@ export async function getItemBySlug(slug: string): Promise<ContentItem | null> {
 			sql: "SELECT * FROM content_items WHERE slug = ? LIMIT 1",
 			args: [slug],
 		});
-		return (result.rows[0] as unknown as ContentItem) || null;
+		const row = result.rows[0];
+		if (!row) return null;
+
+		return {
+			id: row.id as string,
+			type: row.type as "project" | "story",
+			title: row.title as string,
+			slug: row.slug as string,
+			summary: row.summary as string,
+			content: row.content as string,
+			image_url: row.image_url as string,
+			published_date: row.published_date as string,
+			created_at: String(row.created_at),
+		};
 	} catch (error) {
 		console.error("Failed to get item by slug:", error);
 		return null;
@@ -61,7 +84,7 @@ export async function getYears(type: "project" | "story"): Promise<string[]> {
 			sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
 			args: [type],
 		});
-		return result.rows.map((row: any) => row.year).filter(Boolean);
+		return result.rows.map((row: any) => String(row.year)).filter(Boolean);
 	} catch (error) {
 		console.error("Failed to get years:", error);
 		return [];

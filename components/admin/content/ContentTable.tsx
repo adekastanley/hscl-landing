@@ -112,10 +112,13 @@ export function ContentTable({ type }: ContentTableProps) {
 		const file = e.target.files[0];
 
 		try {
-			const response = await fetch(`/api/upload?filename=${file.name}`, {
-				method: "POST",
-				body: file,
-			});
+			const response = await fetch(
+				`/api/upload?filename=${encodeURIComponent(file.name)}`,
+				{
+					method: "POST",
+					body: file,
+				},
+			);
 
 			if (!response.ok) throw new Error("Upload failed");
 

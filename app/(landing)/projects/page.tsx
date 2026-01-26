@@ -13,17 +13,20 @@ export default async function ProjectsPage({
 }: ProjectsPageProps) {
 	const params = await searchParams;
 	const page = Number(params.page) || 1;
+	const storiesPage = Number(params.storiesPage) || 1;
 	const year = params.year || "all";
 	const limit = 6; // Limit for Projects Grid
+	const storiesLimit = 4; // Limit for Stories Grid
 
 	// Fetch Projects and Stories in parallel
 	const [projects, projectYears, stories] = await Promise.all([
 		getItems("project", limit, page, year),
 		getYears("project"),
-		getItems("story", 4), // Fetch latest 4 stories
+		getItems("story", storiesLimit, storiesPage),
 	]);
 
-	const hasMore = projects.length === limit;
+	const hasMoreProjects = projects.length === limit;
+	const hasMoreStories = stories.length === storiesLimit;
 
 	return (
 		<ProjectsClientPage
@@ -32,7 +35,9 @@ export default async function ProjectsPage({
 			years={projectYears}
 			currentYear={year}
 			currentPage={page}
-			hasMore={hasMore}
+			currentStoriesPage={storiesPage}
+			hasMoreProjects={hasMoreProjects}
+			hasMoreStories={hasMoreStories}
 		/>
 	);
 }

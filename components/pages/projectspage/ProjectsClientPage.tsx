@@ -14,7 +14,9 @@ interface ProjectsClientPageProps {
 	years: string[];
 	currentYear: string;
 	currentPage: number;
-	hasMore: boolean;
+	currentStoriesPage: number;
+	hasMoreProjects: boolean;
+	hasMoreStories: boolean;
 }
 
 export default function ProjectsClientPage({
@@ -23,7 +25,9 @@ export default function ProjectsClientPage({
 	years,
 	currentYear,
 	currentPage,
-	hasMore,
+	currentStoriesPage,
+	hasMoreProjects,
+	hasMoreStories,
 }: ProjectsClientPageProps) {
 	const [activeSection, setActiveSection] = useState("projects");
 	const { scrollYProgress } = useScroll();
@@ -161,12 +165,16 @@ export default function ProjectsClientPage({
 					years={years}
 					currentYear={currentYear}
 					currentPage={currentPage}
-					hasMore={hasMore}
+					hasMore={hasMoreProjects}
 				/>
 
 				<Separator />
 
-				<StoriesList stories={stories} />
+				<StoriesList
+					stories={stories}
+					currentPage={currentStoriesPage}
+					hasMore={hasMoreStories}
+				/>
 
 				<Separator />
 

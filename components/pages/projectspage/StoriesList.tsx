@@ -4,20 +4,59 @@ import Image from "next/image";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
 
+import { Button } from "@/components/ui/button";
+
 interface StoriesListProps {
 	stories: ContentItem[];
+	currentPage: number;
+	hasMore: boolean;
 }
 
-export default function StoriesList({ stories }: StoriesListProps) {
+export default function StoriesList({
+	stories,
+	currentPage,
+	hasMore,
+}: StoriesListProps) {
 	return (
 		<section id="stories" className="scroll-mt-32">
-			<div className="mb-8">
-				<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
-					Success Stories
-				</h2>
-				<p className="text-muted-foreground">
-					Real impact, real lives. See how we are making a difference.
-				</p>
+			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+				<div>
+					<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
+						Success Stories
+					</h2>
+					<p className="text-muted-foreground">
+						Real impact, real lives. See how we are making a difference.
+					</p>
+				</div>
+
+				{/* Pagination Controls */}
+				<div className="flex items-center gap-2">
+					{currentPage > 1 && (
+						<Link
+							href={`/projects?storiesPage=${currentPage - 1}#stories`}
+							scroll={false}
+						>
+							<Button variant="outline" size="sm">
+								Previous
+							</Button>
+						</Link>
+					)}
+					{(hasMore || currentPage > 1) && (
+						<span className="text-xs text-muted-foreground font-medium px-2">
+							Page {currentPage}
+						</span>
+					)}
+					{hasMore && (
+						<Link
+							href={`/projects?storiesPage=${currentPage + 1}#stories`}
+							scroll={false}
+						>
+							<Button variant="outline" size="sm">
+								Next
+							</Button>
+						</Link>
+					)}
+				</div>
 			</div>
 
 			{stories.length === 0 ? (

@@ -5,9 +5,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 	const { searchParams } = new URL(request.url);
 	const filename = searchParams.get("filename") || "image.png";
 
-	// ⚠️ In a real app, you must validate the user is authorized to upload!
-	// For now, we assume the admin dashboard is protected (later step).
-
 	if (!request.body) {
 		return NextResponse.json({ error: "No file provided" }, { status: 400 });
 	}

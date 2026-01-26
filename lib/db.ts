@@ -22,6 +22,31 @@ const initDb = async () => {
     )
   `);
 
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS job_listings (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      location TEXT NOT NULL,
+      type TEXT NOT NULL,
+      status TEXT DEFAULT 'open',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS job_applications (
+      id TEXT PRIMARY KEY,
+      job_id TEXT NOT NULL,
+      applicant_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      resume_url TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (job_id) REFERENCES job_listings(id)
+    )
+  `);
+
 	// Migrations for existing databases
 	try {
 		await db.execute("ALTER TABLE team_members ADD COLUMN image_url TEXT");

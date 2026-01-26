@@ -10,9 +10,13 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { JOBS } from "@/lib/dummy-jobs";
+import { getJobListings } from "@/app/actions/careers";
 
-export default function CareersPage() {
+export const dynamic = "force-dynamic";
+
+export default async function CareersPage() {
+	const jobs = await getJobListings(true);
+
 	return (
 		<div className="flex flex-col min-h-screen">
 			{/* Hero Section */}
@@ -57,7 +61,7 @@ export default function CareersPage() {
 								size="lg"
 								className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white font-semibold"
 							>
-								<Link href="/careers/general-application">
+								<Link href="/careers/general">
 									Register for Future Opportunities
 								</Link>
 							</Button>
@@ -78,44 +82,50 @@ export default function CareersPage() {
 						</div>
 
 						<div className="grid gap-6">
-							{JOBS.map((job) => (
-								<div
-									key={job.id}
-									className="group relative flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-200 hover:border-chemonics-teal/30"
-								>
-									<div className="space-y-3">
-										<div className="space-y-1">
-											<h3 className="text-xl font-semibold text-chemonics-navy group-hover:text-chemonics-teal transition-colors">
-												{job.title}
-											</h3>
-											<p className="text-muted-foreground">{job.department}</p>
-										</div>
-										<div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-											<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
-												<MapPin className="h-3.5 w-3.5" />
-												<span>{job.location}</span>
-											</div>
-											<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
-												<Clock className="h-3.5 w-3.5" />
-												<span>{job.type}</span>
-											</div>
-										</div>
-									</div>
-
-									<div className="flex items-center">
-										<Button
-											asChild
-											variant="ghost"
-											className="gap-2 group-hover:bg-chemonics-teal/10 group-hover:text-chemonics-teal"
-										>
-											<Link href={`/careers/${job.id}`}>
-												Apply Now
-												<ArrowUpRight className="h-4 w-4" />
-											</Link>
-										</Button>
-									</div>
+							{jobs.length === 0 ? (
+								<div className="text-center py-12 text-muted-foreground">
+									No open positions at the moment. Please check back later.
 								</div>
-							))}
+							) : (
+								jobs.map((job) => (
+									<div
+										key={job.id}
+										className="group relative flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-200 hover:border-chemonics-teal/30"
+									>
+										<div className="space-y-3">
+											<div className="space-y-1">
+												<h3 className="text-xl font-semibold text-chemonics-navy group-hover:text-chemonics-teal transition-colors">
+													{job.title}
+												</h3>
+												{/* <p className="text-muted-foreground">{job.department}</p> */}
+											</div>
+											<div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+												<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
+													<MapPin className="h-3.5 w-3.5" />
+													<span>{job.location}</span>
+												</div>
+												<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
+													<Clock className="h-3.5 w-3.5" />
+													<span>{job.type}</span>
+												</div>
+											</div>
+										</div>
+
+										<div className="flex items-center">
+											<Button
+												asChild
+												variant="ghost"
+												className="gap-2 group-hover:bg-chemonics-teal/10 group-hover:text-chemonics-teal"
+											>
+												<Link href={`/careers/${job.id}`}>
+													View Details
+													<ArrowUpRight className="h-4 w-4" />
+												</Link>
+											</Button>
+										</div>
+									</div>
+								))
+							)}
 						</div>
 					</div>
 				</div>

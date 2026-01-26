@@ -130,6 +130,10 @@ const initDb = async () => {
 	}
 };
 
-initDb();
+let initPromise: Promise<void> | null = null;
+export const ensureDbInitialized = () => {
+	if (!initPromise) initPromise = initDb();
+	return initPromise;
+};
 
 export default db;

@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db, { ensureDbInitialized } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export interface ContentItem {
@@ -25,6 +25,7 @@ export async function getItems(
 	filterYear?: string,
 ): Promise<ContentItem[]> {
 	try {
+		await ensureDbInitialized();
 		const offset = (page - 1) * limit;
 		const args: any[] = [type];
 
@@ -69,6 +70,7 @@ export async function getItemBySlug(
 	type?: "project" | "story" | "event",
 ): Promise<ContentItem | null> {
 	try {
+		await ensureDbInitialized();
 		let sql = "SELECT * FROM content_items WHERE slug = ?";
 		const args = [slug];
 
@@ -105,6 +107,7 @@ export async function getYears(
 	type: "project" | "story" | "event",
 ): Promise<string[]> {
 	try {
+		await ensureDbInitialized();
 		const result = await db.execute({
 			sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
 			args: [type],
@@ -119,6 +122,7 @@ export async function getYears(
 export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
+		await ensureDbInitialized();
 		await db.execute({
 			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date, category, status) VALUES (:id, :type, :title, :slug, :summary, :content, :image_url, :published_date, :category, :status)",
 			args: {
@@ -151,6 +155,7 @@ export async function updateItem(
 	data: Partial<Omit<ContentItem, "id" | "created_at">>,
 ) {
 	try {
+		await ensureDbInitialized();
 		const fields: string[] = [];
 		const args: Record<string, any> = {};
 
@@ -207,6 +212,7 @@ export async function updateItem(
 
 export async function deleteItem(id: string) {
 	try {
+		await ensureDbInitialized();
 		await db.execute({
 			sql: "DELETE FROM content_items WHERE id = ?",
 			args: [id],

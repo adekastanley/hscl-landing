@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db, { ensureDbInitialized } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export interface EventRegistration {
@@ -22,6 +22,7 @@ export async function registerForEvent(
 ) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
+		await ensureDbInitialized();
 		// Check if event is open
 		const eventRes = await db.execute({
 			sql: "SELECT status FROM content_items WHERE id = ?",
@@ -67,6 +68,7 @@ export async function getEventRegistrations(
 	eventId: string,
 ): Promise<EventRegistration[]> {
 	try {
+		await ensureDbInitialized();
 		const result = await db.execute({
 			sql: "SELECT * FROM event_registrations WHERE event_id = ? ORDER BY created_at DESC",
 			args: [eventId],
@@ -90,6 +92,7 @@ export async function getEventRegistrationCount(
 	eventId: string,
 ): Promise<number> {
 	try {
+		await ensureDbInitialized();
 		const result = await db.execute({
 			sql: "SELECT COUNT(*) as count FROM event_registrations WHERE event_id = ?",
 			args: [eventId],

@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { version } from "process";
+import { FixSchemaButton } from "@/components/debug/FixSchemaButton";
 
 export default async function DebugPage() {
 	let dbStatus = "Unknown";
@@ -93,6 +94,18 @@ export default async function DebugPage() {
 						</ul>
 					</div>
 				)}
+				<div className="mt-6 border-t pt-4">
+					<h3 className="font-semibold mb-2 text-destructive">
+						Administrative Actions
+					</h3>
+					<div className="flex flex-col gap-2">
+						<p className="text-sm text-muted-foreground">
+							Run this only if you are seeing "CHECK constraint failed" errors
+							for events.
+						</p>
+						<FixSchemaButton />
+					</div>
+				</div>
 			</div>
 		</div>
 	);

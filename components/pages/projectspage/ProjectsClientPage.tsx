@@ -139,7 +139,7 @@ export default function ProjectsClientPage({
 						{[
 							{ id: "projects", label: "Projects" },
 							{ id: "stories", label: "Success Stories" },
-							{ id: "impact", label: "Impact" },
+							{ id: "events", label: "Events" },
 							{ id: "resources", label: "Resources" },
 						].map((item) => (
 							<button
@@ -180,11 +180,11 @@ export default function ProjectsClientPage({
 
 				{/* Placeholders for future sections */}
 				<section
-					id="impact"
+					id="events"
 					className="scroll-mt-32 min-h-[300px] flex flex-col justify-center items-center text-center"
 				>
 					<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
-						Impact
+						Events
 					</h2>
 					<p className="text-muted-foreground max-w-lg">
 						Our impact metrics and reports will appear here.

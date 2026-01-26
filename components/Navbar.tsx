@@ -86,7 +86,7 @@ const pcMenu = [
 				items: [
 					{ label: "All Projects", href: "/projects#projects" },
 					{ label: "Success Stories", href: "/projects#stories" },
-					{ label: "Publications", href: "/projects#resources" },
+					{ label: "Events", href: "/projects#events" },
 					{ label: "News", href: "/projects#impact" },
 				],
 			},

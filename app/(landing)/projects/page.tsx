@@ -5,6 +5,7 @@ interface ProjectsPageProps {
 	searchParams: Promise<{
 		page?: string;
 		year?: string;
+		storiesPage?: string;
 	}>;
 }
 

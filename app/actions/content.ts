@@ -120,19 +120,19 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
 		await db.execute({
-			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date, category, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			args: [
+			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date, category, status) VALUES (:id, :type, :title, :slug, :summary, :content, :image_url, :published_date, :category, :status)",
+			args: {
 				id,
-				data.type,
-				data.title,
-				data.slug,
-				data.summary || "",
-				data.content || "",
-				data.image_url || "",
-				data.published_date,
-				data.category || null,
-				data.status || "open",
-			],
+				type: data.type,
+				title: data.title,
+				slug: data.slug,
+				summary: data.summary || "",
+				content: data.content || "",
+				image_url: data.image_url || "",
+				published_date: data.published_date,
+				category: data.category || null,
+				status: data.status || "open",
+			},
 		});
 		revalidatePath("/admin/dashboard/projects");
 		revalidatePath("/admin/dashboard/stories");
@@ -151,46 +151,46 @@ export async function updateItem(
 	data: Partial<Omit<ContentItem, "id" | "created_at">>,
 ) {
 	try {
-		const fields = [];
-		const args = [];
+		const fields: string[] = [];
+		const args: Record<string, any> = {};
 
 		if (data.title) {
-			fields.push("title = ?");
-			args.push(data.title);
+			fields.push("title = :title");
+			args.title = data.title;
 		}
 		if (data.slug) {
-			fields.push("slug = ?");
-			args.push(data.slug);
+			fields.push("slug = :slug");
+			args.slug = data.slug;
 		}
 		if (data.summary !== undefined) {
-			fields.push("summary = ?");
-			args.push(data.summary);
+			fields.push("summary = :summary");
+			args.summary = data.summary;
 		}
 		if (data.content !== undefined) {
-			fields.push("content = ?");
-			args.push(data.content);
+			fields.push("content = :content");
+			args.content = data.content;
 		}
 		if (data.image_url !== undefined) {
-			fields.push("image_url = ?");
-			args.push(data.image_url);
+			fields.push("image_url = :image_url");
+			args.image_url = data.image_url;
 		}
 		if (data.published_date) {
-			fields.push("published_date = ?");
-			args.push(data.published_date);
+			fields.push("published_date = :published_date");
+			args.published_date = data.published_date;
 		}
 		if (data.category !== undefined) {
-			fields.push("category = ?");
-			args.push(data.category);
+			fields.push("category = :category");
+			args.category = data.category;
 		}
 		if (data.status !== undefined) {
-			fields.push("status = ?");
-			args.push(data.status);
+			fields.push("status = :status");
+			args.status = data.status;
 		}
 
 		if (fields.length === 0) return;
 
-		args.push(id);
-		const sql = `UPDATE content_items SET ${fields.join(", ")} WHERE id = ?`;
+		args.id = id;
+		const sql = `UPDATE content_items SET ${fields.join(", ")} WHERE id = :id`;
 
 		await db.execute({ sql, args });
 

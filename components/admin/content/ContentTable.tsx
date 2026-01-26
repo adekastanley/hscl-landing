@@ -183,29 +183,25 @@ export function ContentTable({ type }: ContentTableProps) {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
+			// Prepare data, ensuring category/status are only sent for events
+			const itemData = {
+				title: formData.title,
+				slug: formData.slug,
+				summary: formData.summary,
+				content: formData.content,
+				image_url: formData.image_url,
+				published_date: formData.published_date,
+				category: type === "event" ? formData.category : undefined,
+				status: type === "event" ? formData.status : undefined,
+			};
+
 			if (isEdit) {
-				await updateItem(formData.id, {
-					title: formData.title,
-					slug: formData.slug,
-					summary: formData.summary,
-					content: formData.content,
-					image_url: formData.image_url,
-					published_date: formData.published_date,
-					category: formData.category,
-					status: formData.status,
-				});
+				await updateItem(formData.id, itemData);
 				toast.success("Updated successfully");
 			} else {
 				await createItem({
 					type,
-					title: formData.title,
-					slug: formData.slug,
-					summary: formData.summary,
-					content: formData.content,
-					image_url: formData.image_url,
-					published_date: formData.published_date,
-					category: formData.category,
-					status: formData.status,
+					...itemData,
 				});
 				toast.success("Created successfully");
 			}
@@ -437,7 +433,12 @@ export function ContentTable({ type }: ContentTableProps) {
 				<DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>
-							{isEdit ? "Edit Item" : "Create New Item"}
+							{isEdit ? "Edit" : "Create New"}{" "}
+							{type === "project"
+								? "Project"
+								: type === "story"
+									? "Success Story"
+									: "Event"}
 						</DialogTitle>
 					</DialogHeader>
 					<form onSubmit={handleSubmit} className="space-y-4 py-4">

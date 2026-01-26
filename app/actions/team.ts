@@ -8,17 +8,41 @@ export interface TeamMember {
 	name: string;
 	role: string;
 	bio: string;
+	image_url?: string;
+	category: "team" | "leadership";
+	linkedin?: string;
+	twitter?: string;
+	email?: string;
 }
 
-export async function getTeamMembers(): Promise<TeamMember[]> {
+export async function getTeamMembers(category?: string): Promise<TeamMember[]> {
 	try {
-		const result = await db.execute(
-			"SELECT * FROM team_members ORDER BY created_at DESC",
-		);
+		const sql = category
+			? "SELECT * FROM team_members WHERE category = ? ORDER BY created_at DESC"
+			: "SELECT * FROM team_members ORDER BY created_at DESC";
+
+		const args = category ? [category] : [];
+
+		const result = await db.execute({ sql, args });
 		return result.rows as unknown as TeamMember[];
 	} catch (error) {
 		console.error("Database error:", error);
 		return [];
+	}
+}
+
+export async function getTeamMemberById(
+	id: string,
+): Promise<TeamMember | null> {
+	try {
+		const result = await db.execute({
+			sql: "SELECT * FROM team_members WHERE id = ? LIMIT 1",
+			args: [id],
+		});
+		return (result.rows[0] as unknown as TeamMember) || null;
+	} catch (error) {
+		console.error("Database error:", error);
+		return null;
 	}
 }
 
@@ -27,11 +51,22 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 
 	try {
 		await db.execute({
-			sql: "INSERT INTO team_members (id, name, role, bio) VALUES (?, ?, ?, ?)",
-			args: [id, data.name, data.role, data.bio],
+			sql: "INSERT INTO team_members (id, name, role, bio, image_url, category, linkedin, twitter, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			args: [
+				id,
+				data.name,
+				data.role,
+				data.bio,
+				data.image_url || null,
+				data.category || "team",
+				data.linkedin || null,
+				data.twitter || null,
+				data.email || null,
+			],
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/team");
+		revalidatePath("/admin/dashboard/leadership");
 		return { id, ...data };
 	} catch (error) {
 		console.error("Failed to add member:", error);
@@ -45,11 +80,22 @@ export async function updateTeamMember(
 ) {
 	try {
 		await db.execute({
-			sql: "UPDATE team_members SET name = ?, role = ?, bio = ? WHERE id = ?",
-			args: [data.name, data.role, data.bio, id],
+			sql: "UPDATE team_members SET name = ?, role = ?, bio = ?, image_url = ?, category = ?, linkedin = ?, twitter = ?, email = ? WHERE id = ?",
+			args: [
+				data.name,
+				data.role,
+				data.bio,
+				data.image_url || null,
+				data.category,
+				data.linkedin || null,
+				data.twitter || null,
+				data.email || null,
+				id,
+			],
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/team");
+		revalidatePath("/admin/dashboard/leadership");
 		return { id, ...data };
 	} catch (error) {
 		console.error("Failed to update member:", error);
@@ -65,6 +111,7 @@ export async function deleteTeamMember(id: string) {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/team");
+		revalidatePath("/admin/dashboard/leadership");
 	} catch (error) {
 		console.error("Failed to delete member:", error);
 		throw error;

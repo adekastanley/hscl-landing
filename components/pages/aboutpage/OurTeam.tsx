@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import Link from "next/link";
 import {
 	Card,
 	CardContent,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function TeamSection() {
 	const [team, setTeam] = useState<TeamMember[]>([]);
@@ -17,7 +19,7 @@ export default function TeamSection() {
 	useEffect(() => {
 		async function fetchTeam() {
 			try {
-				const members = await getTeamMembers();
+				const members = await getTeamMembers("team");
 				setTeam(members);
 			} catch (error) {
 				console.error("Failed to fetch team members", error);
@@ -53,7 +55,7 @@ export default function TeamSection() {
 	}
 
 	if (team.length === 0) {
-		return null; // Don't show section if empty, or show placeholder
+		return null;
 	}
 
 	return (
@@ -82,27 +84,35 @@ export default function TeamSection() {
 						viewport={{ once: true }}
 						transition={{ delay: idx * 0.05 }}
 					>
-						<Card className="h-full overflow-hidden group">
-							<div className="aspect-[4/3] bg-muted relative overflow-hidden">
-								{/* Placeholder since we don't have real photos yet. */}
-								<div className="absolute inset-0 flex items-center justify-center bg-chemonics-navy/10 text-chemonics-navy/30 font-bold text-4xl">
-									{member.name.charAt(0)}
+						<Link href={`/team/${member.id}`} className="block h-full">
+							<Card className="h-full overflow-hidden group hover:shadow-lg transition-all duration-300 border-chemonics-navy/5">
+								<div className="aspect-[4/3] bg-muted relative overflow-hidden">
+									<Avatar className="h-full w-full rounded-none">
+										<AvatarImage
+											src={member.image_url}
+											alt={member.name}
+											className="object-cover transition-transform duration-500 group-hover:scale-105"
+										/>
+										<AvatarFallback className="rounded-none text-4xl bg-chemonics-navy/5 text-chemonics-navy/30">
+											{member.name.charAt(0)}
+										</AvatarFallback>
+									</Avatar>
 								</div>
-							</div>
-							<CardHeader>
-								<CardTitle className="text-lg text-chemonics-navy group-hover:text-chemonics-lime transition-colors">
-									{member.name}
-								</CardTitle>
-								<CardDescription className="font-medium text-primary">
-									{member.role}
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<p className="text-sm text-muted-foreground line-clamp-4">
-									{member.bio}
-								</p>
-							</CardContent>
-						</Card>
+								<CardHeader>
+									<CardTitle className="text-lg text-chemonics-navy group-hover:text-chemonics-lime transition-colors">
+										{member.name}
+									</CardTitle>
+									<CardDescription className="font-medium text-primary">
+										{member.role}
+									</CardDescription>
+								</CardHeader>
+								<CardContent>
+									<p className="text-sm text-muted-foreground line-clamp-4">
+										{member.bio}
+									</p>
+								</CardContent>
+							</Card>
+						</Link>
 					</motion.div>
 				))}
 			</div>

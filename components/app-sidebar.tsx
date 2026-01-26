@@ -65,6 +65,11 @@ const data = {
 			url: "/admin/dashboard/team",
 			icon: IconUsers,
 		},
+		{
+			title: "Leadership",
+			url: "/admin/dashboard/leadership",
+			icon: IconUsers,
+		},
 	],
 	navClouds: [
 		{

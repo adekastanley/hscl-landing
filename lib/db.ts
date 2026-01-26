@@ -35,18 +35,34 @@ const initDb = async () => {
   `);
 
 	await db.execute(`
-    CREATE TABLE IF NOT EXISTS job_applications (
-      id TEXT PRIMARY KEY,
-      job_id TEXT NOT NULL,
-      applicant_name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      resume_url TEXT NOT NULL,
-      status TEXT DEFAULT 'pending',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (job_id) REFERENCES job_listings(id)
-    )
-  `);
+      CREATE TABLE IF NOT EXISTS job_applications (
+        id TEXT PRIMARY KEY,
+        job_id TEXT NOT NULL,
+        applicant_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        resume_url TEXT NOT NULL,
+        status TEXT CHECK(status IN ('pending', 'review', 'accepted', 'rejected', 'reserved')) DEFAULT 'pending',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (job_id) REFERENCES job_listings(id)
+      )
+    `);
 
+	// Projects & Success Stories
+	await db.execute(`
+      CREATE TABLE IF NOT EXISTS content_items (
+        id TEXT PRIMARY KEY,
+        type TEXT CHECK(type IN ('project', 'story')) NOT NULL,
+        title TEXT NOT NULL,
+        slug TEXT UNIQUE NOT NULL,
+        summary TEXT,
+        content TEXT,
+        image_url TEXT,
+        published_date TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+	console.log("Database initialized successfully");
 	// Migrations for existing databases
 	try {
 		await db.execute("ALTER TABLE team_members ADD COLUMN image_url TEXT");

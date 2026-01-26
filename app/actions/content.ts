@@ -1,0 +1,162 @@
+"use server";
+
+import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+export interface ContentItem {
+	id: string;
+	type: "project" | "story";
+	title: string;
+	slug: string;
+	summary: string;
+	content: string;
+	image_url: string;
+	published_date: string;
+	created_at: string;
+}
+
+export async function getItems(
+	type: "project" | "story",
+	limit = 100,
+	page = 1,
+	filterYear?: string,
+): Promise<ContentItem[]> {
+	try {
+		const offset = (page - 1) * limit;
+		const args: any[] = [type];
+		let sql = "SELECT * FROM content_items WHERE type = ?";
+
+		if (filterYear && filterYear !== "all") {
+			sql += " AND strftime('%Y', published_date) = ?";
+			args.push(filterYear);
+		}
+
+		sql += " ORDER BY published_date DESC LIMIT ? OFFSET ?";
+		args.push(limit, offset);
+
+		const result = await db.execute({ sql, args });
+		return result.rows as unknown as ContentItem[];
+	} catch (error) {
+		console.error(`Failed to get ${type} items:`, error);
+		return [];
+	}
+}
+
+export async function getItemBySlug(slug: string): Promise<ContentItem | null> {
+	try {
+		const result = await db.execute({
+			sql: "SELECT * FROM content_items WHERE slug = ? LIMIT 1",
+			args: [slug],
+		});
+		return (result.rows[0] as unknown as ContentItem) || null;
+	} catch (error) {
+		console.error("Failed to get item by slug:", error);
+		return null;
+	}
+}
+
+export async function getYears(type: "project" | "story"): Promise<string[]> {
+	try {
+		const result = await db.execute({
+			sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
+			args: [type],
+		});
+		return result.rows.map((row: any) => row.year).filter(Boolean);
+	} catch (error) {
+		console.error("Failed to get years:", error);
+		return [];
+	}
+}
+
+export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
+	const id = Math.random().toString(36).substring(2, 15);
+	try {
+		await db.execute({
+			sql: "INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+			args: [
+				id,
+				data.type,
+				data.title,
+				data.slug,
+				data.summary || "",
+				data.content || "",
+				data.image_url || "",
+				data.published_date,
+			],
+		});
+		revalidatePath("/admin/dashboard/projects");
+		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/projects");
+		revalidatePath("/success-stories");
+		return { id, ...data };
+	} catch (error) {
+		console.error("Failed to create item:", error);
+		throw error;
+	}
+}
+
+export async function updateItem(
+	id: string,
+	data: Partial<Omit<ContentItem, "id" | "created_at">>,
+) {
+	try {
+		const fields = [];
+		const args = [];
+
+		if (data.title) {
+			fields.push("title = ?");
+			args.push(data.title);
+		}
+		if (data.slug) {
+			fields.push("slug = ?");
+			args.push(data.slug);
+		}
+		if (data.summary !== undefined) {
+			fields.push("summary = ?");
+			args.push(data.summary);
+		}
+		if (data.content !== undefined) {
+			fields.push("content = ?");
+			args.push(data.content);
+		}
+		if (data.image_url !== undefined) {
+			fields.push("image_url = ?");
+			args.push(data.image_url);
+		}
+		if (data.published_date) {
+			fields.push("published_date = ?");
+			args.push(data.published_date);
+		}
+
+		if (fields.length === 0) return;
+
+		args.push(id);
+		const sql = `UPDATE content_items SET ${fields.join(", ")} WHERE id = ?`;
+
+		await db.execute({ sql, args });
+
+		revalidatePath("/admin/dashboard/projects");
+		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/projects");
+		revalidatePath("/success-stories");
+	} catch (error) {
+		console.error("Failed to update item:", error);
+		throw error;
+	}
+}
+
+export async function deleteItem(id: string) {
+	try {
+		await db.execute({
+			sql: "DELETE FROM content_items WHERE id = ?",
+			args: [id],
+		});
+		revalidatePath("/admin/dashboard/projects");
+		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/projects");
+		revalidatePath("/success-stories");
+	} catch (error) {
+		console.error("Failed to delete item:", error);
+		throw error;
+	}
+}

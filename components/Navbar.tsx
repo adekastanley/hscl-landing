@@ -33,6 +33,7 @@ const pcMenu = [
 				],
 			},
 			inFocus: {
+				link: "/projects",
 				title: "IN FOCUS",
 				image: "/assets/three.jpg",
 				articleTitle: "Driving Sustainable Impact",
@@ -83,10 +84,10 @@ const pcMenu = [
 			links: {
 				title: "LATEST UPDATES",
 				items: [
-					{ label: "All Projects", href: "/projects" },
-					{ label: "Success Stories", href: "/stories" },
-					{ label: "Publications", href: "/publications" },
-					{ label: "News", href: "/news" },
+					{ label: "All Projects", href: "/projects#projects" },
+					{ label: "Success Stories", href: "/projects#stories" },
+					{ label: "Publications", href: "/projects#resources" },
+					{ label: "News", href: "/projects#impact" },
 				],
 			},
 			inFocus: {

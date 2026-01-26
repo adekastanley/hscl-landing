@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Download, ExternalLink, Filter } from "lucide-react";
+import {
+	Download,
+	ExternalLink,
+	Filter,
+	Calendar as CalendarIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Table,
@@ -28,12 +33,22 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function JobApplicationsTable() {
 	const [applications, setApplications] = useState<JobApplication[]>([]);
 	const [jobs, setJobs] = useState<JobListing[]>([]);
 	const [filterJobId, setFilterJobId] = useState<string>("all");
 	const [filterStatus, setFilterStatus] = useState<string>("all");
+	const [dateRange, setDateRange] = useState<DateRange | undefined>();
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -69,24 +84,30 @@ export function JobApplicationsTable() {
 	const filteredApplications = applications.filter((app) => {
 		if (filterJobId !== "all" && app.job_id !== filterJobId) return false;
 		if (filterStatus !== "all" && app.status !== filterStatus) return false;
+
+		if (dateRange?.from) {
+			const appDate = new Date(app.created_at);
+			if (appDate < dateRange.from) return false;
+			if (dateRange.to) {
+				const endOfDay = new Date(dateRange.to);
+				endOfDay.setHours(23, 59, 59, 999);
+				if (appDate > endOfDay) return false;
+			}
+		}
+
 		return true;
 	});
 
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "pending":
-				return "secondary";
-			case "review":
-				return "default"; // blue-ish usually
-			case "accepted":
-				return "secondary"; // green-ish via custom class maybe? using secondary for now or handled via text color
-			case "rejected":
-				return "destructive";
-			case "reserved":
-				return "outline";
-			default:
-				return "secondary";
-		}
+	const getListingStatusBadge = (status?: string) => {
+		if (!status) return <Badge variant="destructive">Deleted</Badge>; // If join failed or deleted
+		if (status === "deleted")
+			return <Badge variant="destructive">Deleted</Badge>;
+		if (status === "closed") return <Badge variant="secondary">Closed</Badge>;
+		return (
+			<Badge variant="outline" className="border-green-500 text-green-600">
+				Open
+			</Badge>
+		);
 	};
 
 	return (
@@ -95,9 +116,45 @@ export function JobApplicationsTable() {
 				<h3 className="text-lg font-medium">
 					Applications ({filteredApplications.length})
 				</h3>
-				<div className="flex gap-2 w-full md:w-auto">
+				<div className="flex flex-wrap gap-2 w-full md:w-auto items-center">
+					<Popover>
+						<PopoverTrigger asChild>
+							<Button
+								variant={"outline"}
+								className={cn(
+									"w-[240px] justify-start text-left font-normal",
+									!dateRange && "text-muted-foreground",
+								)}
+							>
+								<CalendarIcon className="mr-2 h-4 w-4" />
+								{dateRange?.from ? (
+									dateRange.to ? (
+										<>
+											{format(dateRange.from, "LLL dd, y")} -{" "}
+											{format(dateRange.to, "LLL dd, y")}
+										</>
+									) : (
+										format(dateRange.from, "LLL dd, y")
+									)
+								) : (
+									<span>Pick a date range</span>
+								)}
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className="w-auto p-0" align="end">
+							<Calendar
+								initialFocus
+								mode="range"
+								defaultMonth={dateRange?.from}
+								selected={dateRange}
+								onSelect={setDateRange}
+								numberOfMonths={2}
+							/>
+						</PopoverContent>
+					</Popover>
+
 					<Select value={filterJobId} onValueChange={setFilterJobId}>
-						<SelectTrigger className="w-[200px]">
+						<SelectTrigger className="w-[180px]">
 							<SelectValue placeholder="Filter by Job" />
 						</SelectTrigger>
 						<SelectContent>
@@ -111,7 +168,7 @@ export function JobApplicationsTable() {
 					</Select>
 
 					<Select value={filterStatus} onValueChange={setFilterStatus}>
-						<SelectTrigger className="w-[150px]">
+						<SelectTrigger className="w-[140px]">
 							<SelectValue placeholder="Filter Status" />
 						</SelectTrigger>
 						<SelectContent>
@@ -133,6 +190,7 @@ export function JobApplicationsTable() {
 							<TableHead>Applicant</TableHead>
 							<TableHead>Applied For</TableHead>
 							<TableHead>Applied At</TableHead>
+							<TableHead>Listing Status</TableHead>
 							<TableHead>Resume</TableHead>
 							<TableHead>Status</TableHead>
 						</TableRow>
@@ -140,7 +198,7 @@ export function JobApplicationsTable() {
 					<TableBody>
 						{filteredApplications.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={5} className="h-24 text-center">
+								<TableCell colSpan={6} className="h-24 text-center">
 									No applications found.
 								</TableCell>
 							</TableRow>
@@ -158,6 +216,9 @@ export function JobApplicationsTable() {
 										{new Date(app.created_at).toLocaleDateString()}
 									</TableCell>
 									<TableCell>
+										{getListingStatusBadge(app.job_current_status)}
+									</TableCell>
+									<TableCell>
 										<Button
 											variant="outline"
 											size="sm"
@@ -169,7 +230,7 @@ export function JobApplicationsTable() {
 												target="_blank"
 												rel="noopener noreferrer"
 											>
-												<Download className="h-4 w-4" /> Download PDF
+												<Download className="h-4 w-4" /> PDF
 											</a>
 										</Button>
 									</TableCell>

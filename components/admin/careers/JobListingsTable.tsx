@@ -25,6 +25,7 @@ import {
 import {
 	getJobListings,
 	createJob,
+	updateJob,
 	updateJobStatus,
 	deleteJob,
 	type JobListing,
@@ -45,12 +46,14 @@ export function JobListingsTable() {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [formData, setFormData] = useState({
+		id: "",
 		title: "",
 		description: "",
 		location: "",
 		type: "Full-time",
 	});
 	const [deleteId, setDeleteId] = useState<string | null>(null);
+	const [isEdit, setIsEdit] = useState(false);
 
 	useEffect(() => {
 		loadJobs();
@@ -61,35 +64,74 @@ export function JobListingsTable() {
 		setJobs(data);
 	};
 
+	const openAddModal = () => {
+		setIsEdit(false);
+		setFormData({
+			id: "",
+			title: "",
+			description: "",
+			location: "",
+			type: "Full-time",
+		});
+		setIsAddOpen(true);
+	};
+
+	const openEditModal = (job: JobListing) => {
+		setIsEdit(true);
+		setFormData({
+			id: job.id,
+			title: job.title,
+			description: job.description,
+			location: job.location,
+			type: job.type,
+		});
+		setIsAddOpen(true);
+	};
+
 	const onSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
-			await createJob(formData);
-			toast.success("Job created successfully");
+			if (isEdit) {
+				await updateJob(formData.id, {
+					title: formData.title,
+					description: formData.description,
+					location: formData.location,
+					type: formData.type,
+				});
+				toast.success("Job updated successfully");
+			} else {
+				await createJob({
+					title: formData.title,
+					description: formData.description,
+					location: formData.location,
+					type: formData.type,
+				});
+				toast.success("Job created successfully");
+			}
 			setIsAddOpen(false);
-			setFormData({
-				title: "",
-				description: "",
-				location: "",
-				type: "Full-time",
-			});
 			loadJobs();
 		} catch (error) {
-			toast.error("Failed to create job");
+			toast.error(isEdit ? "Failed to update job" : "Failed to create job");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const handleStatusToggle = async (job: JobListing) => {
-		const newStatus = job.status === "open" ? "closed" : "open";
+	const handleStatusChange = async (
+		jobId: string,
+		newStatus: "open" | "closed",
+	) => {
 		try {
-			await updateJobStatus(job.id, newStatus);
+			// Optimistic
+			setJobs((prev) =>
+				prev.map((j) => (j.id === jobId ? { ...j, status: newStatus } : j)),
+			);
+			await updateJobStatus(jobId, newStatus);
 			toast.success(`Job marked as ${newStatus}`);
-			loadJobs();
 		} catch (error) {
 			toast.error("Failed to update status");
+			loadJobs(); // Revert
 		}
 	};
 
@@ -113,7 +155,7 @@ export function JobListingsTable() {
 			<div className="flex justify-between items-center">
 				<h3 className="text-lg font-medium">Active Job Postings</h3>
 				<Button
-					onClick={() => setIsAddOpen(true)}
+					onClick={openAddModal}
 					className="gap-2 bg-chemonics-teal hover:bg-chemonics-teal/90"
 				>
 					<Plus className="h-4 w-4" /> Post Job
@@ -145,20 +187,29 @@ export function JobListingsTable() {
 									<TableCell>{job.type}</TableCell>
 									<TableCell>{job.location}</TableCell>
 									<TableCell>
-										<Badge
-											variant={job.status === "open" ? "default" : "secondary"}
+										<Select
+											value={job.status}
+											onValueChange={(val) =>
+												handleStatusChange(job.id, val as "open" | "closed")
+											}
 										>
-											{job.status}
-										</Badge>
+											<SelectTrigger className="w-[100px] h-8">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="open">Open</SelectItem>
+												<SelectItem value="closed">Closed</SelectItem>
+											</SelectContent>
+										</Select>
 									</TableCell>
 									<TableCell className="text-right">
 										<div className="flex justify-end gap-2">
 											<Button
 												variant="ghost"
-												size="sm"
-												onClick={() => handleStatusToggle(job)}
+												size="icon"
+												onClick={() => openEditModal(job)}
 											>
-												{job.status === "open" ? "Close" : "Reopen"}
+												<Pencil className="h-4 w-4" />
 											</Button>
 											<Button
 												variant="ghost"
@@ -180,7 +231,7 @@ export function JobListingsTable() {
 			<Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
 				<DialogContent className="max-w-2xl">
 					<DialogHeader>
-						<DialogTitle>Post a New Job</DialogTitle>
+						<DialogTitle>{isEdit ? "Edit Job" : "Post a New Job"}</DialogTitle>
 					</DialogHeader>
 					<form onSubmit={onSubmit}>
 						<div className="grid gap-4 py-4">
@@ -240,7 +291,7 @@ export function JobListingsTable() {
 						</div>
 						<DialogFooter>
 							<Button type="submit" disabled={isLoading}>
-								{isLoading ? "Posting..." : "Post Job"}
+								{isLoading ? "Saving..." : isEdit ? "Save Changes" : "Post Job"}
 							</Button>
 						</DialogFooter>
 					</form>

@@ -22,15 +22,20 @@ export interface JobApplication {
 	status: "pending" | "review" | "accepted" | "rejected" | "reserved";
 	created_at: string;
 	job_title?: string; // For display
+	job_current_status?: string;
 }
+
+// --- Jobs ---
 
 // --- Jobs ---
 
 export async function getJobListings(openOnly = false): Promise<JobListing[]> {
 	try {
-		const sql = openOnly
-			? "SELECT * FROM job_listings WHERE status = 'open' ORDER BY created_at DESC"
-			: "SELECT * FROM job_listings ORDER BY created_at DESC";
+		let sql = "SELECT * FROM job_listings WHERE status != 'deleted'";
+		if (openOnly) {
+			sql += " AND status = 'open'";
+		}
+		sql += " ORDER BY created_at DESC";
 
 		const result = await db.execute(sql);
 		return result.rows as unknown as JobListing[];
@@ -71,34 +76,63 @@ export async function createJob(
 	}
 }
 
-export async function updateJobStatus(id: string, status: "open" | "closed") {
+export async function updateJob(
+	id: string,
+	data: Partial<Omit<JobListing, "id" | "created_at">>,
+) {
 	try {
-		await db.execute({
-			sql: "UPDATE job_listings SET status = ? WHERE id = ?",
-			args: [status, id],
-		});
+		// Only update fields that are present
+		const fields = [];
+		const args = [];
+
+		if (data.title) {
+			fields.push("title = ?");
+			args.push(data.title);
+		}
+		if (data.description) {
+			fields.push("description = ?");
+			args.push(data.description);
+		}
+		if (data.location) {
+			fields.push("location = ?");
+			args.push(data.location);
+		}
+		if (data.type) {
+			fields.push("type = ?");
+			args.push(data.type);
+		}
+		if (data.status) {
+			fields.push("status = ?");
+			args.push(data.status);
+		}
+
+		if (fields.length === 0) return;
+
+		args.push(id);
+		const sql = `UPDATE job_listings SET ${fields.join(", ")} WHERE id = ?`;
+
+		await db.execute({ sql, args });
 		revalidatePath("/careers");
 		revalidatePath("/admin/dashboard/careers");
 	} catch (error) {
-		console.error("Failed to update job status:", error);
+		console.error("Failed to update job:", error);
 		throw error;
 	}
 }
 
+export async function updateJobStatus(id: string, status: "open" | "closed") {
+	return updateJob(id, { status });
+}
+
 export async function deleteJob(id: string) {
 	try {
+		// Soft delete
 		await db.execute({
-			sql: "DELETE FROM job_listings WHERE id = ?",
+			sql: "UPDATE job_listings SET status = 'deleted' WHERE id = ?",
 			args: [id],
 		});
-		// Also delete applications? For now, we keep them or DB might error if FK constraint.
-		// SQLite default FK usually doesn't cascade unless specified.
-		// Let's assume we might need to delete applications too or allow it to fail.
-		// Safe bet: Delete applications first.
-		await db.execute({
-			sql: "DELETE FROM job_applications WHERE job_id = ?",
-			args: [id],
-		});
+
+		// Do NOT delete applications, they remain linked.
 
 		revalidatePath("/careers");
 		revalidatePath("/admin/dashboard/careers");
@@ -134,9 +168,9 @@ export async function getApplications(
 	jobId?: string,
 ): Promise<JobApplication[]> {
 	try {
-		// Join with jobs to get title
+		// Join with jobs to get title and status
 		let sql = `
-			SELECT ja.*, jl.title as job_title 
+			SELECT ja.*, jl.title as job_title, jl.status as job_current_status
 			FROM job_applications ja
 			LEFT JOIN job_listings jl ON ja.job_id = jl.id
 		`;
@@ -150,6 +184,11 @@ export async function getApplications(
 		sql += " ORDER BY ja.created_at DESC";
 
 		const result = await db.execute({ sql, args });
+		// Map 'job_current_status' to something the frontend might expect if we need to
+		// But cleaner to just update the type or cast it.
+		// Let's assume we update the interface definition below or cast it.
+		// Actually I need to update the interface to include job_current_status?
+		// Better: return it as is, frontend will see `job_current_status`.
 		return result.rows as unknown as JobApplication[];
 	} catch (error) {
 		console.error("Failed to get applications:", error);

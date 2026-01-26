@@ -5,12 +5,14 @@ import { motion, useScroll, useSpring } from "motion/react"; // Assuming 'framer
 import { cn } from "@/lib/utils";
 import ProjectsList from "./ProjectsList";
 import StoriesList from "./StoriesList";
+import EventCard from "./EventCard";
 import { type ContentItem } from "@/app/actions/content";
 import { Separator } from "@/components/ui/separator";
 
 interface ProjectsClientPageProps {
 	projects: ContentItem[];
 	stories: ContentItem[];
+	events: ContentItem[];
 	years: string[];
 	currentYear: string;
 	currentPage: number;
@@ -22,6 +24,7 @@ interface ProjectsClientPageProps {
 export default function ProjectsClientPage({
 	projects,
 	stories,
+	events,
 	years,
 	currentYear,
 	currentPage,
@@ -179,16 +182,35 @@ export default function ProjectsClientPage({
 				<Separator />
 
 				{/* Placeholders for future sections */}
-				<section
-					id="events"
-					className="scroll-mt-32 min-h-[300px] flex flex-col justify-center items-center text-center"
-				>
-					<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
-						Events
-					</h2>
-					<p className="text-muted-foreground max-w-lg">
-						Our impact metrics and reports will appear here.
-					</p>
+				<section id="events" className="scroll-mt-32">
+					<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+						<div>
+							<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
+								Upcoming Events & Training
+							</h2>
+							<p className="text-muted-foreground">
+								Join us in our upcoming workshops, seminars, and training
+								sessions.
+							</p>
+						</div>
+						<div className="hidden md:block">
+							{/* Future: Add "View All Events" button if needed */}
+						</div>
+					</div>
+
+					{events.length === 0 ? (
+						<div className="text-center py-20 bg-muted/30 rounded-lg">
+							<p className="text-muted-foreground">
+								No upcoming events scheduled.
+							</p>
+						</div>
+					) : (
+						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+							{events.map((event) => (
+								<EventCard key={event.id} event={event} />
+							))}
+						</div>
+					)}
 				</section>
 
 				<Separator />

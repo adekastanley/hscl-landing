@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 export interface ContentItem {
 	id: string;
-	type: "project" | "story";
+	type: "project" | "story" | "event";
 	title: string;
 	slug: string;
 	summary: string;
@@ -16,7 +16,7 @@ export interface ContentItem {
 }
 
 export async function getItems(
-	type: "project" | "story",
+	type: "project" | "story" | "event",
 	limit = 100,
 	page = 1,
 	filterYear?: string,
@@ -63,7 +63,7 @@ export async function getItemBySlug(slug: string): Promise<ContentItem | null> {
 
 		return {
 			id: row.id as string,
-			type: row.type as "project" | "story",
+			type: row.type as "project" | "story" | "event",
 			title: row.title as string,
 			slug: row.slug as string,
 			summary: row.summary as string,
@@ -78,7 +78,9 @@ export async function getItemBySlug(slug: string): Promise<ContentItem | null> {
 	}
 }
 
-export async function getYears(type: "project" | "story"): Promise<string[]> {
+export async function getYears(
+	type: "project" | "story" | "event",
+): Promise<string[]> {
 	try {
 		const result = await db.execute({
 			sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
@@ -109,6 +111,7 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 		});
 		revalidatePath("/admin/dashboard/projects");
 		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
 		return { id, ...data };
@@ -160,6 +163,7 @@ export async function updateItem(
 
 		revalidatePath("/admin/dashboard/projects");
 		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
 	} catch (error) {
@@ -176,6 +180,7 @@ export async function deleteItem(id: string) {
 		});
 		revalidatePath("/admin/dashboard/projects");
 		revalidatePath("/admin/dashboard/stories");
+		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
 	} catch (error) {

@@ -46,7 +46,7 @@ import {
 import Image from "next/image";
 
 interface ContentTableProps {
-	type: "project" | "story";
+	type: "project" | "story" | "event";
 }
 
 export function ContentTable({ type }: ContentTableProps) {
@@ -215,7 +215,11 @@ export function ContentTable({ type }: ContentTableProps) {
 		<div className="space-y-4">
 			<div className="flex justify-between items-center">
 				<h2 className="text-2xl font-bold tracking-tight capitalize">
-					{type === "project" ? "Projects" : "Success Stories"}
+					{type === "project"
+						? "Projects"
+						: type === "story"
+							? "Success Stories"
+							: "Events & Training"}
 				</h2>
 				<div className="flex items-center gap-2">
 					{type === "project" && (
@@ -238,7 +242,11 @@ export function ContentTable({ type }: ContentTableProps) {
 						className="bg-chemonics-teal hover:bg-chemonics-teal/90"
 					>
 						<Plus className="mr-2 h-4 w-4" /> Add{" "}
-						{type === "project" ? "Project" : "Story"}
+						{type === "project"
+							? "Project"
+							: type === "story"
+								? "Story"
+								: "Event"}
 					</Button>
 				</div>
 			</div>

@@ -17,6 +17,7 @@ import {
 	IconSearch,
 	IconSettings,
 	IconUsers,
+	IconCalendarEvent,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -74,6 +75,11 @@ const data = {
 			title: "Stories",
 			url: "/admin/dashboard/stories",
 			icon: IconReport,
+		},
+		{
+			title: "Events",
+			url: "/admin/dashboard/events",
+			icon: IconCalendarEvent,
 		},
 	],
 	navClouds: [

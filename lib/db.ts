@@ -51,7 +51,7 @@ const initDb = async () => {
 	await db.execute(`
       CREATE TABLE IF NOT EXISTS content_items (
         id TEXT PRIMARY KEY,
-        type TEXT CHECK(type IN ('project', 'story')) NOT NULL,
+        type TEXT CHECK(type IN ('project', 'story', 'event')) NOT NULL,
         title TEXT NOT NULL,
         slug TEXT UNIQUE NOT NULL,
         summary TEXT,

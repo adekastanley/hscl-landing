@@ -20,10 +20,11 @@ export default async function ProjectsPage({
 	const storiesLimit = 4; // Limit for Stories Grid
 
 	// Fetch Projects and Stories in parallel
-	const [projects, projectYears, stories] = await Promise.all([
+	const [projects, projectYears, stories, events] = await Promise.all([
 		getItems("project", limit, page, year),
 		getYears("project"),
 		getItems("story", storiesLimit, storiesPage),
+		getItems("event", 4), // Limit 4 for events
 	]);
 
 	const hasMoreProjects = projects.length === limit;
@@ -33,6 +34,7 @@ export default async function ProjectsPage({
 		<ProjectsClientPage
 			projects={projects}
 			stories={stories}
+			events={events}
 			years={projectYears}
 			currentYear={year}
 			currentPage={page}

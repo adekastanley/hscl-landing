@@ -143,10 +143,13 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
-		return { id, ...data };
+		return { success: true, data: { id, ...data } };
 	} catch (error) {
 		console.error("Failed to create item:", error);
-		throw error;
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
 	}
 }
 
@@ -192,7 +195,7 @@ export async function updateItem(
 			args.status = data.status;
 		}
 
-		if (fields.length === 0) return;
+		if (fields.length === 0) return { success: true };
 
 		args.id = id;
 		const sql = `UPDATE content_items SET ${fields.join(", ")} WHERE id = :id`;
@@ -204,9 +207,13 @@ export async function updateItem(
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
+		return { success: true };
 	} catch (error) {
 		console.error("Failed to update item:", error);
-		throw error;
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
 	}
 }
 
@@ -222,8 +229,12 @@ export async function deleteItem(id: string) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
+		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete item:", error);
-		throw error;
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Unknown error",
+		};
 	}
 }

@@ -195,18 +195,23 @@ export function ContentTable({ type }: ContentTableProps) {
 				status: type === "event" ? formData.status : undefined,
 			};
 
+			let res;
 			if (isEdit) {
-				await updateItem(formData.id, itemData);
-				toast.success("Updated successfully");
+				res = await updateItem(formData.id, itemData);
 			} else {
-				await createItem({
+				res = await createItem({
 					type,
 					...itemData,
 				});
-				toast.success("Created successfully");
 			}
-			setIsDialogOpen(false);
-			loadData();
+
+			if (res.success) {
+				toast.success(isEdit ? "Updated successfully" : "Created successfully");
+				setIsDialogOpen(false);
+				loadData();
+			} else {
+				toast.error(res.error || "Operation failed");
+			}
 		} catch (error) {
 			console.error(error);
 			const message =
@@ -221,10 +226,14 @@ export function ContentTable({ type }: ContentTableProps) {
 		if (!deleteId) return;
 		setIsLoading(true);
 		try {
-			await deleteItem(deleteId);
-			toast.success("Deleted successfully");
-			setDeleteId(null);
-			loadData();
+			const res = await deleteItem(deleteId);
+			if (res.success) {
+				toast.success("Deleted successfully");
+				setDeleteId(null);
+				loadData();
+			} else {
+				toast.error(res.error || "Failed to delete");
+			}
 		} catch (error) {
 			toast.error("Failed to delete");
 		} finally {

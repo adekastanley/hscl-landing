@@ -86,7 +86,7 @@ export default function TeamSection() {
 					>
 						<Link href={`/team/${member.id}`} className="block h-full">
 							<Card className="h-full overflow-hidden group hover:shadow-lg transition-all duration-300 border-chemonics-navy/5">
-								<div className="aspect-[4/3] bg-muted relative overflow-hidden">
+								<div className="aspect-4/3 bg-muted relative overflow-hidden">
 									<Avatar className="h-full w-full rounded-none">
 										<AvatarImage
 											src={member.image_url}

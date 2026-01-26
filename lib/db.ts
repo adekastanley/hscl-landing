@@ -106,6 +106,28 @@ const initDb = async () => {
 	} catch (e) {
 		// Column likely exists
 	}
+
+	// Migrations for content_items
+	try {
+		await db.execute("ALTER TABLE content_items ADD COLUMN category TEXT");
+	} catch (e) {
+		// Column likely exists
+	}
+	try {
+		await db.execute(
+			"ALTER TABLE content_items ADD COLUMN status TEXT DEFAULT 'open'",
+		);
+	} catch (e) {
+		// Column likely exists
+	}
+	// Just in case published_date was added later in some versions
+	try {
+		await db.execute(
+			"ALTER TABLE content_items ADD COLUMN published_date TEXT",
+		);
+	} catch (e) {
+		// Column likely exists
+	}
 };
 
 initDb();

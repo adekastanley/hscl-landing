@@ -1,0 +1,82 @@
+import db from "@/lib/db";
+import { version } from "process";
+
+export default async function DebugPage() {
+	let dbStatus = "Unknown";
+	let dbError = null;
+	let tables = [];
+
+	try {
+		// Test connection
+		const result = await db.execute("SELECT 1 as val");
+		dbStatus = result.rows[0].val === 1 ? "Connected" : "Unexpected Result";
+
+		// List tables to verify schema
+		const tablesRes = await db.execute(
+			"SELECT name FROM sqlite_master WHERE type='table'",
+		);
+		tables = tablesRes.rows.map((r) => r.name);
+	} catch (e: any) {
+		dbStatus = "Error";
+		dbError = e.message;
+	}
+
+	const envCheck = {
+		TURSO_DATABASE_URL: process.env.TURSO_DATABASE_URL
+			? "Set (Starts with " +
+				process.env.TURSO_DATABASE_URL.substring(0, 8) +
+				"...)"
+			: "MISSING (Using local file fallback?)",
+		TURSO_AUTH_TOKEN: process.env.TURSO_AUTH_TOKEN ? "Set" : "MISSING",
+		NODE_ENV: process.env.NODE_ENV,
+		NODE_VERSION: version,
+	};
+
+	return (
+		<div className="p-8 space-y-6 max-w-2xl mx-auto">
+			<h1 className="text-2xl font-bold">System Debug</h1>
+
+			<div className="border p-4 rounded bg-muted/20 space-y-2">
+				<h2 className="font-semibold">Environment Variables</h2>
+				<pre className="text-sm bg-black/10 p-2 rounded overflow-auto">
+					{JSON.stringify(envCheck, null, 2)}
+				</pre>
+				{!process.env.TURSO_DATABASE_URL && (
+					<div className="text-destructive font-bold mt-2">
+						CRITICAL: TURSO_DATABASE_URL is missing. Vercel cannot write to a
+						local file database.
+					</div>
+				)}
+			</div>
+
+			<div className="border p-4 rounded bg-muted/20 space-y-2">
+				<h2 className="font-semibold">Database Connection</h2>
+				<div className="flex items-center gap-2">
+					Status:
+					<span
+						className={
+							dbStatus === "Connected"
+								? "text-green-600 font-bold"
+								: "text-red-600 font-bold"
+						}
+					>
+						{dbStatus}
+					</span>
+				</div>
+				{dbError && (
+					<div className="text-red-500 text-sm bg-red-50 p-2 rounded">
+						Error: {dbError}
+					</div>
+				)}
+				<div className="mt-4">
+					<h3 className="font-medium">Tables Found:</h3>
+					<ul className="list-disc pl-5">
+						{tables.map((t) => (
+							<li key={String(t)}>{String(t)}</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</div>
+	);
+}

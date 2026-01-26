@@ -4,7 +4,7 @@ import { version } from "process";
 export default async function DebugPage() {
 	let dbStatus = "Unknown";
 	let dbError = null;
-	let tables = [];
+	let tables: string[] = [];
 
 	try {
 		// Test connection
@@ -15,7 +15,7 @@ export default async function DebugPage() {
 		const tablesRes = await db.execute(
 			"SELECT name FROM sqlite_master WHERE type='table'",
 		);
-		tables = tablesRes.rows.map((r) => r.name);
+		tables = tablesRes.rows.map((r) => r.name as string);
 	} catch (e: any) {
 		dbStatus = "Error";
 		dbError = e.message;

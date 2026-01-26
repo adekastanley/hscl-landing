@@ -5,6 +5,7 @@ import { FeaturedProjectsSection } from "@/components/pages/homepage/FeaturedPro
 import SectionOne from "@/components/pages/homepage/sectionOne";
 import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
+import Map from "@/components/pages/homepage/map";
 
 export default function Home() {
 	return (
@@ -15,6 +16,7 @@ export default function Home() {
 			<FocusAreasSection />
 			<ServicesSection />
 			<FeaturedProjectsSection />
+			<Map />
 			<ContactSection />
 		</div>
 	);

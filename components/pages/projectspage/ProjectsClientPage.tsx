@@ -205,9 +205,14 @@ export default function ProjectsClientPage({
 							</p>
 						</div>
 					) : (
-						<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+						<div className="flex overflow-x-auto gap-6 pb-6 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar snap-x">
 							{events.map((event) => (
-								<EventCard key={event.id} event={event} />
+								<div
+									key={event.id}
+									className="min-w-[300px] md:min-w-[350px] snap-center"
+								>
+									<EventCard event={event} />
+								</div>
 							))}
 						</div>
 					)}

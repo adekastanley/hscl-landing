@@ -208,7 +208,10 @@ export function ContentTable({ type }: ContentTableProps) {
 			setIsDialogOpen(false);
 			loadData();
 		} catch (error) {
-			toast.error("Operation failed");
+			console.error(error);
+			const message =
+				error instanceof Error ? error.message : "Operation failed";
+			toast.error(message);
 		} finally {
 			setIsLoading(false);
 		}

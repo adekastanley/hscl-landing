@@ -5,6 +5,7 @@ export default async function DebugPage() {
 	let dbStatus = "Unknown";
 	let dbError = null;
 	let tables: string[] = [];
+	let contentItemsColumns: any[] = [];
 
 	try {
 		// Test connection
@@ -16,6 +17,9 @@ export default async function DebugPage() {
 			"SELECT name FROM sqlite_master WHERE type='table'",
 		);
 		tables = tablesRes.rows.map((r) => r.name as string);
+
+		const columnsRes = await db.execute("PRAGMA table_info(content_items)");
+		contentItemsColumns = columnsRes.rows;
 	} catch (e: any) {
 		dbStatus = "Error";
 		dbError = e.message;
@@ -76,6 +80,19 @@ export default async function DebugPage() {
 						))}
 					</ul>
 				</div>
+				{contentItemsColumns.length > 0 && (
+					<div className="mt-4">
+						<h3 className="font-medium">Content Items Columns:</h3>
+						<ul className="list-disc pl-5 text-sm">
+							{contentItemsColumns.map((c: any) => (
+								<li key={c.name}>
+									{c.name} ({c.type}){" "}
+									{c.dflt_value ? `Default: ${c.dflt_value}` : ""}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
 			</div>
 		</div>
 	);

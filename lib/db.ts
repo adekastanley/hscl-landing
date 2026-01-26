@@ -70,8 +70,10 @@ const initDb = async () => {
       CREATE TABLE IF NOT EXISTS event_registrations (
         id TEXT PRIMARY KEY,
         event_id TEXT NOT NULL,
-        name TEXT NOT NULL,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
         email TEXT NOT NULL,
+        phone TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (event_id) REFERENCES content_items(id)
       )

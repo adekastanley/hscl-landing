@@ -47,6 +47,7 @@ import { getEventRegistrations } from "@/app/actions/events";
 import Image from "next/image";
 import { Users, Download, Lock, LockOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 interface ContentTableProps {
 	type: "project" | "story" | "event";
@@ -57,6 +58,7 @@ export function ContentTable({ type }: ContentTableProps) {
 	const [years, setYears] = useState<string[]>([]);
 	const [filterYear, setFilterYear] = useState<string>("all");
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 
 	// Dialog State
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -88,38 +90,6 @@ export function ContentTable({ type }: ContentTableProps) {
 	const inputFileRef = useRef<HTMLInputElement>(null);
 	const [isUploading, setIsUploading] = useState(false);
 
-	// Registration View State
-	const [viewRegId, setViewRegId] = useState<string | null>(null);
-	const [registrations, setRegistrations] = useState<
-		{ id: string; name: string; email: string; created_at: string }[]
-	>([]);
-
-	const handleViewRegistrations = async (eventId: string) => {
-		setViewRegId(eventId);
-		const regs = await getEventRegistrations(eventId);
-		setRegistrations(regs);
-	};
-
-	const downloadCSV = () => {
-		if (!registrations.length) return;
-		const headers = ["Name", "Email", "Date"];
-		const rows = registrations.map((r) => [
-			r.name,
-			r.email,
-			new Date(r.created_at).toLocaleDateString(),
-		]);
-		const csvContent =
-			"data:text/csv;charset=utf-8," +
-			[headers, ...rows].map((e) => e.join(",")).join("\n");
-		const encodedUri = encodeURI(csvContent);
-		const link = document.createElement("a");
-		link.setAttribute("href", encodedUri);
-		link.setAttribute("download", "registrations.csv");
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-	};
-
 	useEffect(() => {
 		loadData();
 	}, [filterYear]); // Reload when filter changes
@@ -142,8 +112,6 @@ export function ContentTable({ type }: ContentTableProps) {
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const title = e.target.value;
-		// Only auto-generate slug if not editing an existing item (or maybe we allow it?)
-		// Let's allow manual slug editing but auto-fill on creation title change
 		if (!isEdit) {
 			setFormData((prev) => ({ ...prev, title, slug: generateSlug(title) }));
 		} else {
@@ -265,6 +233,49 @@ export function ContentTable({ type }: ContentTableProps) {
 		}
 	};
 
+	const handleDownloadCSV = async (e: React.MouseEvent, eventId: string) => {
+		e.stopPropagation();
+		try {
+			toast.info("Preparing CSV...");
+			const regs = await getEventRegistrations(eventId);
+			if (!regs.length) {
+				toast.warning("No registrations found for this event.");
+				return;
+			}
+
+			const headers = ["First Name", "Last Name", "Email", "Phone", "Date"];
+			const rows = regs.map((r) => [
+				r.first_name,
+				r.last_name,
+				r.email,
+				r.phone,
+				new Date(r.created_at).toLocaleDateString(),
+			]);
+
+			const csvContent =
+				"data:text/csv;charset=utf-8," +
+				[headers, ...rows].map((e) => e.join(",")).join("\n");
+			const encodedUri = encodeURI(csvContent);
+			const link = document.createElement("a");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", `registrations-${eventId}.csv`);
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			toast.success("Download started");
+		} catch (error) {
+			toast.error("Failed to download CSV");
+		}
+	};
+
+	const handleRowClick = (item: ContentItem) => {
+		if (type === "event") {
+			router.push(`/admin/dashboard/events/${item.id}`);
+		} else {
+			openEdit(item);
+		}
+	};
+
 	return (
 		<div className="space-y-4">
 			<div className="flex justify-between items-center">
@@ -313,6 +324,7 @@ export function ContentTable({ type }: ContentTableProps) {
 							<TableHead>Title</TableHead>
 							<TableHead>Date</TableHead>
 							{type === "event" && <TableHead>Status</TableHead>}
+							{type === "event" && <TableHead>Registrants</TableHead>}
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -320,7 +332,7 @@ export function ContentTable({ type }: ContentTableProps) {
 						{items.length === 0 ? (
 							<TableRow>
 								<TableCell
-									colSpan={type === "event" ? 5 : 4}
+									colSpan={type === "event" ? 6 : 4}
 									className="h-24 text-center"
 								>
 									No items found.
@@ -328,7 +340,11 @@ export function ContentTable({ type }: ContentTableProps) {
 							</TableRow>
 						) : (
 							items.map((item) => (
-								<TableRow key={item.id}>
+								<TableRow
+									key={item.id}
+									className="cursor-pointer hover:bg-muted/50"
+									onClick={() => handleRowClick(item)}
+								>
 									<TableCell>
 										{item.image_url ? (
 											<div className="relative h-10 w-16 overflow-hidden rounded">
@@ -368,21 +384,32 @@ export function ContentTable({ type }: ContentTableProps) {
 											</Badge>
 										</TableCell>
 									)}
+									{type === "event" && (
+										<TableCell>
+											<div className="flex items-center gap-1 font-medium">
+												<Users className="h-3 w-3 text-muted-foreground" />
+												{item.registration_count || 0}
+											</div>
+										</TableCell>
+									)}
 									<TableCell className="text-right">
 										{type === "event" && (
 											<Button
 												variant="ghost"
 												size="icon"
-												title="View Registrations"
-												onClick={() => handleViewRegistrations(item.id)}
+												title="Download Registrations CSV"
+												onClick={(e) => handleDownloadCSV(e, item.id)}
 											>
-												<Users className="h-4 w-4" />
+												<Download className="h-4 w-4" />
 											</Button>
 										)}
 										<Button
 											variant="ghost"
 											size="icon"
-											onClick={() => openEdit(item)}
+											onClick={(e) => {
+												e.stopPropagation();
+												openEdit(item);
+											}}
 										>
 											<Pencil className="h-4 w-4" />
 										</Button>
@@ -390,7 +417,10 @@ export function ContentTable({ type }: ContentTableProps) {
 											variant="ghost"
 											size="icon"
 											className="text-destructive hover:bg-destructive/10"
-											onClick={() => setDeleteId(item.id)}
+											onClick={(e) => {
+												e.stopPropagation();
+												setDeleteId(item.id);
+											}}
 										>
 											<Trash2 className="h-4 w-4" />
 										</Button>
@@ -585,56 +615,6 @@ export function ContentTable({ type }: ContentTableProps) {
 							{isLoading ? "Deleting..." : "Delete"}
 						</Button>
 					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-
-			{/* Registrations Dialog */}
-			<Dialog
-				open={!!viewRegId}
-				onOpenChange={(open) => !open && setViewRegId(null)}
-			>
-				<DialogContent className="max-w-2xl">
-					<DialogHeader>
-						<DialogTitle className="flex justify-between items-center">
-							<span>Event Registrations</span>
-							<Button size="sm" variant="outline" onClick={downloadCSV}>
-								<Download className="mr-2 h-4 w-4" /> Export CSV
-							</Button>
-						</DialogTitle>
-					</DialogHeader>
-					<div className="max-h-[60vh] overflow-y-auto border rounded-md">
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Name</TableHead>
-									<TableHead>Email</TableHead>
-									<TableHead>Date</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{registrations.length === 0 ? (
-									<TableRow>
-										<TableCell
-											colSpan={3}
-											className="text-center py-8 text-muted-foreground"
-										>
-											No registrations yet.
-										</TableCell>
-									</TableRow>
-								) : (
-									registrations.map((reg) => (
-										<TableRow key={reg.id}>
-											<TableCell>{reg.name}</TableCell>
-											<TableCell>{reg.email}</TableCell>
-											<TableCell>
-												{new Date(reg.created_at).toLocaleDateString()}
-											</TableCell>
-										</TableRow>
-									))
-								)}
-							</TableBody>
-						</Table>
-					</div>
 				</DialogContent>
 			</Dialog>
 		</div>

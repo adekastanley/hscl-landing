@@ -14,6 +14,7 @@ export interface ContentItem {
 	published_date: string;
 	category?: "event" | "training";
 	status?: "open" | "closed";
+	registration_count?: number;
 	created_at: string;
 }
 
@@ -26,14 +27,20 @@ export async function getItems(
 	try {
 		const offset = (page - 1) * limit;
 		const args: any[] = [type];
-		let sql = "SELECT * FROM content_items WHERE type = ?";
+
+		let sql = `
+			SELECT c.*, 
+			(SELECT COUNT(*) FROM event_registrations WHERE event_id = c.id) as registration_count 
+			FROM content_items c 
+			WHERE c.type = ?
+		`;
 
 		if (filterYear && filterYear !== "all") {
-			sql += " AND strftime('%Y', published_date) = ?";
+			sql += " AND strftime('%Y', c.published_date) = ?";
 			args.push(filterYear);
 		}
 
-		sql += " ORDER BY published_date DESC LIMIT ? OFFSET ?";
+		sql += " ORDER BY c.published_date DESC LIMIT ? OFFSET ?";
 		args.push(limit, offset);
 
 		const result = await db.execute({ sql, args });
@@ -48,6 +55,7 @@ export async function getItems(
 			published_date: row.published_date as string,
 			category: row.category as "event" | "training" | undefined,
 			status: row.status as "open" | "closed" | undefined,
+			registration_count: Number(row.registration_count || 0),
 			created_at: String(row.created_at), // Ensure Date/Object is string
 		}));
 	} catch (error) {
@@ -56,11 +64,22 @@ export async function getItems(
 	}
 }
 
-export async function getItemBySlug(slug: string): Promise<ContentItem | null> {
+export async function getItemBySlug(
+	slug: string,
+	type?: "project" | "story" | "event",
+): Promise<ContentItem | null> {
 	try {
+		let sql = "SELECT * FROM content_items WHERE slug = ?";
+		const args = [slug];
+
+		if (type) {
+			sql += " AND type = ?";
+			args.push(type);
+		}
+
 		const result = await db.execute({
-			sql: "SELECT * FROM content_items WHERE slug = ? LIMIT 1",
-			args: [slug],
+			sql: sql + " LIMIT 1",
+			args,
 		});
 		const row = result.rows[0];
 		if (!row) return null;

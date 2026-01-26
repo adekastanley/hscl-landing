@@ -6,15 +6,19 @@ import { revalidatePath } from "next/cache";
 export interface EventRegistration {
 	id: string;
 	event_id: string;
-	name: string;
+	first_name: string;
+	last_name: string;
 	email: string;
+	phone: string;
 	created_at: string;
 }
 
 export async function registerForEvent(
 	eventId: string,
-	name: string,
+	firstName: string,
+	lastName: string,
 	email: string,
+	phone: string,
 ) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
@@ -42,10 +46,13 @@ export async function registerForEvent(
 		}
 
 		await db.execute({
-			sql: "INSERT INTO event_registrations (id, event_id, name, email) VALUES (?, ?, ?, ?)",
-			args: [id, eventId, name, email],
+			sql: "INSERT INTO event_registrations (id, event_id, first_name, last_name, email, phone) VALUES (:id, :eventId, :firstName, :lastName, :email, :phone)",
+			args: { id, eventId, firstName, lastName, email, phone },
 		});
 
+		// Explicit path revalidation might not be enough for dynamic subpages,
+		// but ensures the list count updates.
+		revalidatePath("/admin/dashboard/events");
 		return { success: true, message: "Registration successful!" };
 	} catch (error) {
 		console.error("Registration failed:", error);
@@ -67,12 +74,29 @@ export async function getEventRegistrations(
 		return result.rows.map((row) => ({
 			id: row.id as string,
 			event_id: row.event_id as string,
-			name: row.name as string,
+			first_name: row.first_name as string,
+			last_name: row.last_name as string,
 			email: row.email as string,
+			phone: row.phone as string,
 			created_at: String(row.created_at),
 		}));
 	} catch (error) {
 		console.error("Failed to get registrations:", error);
 		return [];
+	}
+}
+
+export async function getEventRegistrationCount(
+	eventId: string,
+): Promise<number> {
+	try {
+		const result = await db.execute({
+			sql: "SELECT COUNT(*) as count FROM event_registrations WHERE event_id = ?",
+			args: [eventId],
+		});
+		return Number(result.rows[0].count);
+	} catch (error) {
+		console.error("Failed to get registration count:", error);
+		return 0;
 	}
 }

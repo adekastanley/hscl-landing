@@ -32,6 +32,7 @@ export interface JobApplication {
 
 export async function getJobListings(openOnly = false): Promise<JobListing[]> {
 	try {
+		// ... (sql construction)
 		let sql = "SELECT * FROM job_listings WHERE status != 'deleted'";
 		if (openOnly) {
 			sql += " AND status = 'open'";
@@ -39,7 +40,8 @@ export async function getJobListings(openOnly = false): Promise<JobListing[]> {
 		sql += " ORDER BY created_at DESC";
 
 		const result = await db.execute(sql);
-		return result.rows as unknown as JobListing[];
+		// Map to plain objects to avoid "Only plain objects can be passed..." error
+		return result.rows.map((row) => ({ ...row })) as unknown as JobListing[];
 	} catch (error) {
 		console.error("Failed to get jobs:", error);
 		return [];
@@ -52,12 +54,15 @@ export async function getJobById(id: string): Promise<JobListing | null> {
 			sql: "SELECT * FROM job_listings WHERE id = ? LIMIT 1",
 			args: [id],
 		});
-		return (result.rows[0] as unknown as JobListing) || null;
+		return (result.rows[0]
+			? { ...result.rows[0] }
+			: null) as unknown as JobListing;
 	} catch (error) {
 		console.error("Failed to get job:", error);
 		return null;
 	}
 }
+// ... (restored functions)
 
 export async function createJob(
 	data: Omit<JobListing, "id" | "status" | "created_at">,
@@ -193,7 +198,6 @@ export async function submitApplication(data: {
 		throw error;
 	}
 }
-
 export async function getApplications(
 	jobId?: string,
 ): Promise<JobApplication[]> {
@@ -214,13 +218,11 @@ export async function getApplications(
 		sql += " ORDER BY ja.created_at DESC";
 
 		const result = await db.execute({ sql, args });
-		// Map 'job_current_status' to something the frontend might expect if we need to
-		// But cleaner to just update the type or cast it.
-		// Let's assume we update the interface definition below or cast it.
-		// Actually I need to update the interface to include job_current_status?
-		// Better: return it as is, frontend will see `job_current_status`.
-		return result.rows as unknown as JobApplication[];
+		return result.rows.map((row) => ({
+			...row,
+		})) as unknown as JobApplication[];
 	} catch (error) {
+		// ...
 		console.error("Failed to get applications:", error);
 		return [];
 	}

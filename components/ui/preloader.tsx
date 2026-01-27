@@ -28,8 +28,8 @@ export function Preloader() {
 					{/* Breathing Text Container */}
 					<motion.div
 						className="relative"
-						animate={{ scale: [1, 1.05, 1] }}
-						transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+						// animate={{ scale: [1, 1.05, 1] }}
+						// transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
 					>
 						{/* Background Faded Text */}
 						<h1 className="text-6xl md:text-9xl font-bold font-montserrat text-white/20">

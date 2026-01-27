@@ -182,8 +182,11 @@ export function Navbar() {
 							</HoverCard>
 						);
 					})}
-					<Button className="bg-chemonics-lime text-chemonics-navy font-bold hover:bg-chemonics-lime-hover rounded-full px-6">
-						Contact
+					<Button
+						asChild
+						className="bg-chemonics-lime text-chemonics-navy font-bold hover:bg-chemonics-lime-hover rounded-full px-6"
+					>
+						<Link href="/contact">Contact</Link>
 					</Button>
 				</div>
 

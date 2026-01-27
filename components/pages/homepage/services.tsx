@@ -14,7 +14,7 @@ around WASH, Climate
 change, Disease
 surveillance, and other
 Public Health concerns.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/two.jpg",
 	},
 	{
 		title: `Health Financing & Economic Reviews`,
@@ -28,7 +28,7 @@ evaluation of health
 programmes and
 public financial
 management.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/hf.jpg",
 	},
 	{
 		title: `Policy Analysis
@@ -39,7 +39,7 @@ the review and
 development of sector
 wide and program
 specific policies.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/policy.jpg",
 	},
 	{
 		title: `Monitoring, Evaluation,
@@ -54,7 +54,7 @@ development research
 and evaluation and
 capacity building for
 MERL.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/eval.jpg",
 	},
 	{
 		title: `Human Resources
@@ -67,7 +67,7 @@ building and temporary
 placement of
 consultants for defined
 projects/timelines.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/hr.jpg",
 	},
 	{
 		title: `Strengthening
@@ -84,7 +84,7 @@ improving coordination
 and integration of PSM
 for improved
 efficiency.`,
-		image: "/placeholder.svg?height=400&width=600",
+		image: "/assets/pro.jpg",
 	},
 ];
 

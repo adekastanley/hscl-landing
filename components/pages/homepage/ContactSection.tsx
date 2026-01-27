@@ -7,6 +7,7 @@ import {
 	Linkedin,
 	Instagram,
 } from "lucide-react";
+import { ContactForm } from "@/components/contact/ContactForm";
 
 export function ContactSection() {
 	return (
@@ -101,88 +102,7 @@ export function ContactSection() {
 							</p>
 						</div>
 
-						<form className="space-y-6">
-							<div>
-								<input
-									type="text"
-									placeholder="Your name"
-									className="w-full border-b border-chemonics-lime/20 bg-transparent py-2 text-white placeholder-white/60 outline-none focus:border-chemonics-lime"
-								/>
-							</div>
-							<div>
-								<input
-									type="email"
-									placeholder="you@organization.org"
-									className="w-full border-b border-chemonics-lime/20 bg-transparent py-2 text-white placeholder-white/60 outline-none focus:border-chemonics-lime"
-								/>
-							</div>
-							<div>
-								<textarea
-									rows={2}
-									placeholder="Tell us a little about the project..."
-									className="w-full resize-none border-b border-chemonics-lime/20 bg-transparent py-2 text-white placeholder-white/60 outline-none focus:border-chemonics-lime"
-								/>
-							</div>
-
-							<div className="pt-4">
-								<p className="mb-4 font-semibold text-white">
-									How can we help?
-								</p>
-								<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">
-											Health Systems Strengthening
-										</span>
-									</label>
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">Monitoring & Evaluation</span>
-									</label>
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">Public Health Policy</span>
-									</label>
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">Research</span>
-									</label>
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">Governance</span>
-									</label>
-									<label className="flex items-center gap-3 cursor-pointer">
-										<input
-											type="checkbox"
-											className="h-5 w-5 rounded border-chemonics-lime text-chemonics-lime focus:ring-chemonics-lime"
-										/>
-										<span className="text-white">Other</span>
-									</label>
-								</div>
-							</div>
-
-							<button
-								type="submit"
-								className="mt-8 w-full rounded-lg bg-chemonics-lime py-4 font-bold text-white transition-opacity hover:opacity-90"
-							>
-								Send Message
-							</button>
-						</form>
+						<ContactForm theme="dark" />
 					</div>
 				</div>
 			</div>

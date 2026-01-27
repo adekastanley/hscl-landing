@@ -1,16 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import {
 	Facebook,
 	Twitter,
@@ -20,6 +10,7 @@ import {
 	Phone,
 	MapPin,
 } from "lucide-react";
+import { ContactForm } from "@/components/contact/ContactForm";
 
 export default function ContactPage() {
 	return (
@@ -48,82 +39,7 @@ export default function ContactPage() {
 							<h2 className="text-xl font-semibold mb-8 text-gray-800">
 								Send a Message
 							</h2>
-							<form className="space-y-8">
-								<div className="grid md:grid-cols-2 gap-8">
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-											Name (Required)
-										</label>
-										<Input
-											placeholder="First Name"
-											className="border-0 border-b border-gray-300 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-chemonics-navy placeholder:text-gray-300 text-lg"
-										/>
-									</div>
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-500 uppercase tracking-wider opacity-0 md:opacity-100">
-											Last Name
-										</label>
-										<Input
-											placeholder="Last Name"
-											className="border-0 border-b border-gray-300 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-chemonics-navy placeholder:text-gray-300 text-lg"
-										/>
-									</div>
-								</div>
-
-								<div className="space-y-2">
-									<label className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-										Email (Required)
-									</label>
-									<Input
-										type="email"
-										placeholder="you@company.com"
-										className="border-0 border-b border-gray-300 rounded-none px-0 py-2 focus-visible:ring-0 focus-visible:border-chemonics-navy placeholder:text-gray-300 text-lg"
-									/>
-								</div>
-
-								<div className="space-y-2">
-									<label className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-										Service Interest
-									</label>
-									<Select>
-										<SelectTrigger className="border-0 border-b border-gray-300 rounded-none px-0 py-2 focus:ring-0 focus:border-chemonics-navy text-lg text-gray-500 font-normal shadow-none">
-											<SelectValue placeholder="Select a service..." />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="health-systems">
-												Health Systems Strengthening
-											</SelectItem>
-											<SelectItem value="monitoring">
-												Monitoring & Evaluation
-											</SelectItem>
-											<SelectItem value="public-health">
-												Public Health Policy
-											</SelectItem>
-											<SelectItem value="research">Research</SelectItem>
-											<SelectItem value="other">Other</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-
-								<div className="space-y-2">
-									<label className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-										Project Description
-									</label>
-									<Textarea
-										placeholder="Tell us about your project..."
-										className="border-0 border-b border-gray-300 rounded-none px-0 py-2 resize-none min-h-[100px] focus-visible:ring-0 focus-visible:border-chemonics-navy placeholder:text-gray-300 text-lg"
-									/>
-								</div>
-
-								<div className="pt-4">
-									<Button
-										size="lg"
-										className="bg-chemonics-navy text-white rounded-full px-10 py-6 text-lg font-bold hover:bg-chemonics-navy-light transition-all"
-									>
-										Submit Message
-									</Button>
-								</div>
-							</form>
+							<ContactForm theme="light" />
 						</div>
 					</motion.div>
 

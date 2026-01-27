@@ -7,19 +7,24 @@ import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
 import Map from "@/components/pages/homepage/map";
 // import Clients from "@/components/pages/homepage/clients";
-import FocusAreasSection from "@/components/pages/homepage/focus";
+// import FocusAreasSection from "@/components/pages/homepage/focus";
 
-export default function Home() {
+import { getItems } from "@/app/actions/content";
+
+export default async function Home() {
+	const projects = await getItems("project", 3);
+	const stories = await getItems("story", 3);
+
 	return (
-		<div className="font-montserrat bg-chemonics-navy-light min-h-screen text-white">
+		<div className="flex min-h-screen flex-col font-sans">
 			<HeroSection />
 			<SectionOne />
 			{/* <FocusAreasSection /> */}
 			<MissionSection />
 
 			<ServicesSection />
-			<FeaturedProjectsSection />
-			<InsightsSection />
+			<FeaturedProjectsSection projects={projects} />
+			<InsightsSection stories={stories} />
 			<Map />
 			<ContactSection />
 		</div>

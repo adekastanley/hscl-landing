@@ -5,36 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ContentItem } from "@/app/actions/content";
 
-const insights = [
-	{
-		id: 1,
-		title:
-			"Data-Driven Decisions: How Electronic Medical Records are Saving Lives",
-		category: "Monitoring & Evaluation",
-		date: "Jan 24, 2026",
-		image: "/assets/pro.jpg",
-		link: "/projects/emr-success",
-	},
-	{
-		id: 2,
-		title: "Community Health Workers: The Unsung Heroes of Polio Eradication",
-		category: "Public Health",
-		date: "Jan 18, 2026",
-		image: "/assets/hr.jpg",
-		link: "/projects/community-health",
-	},
-	{
-		id: 3,
-		title: "Policy Brief: Sustainable Financing for Universal Health Coverage",
-		category: "Health Financing",
-		date: "Jan 10, 2026",
-		image: "/assets/hf.jpg",
-		link: "/projects/health-financing",
-	},
-];
+interface InsightsSectionProps {
+	stories: ContentItem[];
+}
 
-export function InsightsSection() {
+export function InsightsSection({ stories }: InsightsSectionProps) {
 	return (
 		<section className="py-24 bg-chemonics-navy text-white overflow-hidden">
 			<div className="container mx-auto px-6 max-w-7xl">
@@ -58,7 +35,7 @@ export function InsightsSection() {
 						className="border-chemonics-lime text-chemonics-lime hover:bg-chemonics-lime hover:text-chemonics-navy rounded-full"
 						asChild
 					>
-						<Link href="/projects">View All Insights</Link>
+						<Link href="/success-stories">View All Insights</Link>
 					</Button>
 				</motion.div>
 
@@ -113,7 +90,7 @@ export function InsightsSection() {
 
 					{/* Sidebar List - Spans 5 cols */}
 					<div className="lg:col-span-5 flex flex-col justify-between space-y-8 lg:space-y-0">
-						{insights.map((item, index) => (
+						{stories.map((item, index) => (
 							<motion.div
 								key={item.id}
 								initial={{ opacity: 0, x: 30 }}
@@ -124,7 +101,7 @@ export function InsightsSection() {
 							>
 								<div className="relative w-32 aspect-square shrink-0 rounded-xl overflow-hidden bg-gray-800">
 									<Image
-										src={item.image}
+										src={item.image_url || "/assets/three.jpg"}
 										alt={item.title}
 										fill
 										className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -133,13 +110,17 @@ export function InsightsSection() {
 								<div className="space-y-2">
 									<div className="flex items-center gap-3 text-xs">
 										<span className="text-chemonics-lime font-bold uppercase tracking-wider">
-											{item.category}
+											Success Story
 										</span>
 										<span className="text-gray-500">•</span>
-										<span className="text-gray-400">{item.date}</span>
+										<span className="text-gray-400">
+											{new Date(item.published_date).toLocaleDateString()}
+										</span>
 									</div>
 									<h4 className="text-lg font-bold font-montserrat leading-snug group-hover:text-chemonics-lime transition-colors line-clamp-3">
-										<Link href={item.link}>{item.title}</Link>
+										<Link href={`/success-stories/${item.slug}`}>
+											{item.title}
+										</Link>
 									</h4>
 								</div>
 							</motion.div>

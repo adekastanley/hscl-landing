@@ -117,6 +117,7 @@ export default function GeneralApplicationPage() {
 				email: values.email,
 				resume_url: blob.url,
 				role_interest: values.role_interest,
+				message: values.message,
 			});
 
 			toast("Application Submitted", {

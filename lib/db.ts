@@ -42,6 +42,7 @@ const initDb = async () => {
         email TEXT NOT NULL,
         resume_url TEXT NOT NULL,
         role_interest TEXT,
+        message TEXT,
         status TEXT CHECK(status IN ('pending', 'review', 'accepted', 'rejected', 'reserved')) DEFAULT 'pending',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (job_id) REFERENCES job_listings(id)
@@ -134,6 +135,13 @@ const initDb = async () => {
 		await db.execute(
 			"ALTER TABLE job_applications ADD COLUMN role_interest TEXT",
 		);
+	} catch (e) {
+		// Column likely exists
+	}
+
+	// Migration for message in job_applications
+	try {
+		await db.execute("ALTER TABLE job_applications ADD COLUMN message TEXT");
 	} catch (e) {
 		// Column likely exists
 	}

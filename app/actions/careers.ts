@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import db, { ensureDbInitialized } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export interface JobListing {
@@ -20,6 +20,7 @@ export interface JobApplication {
 	email: string;
 	resume_url: string;
 	role_interest?: string;
+	message?: string;
 	status: "pending" | "review" | "accepted" | "rejected" | "reserved";
 	created_at: string;
 	job_title?: string; // For display
@@ -156,7 +157,9 @@ export async function submitApplication(data: {
 	email: string;
 	resume_url: string;
 	role_interest?: string;
+	message?: string;
 }) {
+	await ensureDbInitialized();
 	const id = Math.random().toString(36).substring(2, 15);
 
 	// Ensure the job exists if it's the general application
@@ -181,7 +184,7 @@ export async function submitApplication(data: {
 
 	try {
 		await db.execute({
-			sql: "INSERT INTO job_applications (id, job_id, applicant_name, email, resume_url, role_interest, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')",
+			sql: "INSERT INTO job_applications (id, job_id, applicant_name, email, resume_url, role_interest, message, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')",
 			args: [
 				id,
 				data.job_id,
@@ -189,6 +192,7 @@ export async function submitApplication(data: {
 				data.email,
 				data.resume_url,
 				data.role_interest || null,
+				data.message || null,
 			],
 		});
 		revalidatePath("/admin/dashboard/careers");

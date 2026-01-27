@@ -391,6 +391,17 @@ export function GeneralApplicationsTable() {
 									Status
 								</div>
 								<div>{getStatusBadge(viewApp.status)}</div>
+
+								{viewApp.message && (
+									<>
+										<div className="font-medium text-sm text-muted-foreground col-span-2 mt-2">
+											Message
+										</div>
+										<div className="col-span-2 text-sm bg-muted/50 p-3 rounded-md whitespace-pre-wrap">
+											{viewApp.message}
+										</div>
+									</>
+								)}
 							</div>
 						</div>
 					)}

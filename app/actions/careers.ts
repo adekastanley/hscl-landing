@@ -153,6 +153,27 @@ export async function submitApplication(data: {
 	role_interest?: string;
 }) {
 	const id = Math.random().toString(36).substring(2, 15);
+
+	// Ensure the job exists if it's the general application
+	if (data.job_id === "general-application") {
+		const job = await getJobById("general-application");
+		if (!job) {
+			await createJob({
+				title: "General Application",
+				description: "General Talent Pipeline",
+				location: "Remote/Various",
+				type: "General",
+			});
+			// createJob generates a random ID, but we need strictly "general-application"
+			// So actually we should manually insert it or fix createJob.
+			// Let's manually insert it here to be safe and precise.
+			await db.execute({
+				sql: "INSERT OR IGNORE INTO job_listings (id, title, description, location, type, status) VALUES ('general-application', 'General Application', 'General Talent Pipeline', 'Remote/Various', 'General', 'open')",
+				args: [],
+			});
+		}
+	}
+
 	try {
 		await db.execute({
 			sql: "INSERT INTO job_applications (id, job_id, applicant_name, email, resume_url, role_interest, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')",

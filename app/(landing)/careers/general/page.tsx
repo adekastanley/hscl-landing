@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -45,12 +45,12 @@ import { useRouter } from "next/navigation";
 // Let's do "Link to CV/Resume (Google Drive, Dropbox, etc.)" to be safe.
 
 const formSchema = z.object({
-	name: z.string().min(2, "Name must be at least 2 characters"),
+	first_name: z.string().min(2, "First name must be at least 2 characters"),
+	last_name: z.string().min(2, "Last name must be at least 2 characters"),
 	email: z.string().email("Invalid email address"),
 	role_interest: z.string().min(1, "Please select a role of interest"),
-	resume_url: z
-		.string()
-		.url("Please enter a valid URL (e.g., LinkedIn, Google Drive)"),
+	// resume_url will be handled separately via file upload logic, but we can keep it in schema if we want to validte it exists
+	// OR we just validate file presence manually like in JobApplicationForm. Let's keep it clean.
 	message: z.string().optional(),
 });
 
@@ -68,14 +68,15 @@ const roles = [
 export default function GeneralApplicationPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
+	const inputFileRef = useRef<HTMLInputElement>(null);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			name: "",
+			first_name: "",
+			last_name: "",
 			email: "",
 			role_interest: "",
-			resume_url: "",
 			message: "",
 		},
 	});
@@ -83,11 +84,38 @@ export default function GeneralApplicationPage() {
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		setIsSubmitting(true);
 		try {
+			// 1. Handle File Upload
+			if (!inputFileRef.current?.files?.length) {
+				toast.error("Please upload your resume (PDF)");
+				setIsSubmitting(false);
+				return;
+			}
+
+			const file = inputFileRef.current.files[0];
+			if (file.size > 5 * 1024 * 1024) {
+				// 5MB
+				toast.error("File too large (max 5MB)");
+				setIsSubmitting(false);
+				return;
+			}
+
+			const uploadResponse = await fetch(`/api/upload?filename=${file.name}`, {
+				method: "POST",
+				body: file,
+			});
+
+			if (!uploadResponse.ok) {
+				throw new Error("Upload failed");
+			}
+
+			const blob = await uploadResponse.json();
+
+			// 2. Submit Application
 			await submitApplication({
 				job_id: "general-application", // Special ID for general applications
-				applicant_name: values.name,
+				applicant_name: `${values.first_name} ${values.last_name}`,
 				email: values.email,
-				resume_url: values.resume_url,
+				resume_url: blob.url,
 				role_interest: values.role_interest,
 			});
 
@@ -97,6 +125,9 @@ export default function GeneralApplicationPage() {
 			});
 
 			form.reset();
+			if (inputFileRef.current) {
+				inputFileRef.current.value = "";
+			}
 			// Optionally redirect
 			// router.push("/careers");
 		} catch (error) {
@@ -127,19 +158,34 @@ export default function GeneralApplicationPage() {
 				<div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border">
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Full Name</FormLabel>
-										<FormControl>
-											<Input placeholder="John Doe" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<FormField
+									control={form.control}
+									name="first_name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>First Name</FormLabel>
+											<FormControl>
+												<Input placeholder="Jane" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="last_name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Last Name</FormLabel>
+											<FormControl>
+												<Input placeholder="Doe" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 
 							<FormField
 								control={form.control}
@@ -187,27 +233,22 @@ export default function GeneralApplicationPage() {
 								)}
 							/>
 
-							<FormField
-								control={form.control}
-								name="resume_url"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Resume / Portfolio Link</FormLabel>
-										<FormControl>
-											<Input
-												placeholder="https://linkedin.com/in/..."
-												{...field}
-											/>
-										</FormControl>
-										<p className="text-xs text-muted-foreground">
-											Please provide a link to your LinkedIn profile, personal
-											website, or a cloud storage link (Google Drive, Dropbox)
-											to your CV.
-										</p>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							{/* Manual File Input */}
+							<div className="space-y-2">
+								<FormLabel>Resume (PDF)</FormLabel>
+								<div className="flex items-center gap-2">
+									<Input
+										type="file"
+										ref={inputFileRef}
+										accept=".pdf"
+										required
+										className="cursor-pointer"
+									/>
+								</div>
+								<p className="text-xs text-muted-foreground">
+									Max file size: 5MB. PDF only.
+								</p>
+							</div>
 
 							<FormField
 								control={form.control}

@@ -37,7 +37,8 @@
 	--color-card-foreground: hsl(var(--card-foreground));
 
 	/* Chemonics Colors */
-	--color-chemonics-navy: #181d27;
+	--color-chemonics-navy: #001d3d;
+	/* --color-chemonics-navy: #181d27; */
 	--color-chemonics-navy-light: #2a3346;
 	--color-chemonics-navy-dark: #0d253f;
 	--color-chemonics-lime: #3fa34d;
@@ -218,10 +219,10 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
 }

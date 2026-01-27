@@ -7,7 +7,7 @@ export function HeroSection() {
 	// const heroVideo = data?.items[0].fields.background.fields.file;
 	// console.log(heroVideo);
 	return (
-		<main className="relative h-[85vh] w-full overflow-hidden bg-chemonics-navy-dark min-h-screen">
+		<main className="relative h-[85vh]  w-full overflow-hidden bg-chemonics-navy-dark min-h-screen">
 			{/* Background Image/Video */}
 			<div className="absolute inset-0 z-0">
 				<video
@@ -34,8 +34,8 @@ export function HeroSection() {
 
 			{/* Chevron/Arrow Content Container */}
 
-			<div className="relative z-10 flex h-full w-full items-center max-sm:from-chemonics-navy/10 bg-gradient-to-r from-chemonics-navy/95 to-chemonics-navy/90 md:w-[65%] md:[clip-path:polygon(0_0,_100%_0,_85%_50%,_100%_100%,_0_100%)] lg:w-[55%]">
-				<div className="px-6 py-12 md:px-16 lg:px-24">
+			<div className="relative  z-10 flex h-full w-full items-center max-sm:from-chemonics-navy/10 bg-linear-to-r from-chemonics-navy/95 to-chemonics-navy/90 md:w-[65%] md:[clip-path:polygon(0_0,_100%_0,_85%_50%,_100%_100%,_0_100%)] lg:w-[55%]">
+				<div className=" px-6 py-12 md:px-16 lg:px-24">
 					<h1 className="mb-6 font-montserrat text-5xl font-bold leading-tight text-white md:text-7xl">
 						Providing Innovative <br />
 						<span className="text-chemonics-lime">Solutions</span> for Health &

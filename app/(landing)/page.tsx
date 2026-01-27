@@ -6,6 +6,7 @@ import SectionOne from "@/components/pages/homepage/sectionOne";
 import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
 import Map from "@/components/pages/homepage/map";
+import Clients from "@/components/pages/homepage/clients";
 
 export default function Home() {
 	return (
@@ -13,6 +14,7 @@ export default function Home() {
 			<HeroSection />
 			<SectionOne />
 			<MissionSection />
+			<Clients />
 			<FocusAreasSection />
 			<ServicesSection />
 			<FeaturedProjectsSection />

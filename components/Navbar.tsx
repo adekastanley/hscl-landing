@@ -73,21 +73,21 @@ const pcMenu = [
 		},
 	},
 	{
-		title: "In Focus",
-		link: "/projects",
+		title: "Our People",
+		link: "/our-people",
 		hoverContentProps: {
 			overview: {
-				title: "In Focus",
+				title: "Our People",
 				description:
-					"Explore our latest projects, success stories, and thought leadership articles from the field.",
+					"Explore our team, success stories, and upcoming events from the field.",
 			},
 			links: {
 				title: "LATEST UPDATES",
 				items: [
-					{ label: "All Projects", href: "/projects#projects" },
-					{ label: "Success Stories", href: "/projects#stories" },
-					{ label: "Events", href: "/projects#events" },
-					{ label: "News", href: "/projects#impact" },
+					{ label: "Our Projects", href: "/our-work#projects" },
+					{ label: "Careers", href: "/careers" },
+					{ label: "Success Stories", href: "/our-people#stories" },
+					{ label: "Events", href: "/our-people#events" },
 				],
 			},
 			inFocus: {

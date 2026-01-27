@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JobListingsTable } from "@/components/admin/careers/JobListingsTable";
 import { JobApplicationsTable } from "@/components/admin/careers/JobApplicationsTable";
+import { GeneralApplicationsTable } from "@/components/admin/careers/GeneralApplicationsTable";
 
 export default function CareersPage() {
 	return (
@@ -19,13 +20,17 @@ export default function CareersPage() {
 			<Tabs defaultValue="listings" className="space-y-4">
 				<TabsList>
 					<TabsTrigger value="listings">Job Listings</TabsTrigger>
-					<TabsTrigger value="applications">Applications</TabsTrigger>
+					<TabsTrigger value="applications">Job Applications</TabsTrigger>
+					<TabsTrigger value="general">General Applications</TabsTrigger>
 				</TabsList>
 				<TabsContent value="listings">
 					<JobListingsTable />
 				</TabsContent>
 				<TabsContent value="applications">
 					<JobApplicationsTable />
+				</TabsContent>
+				<TabsContent value="general">
+					<GeneralApplicationsTable />
 				</TabsContent>
 			</Tabs>
 		</div>

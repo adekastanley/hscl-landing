@@ -19,6 +19,7 @@ export interface JobApplication {
 	applicant_name: string;
 	email: string;
 	resume_url: string;
+	role_interest?: string;
 	status: "pending" | "review" | "accepted" | "rejected" | "reserved";
 	created_at: string;
 	job_title?: string; // For display
@@ -149,12 +150,20 @@ export async function submitApplication(data: {
 	applicant_name: string;
 	email: string;
 	resume_url: string;
+	role_interest?: string;
 }) {
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
 		await db.execute({
-			sql: "INSERT INTO job_applications (id, job_id, applicant_name, email, resume_url, status) VALUES (?, ?, ?, ?, ?, 'pending')",
-			args: [id, data.job_id, data.applicant_name, data.email, data.resume_url],
+			sql: "INSERT INTO job_applications (id, job_id, applicant_name, email, resume_url, role_interest, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')",
+			args: [
+				id,
+				data.job_id,
+				data.applicant_name,
+				data.email,
+				data.resume_url,
+				data.role_interest || null,
+			],
 		});
 		revalidatePath("/admin/dashboard/careers");
 		return { id };

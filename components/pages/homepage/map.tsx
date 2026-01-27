@@ -71,20 +71,20 @@ export default function Map() {
 											}}
 											style={{
 												default: {
-													fill: isActive ? "#D1282E" : "#E5E7EB", // Chemonics Red or similiar vs Gray-200
+													fill: isActive ? "#000" : "#E5E7EB", // Chemonics Red or similiar vs Gray-200
 													outline: "none",
 													stroke: "#ffffff",
 													strokeWidth: 0.5,
 												},
 												hover: {
-													fill: isActive ? "#A81E23" : "#D1D5DB", // Darker Red vs Darker Gray
+													fill: isActive ? "#4c956c" : "#D1D5DB", // Darker Red vs Darker Gray
 													outline: "none",
 													stroke: "#ffffff",
 													strokeWidth: 0.75,
 													cursor: isActive ? "pointer" : "default",
 												},
 												pressed: {
-													fill: isActive ? "#7F161A" : "#9CA3AF",
+													fill: isActive ? "#16425b" : "#9CA3AF",
 													outline: "none",
 												},
 											}}
@@ -99,7 +99,7 @@ export default function Map() {
 					{/* Legend */}
 					<div className="absolute bottom-6 left-6 bg-white/90 p-4 rounded-lg shadow-sm border text-xs">
 						<div className="flex items-center gap-2 mb-2">
-							<div className="w-3 h-3 bg-[#D1282E] rounded-full"></div>
+							<div className="w-3 h-3 bg-[#4c956c] rounded-full"></div>
 							<span className="font-medium text-chemonics-navy">
 								Active Presence
 							</span>

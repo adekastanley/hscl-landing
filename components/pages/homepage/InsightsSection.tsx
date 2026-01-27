@@ -35,7 +35,7 @@ export function InsightsSection({ stories }: InsightsSectionProps) {
 						className="border-chemonics-lime text-chemonics-lime hover:bg-chemonics-lime hover:text-chemonics-navy rounded-full"
 						asChild
 					>
-						<Link href="/success-stories">View All Insights</Link>
+						<Link href="/our-people">View All Insights</Link>
 					</Button>
 				</motion.div>
 

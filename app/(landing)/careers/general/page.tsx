@@ -27,23 +27,6 @@ import { toast } from "sonner";
 import { Loader2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Since we don't have a real file upload service setup in this context yet (like Uploadthing or S3),
-// we will simulate file upload or use a placeholder.
-// Ideally, this should upload to a storage bucket and return a URL.
-// For now, let's assume the user inputs a URL or we handle a basic file read to base64 (not recommended for large files)
-// OR we just ask for a Link to Resume (Google Drive, LinkedIn, etc.) as often easier without complex backend.
-// User requirement: "submit there cv".
-// Let's implement a simple file input that converts to base64 string for now to store in DB text field,
-// or better, just a "Link to Resume" field if simple.
-// BUT user said "submit there cv", implying upload.
-// Given constraints, I will implement a "Resume Link" field as fallback if no storage provider.
-// Wait, I can't easily add a storage provider now. I'll stick to "Link to Resume / Portfolio" for simplicity and robustness,
-// or try to implement a simple local file upload if I had a route for it.
-// Let's go with "Resume URL" (Link) for now to ensure it works reliably without extra infrastructure.
-// Wait, if I use a "file" input, I need an upload handler.
-// I'll stick to "Link" for safety, OR if I really want to impress, I'd need an upload route.
-// Let's do "Link to CV/Resume (Google Drive, Dropbox, etc.)" to be safe.
-
 const formSchema = z.object({
 	first_name: z.string().min(2, "First name must be at least 2 characters"),
 	last_name: z.string().min(2, "Last name must be at least 2 characters"),

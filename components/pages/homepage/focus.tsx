@@ -5,24 +5,27 @@ import { motion, useScroll, useTransform } from "motion/react";
 const focusAreas = [
 	{
 		year: "01",
-		title: "Health Systems Strengthening",
+		title: "Sustainable Systems",
 		description:
-			"Building resilient systems for sustainable healthcare delivery.",
+			"Designing resilient health infrastructures that ensure long-term access, equity, and stability for communities.",
 	},
 	{
 		year: "02",
-		title: "Monitoring, Evaluation & Research",
-		description: "Data-driven insights to inform policy and practice.",
+		title: "Data-Driven Insight",
+		description:
+			"Leveraging advanced analytics and rigorous research to guide policy decisions and maximize program impact.",
 	},
 	{
 		year: "03",
-		title: "Public Health Interventions",
-		description: "Targeted programs for HIV/AIDS, Malaria, and TB.",
+		title: "Workforce Empowerment",
+		description:
+			"Cultivating a skilled, adaptable health workforce capable of meeting evolving public health challenges.",
 	},
 	{
 		year: "04",
-		title: "Human Resources for Health",
-		description: "Capacity building and workforce development for the sector.",
+		title: "Community-Centric Action",
+		description:
+			"Delivering targeted interventions that prioritize local needs and foster lasting behavioral change.",
 	},
 ];
 

@@ -7,7 +7,7 @@ import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
 import Map from "@/components/pages/homepage/map";
 // import Clients from "@/components/pages/homepage/clients";
-// import FocusAreasSection from "@/components/pages/homepage/focus";
+import FocusAreasSection from "@/components/pages/homepage/focus";
 
 import { getItems } from "@/app/actions/content";
 
@@ -19,7 +19,7 @@ export default async function Home() {
 		<div className="flex min-h-screen flex-col font-sans">
 			<HeroSection />
 			<SectionOne />
-			{/* <FocusAreasSection /> */}
+			<FocusAreasSection />
 			<MissionSection />
 
 			<ServicesSection />

@@ -212,7 +212,7 @@ export function TeamManager({
 					<TableHeader>
 						<TableRow>
 							<TableHead>Member</TableHead>
-							<TableHead>Role</TableHead>
+							<TableHead className="hidden md:table-cell">Role</TableHead>
 							<TableHead className="hidden md:table-cell">Bio</TableHead>
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
@@ -233,10 +233,13 @@ export function TeamManager({
 												<AvatarImage src={member.image_url} alt={member.name} />
 												<AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
 											</Avatar>
-											<div>
+											<div className="flex flex-col gap-1">
 												<div className="font-bold">{member.name}</div>
-												<div className="text-xs text-muted-foreground md:hidden">
+												<div className="text-sm text-muted-foreground md:hidden">
 													{member.role}
+												</div>
+												<div className="text-xs text-muted-foreground/80 md:hidden line-clamp-2">
+													{member.bio}
 												</div>
 											</div>
 										</div>

@@ -24,7 +24,8 @@ export async function getTeamMembers(category?: string): Promise<TeamMember[]> {
 		const args = category ? [category] : [];
 
 		const result = await db.execute({ sql, args });
-		return result.rows as unknown as TeamMember[];
+		// Ensure simplified objects are returned to avoid "Only plain objects..." error
+		return JSON.parse(JSON.stringify(result.rows)) as TeamMember[];
 	} catch (error) {
 		console.error("Database error:", error);
 		return [];
@@ -39,7 +40,8 @@ export async function getTeamMemberById(
 			sql: "SELECT * FROM team_members WHERE id = ? LIMIT 1",
 			args: [id],
 		});
-		return (result.rows[0] as unknown as TeamMember) || null;
+		const item = result.rows[0];
+		return item ? (JSON.parse(JSON.stringify(item)) as TeamMember) : null;
 	} catch (error) {
 		console.error("Database error:", error);
 		return null;

@@ -26,7 +26,7 @@ const focusAreas = [
 	},
 ];
 
-export function FocusAreasSection() {
+export default function FocusAreasSection() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { scrollYProgress } = useScroll({
 		target: containerRef,

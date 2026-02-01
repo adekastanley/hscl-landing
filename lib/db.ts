@@ -205,6 +205,26 @@ const initDb = async () => {
 	} catch (error) {
 		console.error("Migration for people_story failed:", error);
 	}
+
+	// Active Countries & Projects for Map
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS active_countries (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      code TEXT, -- ISO code if needed for map matching, though name might suffice if standardized
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS active_country_projects (
+      id TEXT PRIMARY KEY,
+      country_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (country_id) REFERENCES active_countries(id) ON DELETE CASCADE
+    )
+  `);
 };
 
 let initPromise: Promise<void> | null = null;

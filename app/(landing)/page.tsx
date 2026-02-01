@@ -11,9 +11,12 @@ import FocusAreasSection from "@/components/pages/homepage/focus";
 
 import { getItems } from "@/app/actions/content";
 
+import { getActiveCountries } from "@/actions/landing/map";
+
 export default async function Home() {
 	const projects = await getItems("project", 3);
 	const stories = await getItems("story", 3);
+	const activeCountries = await getActiveCountries();
 
 	return (
 		<div className="flex min-h-screen flex-col font-sans">
@@ -25,7 +28,7 @@ export default async function Home() {
 			<ServicesSection />
 			<FeaturedProjectsSection projects={projects} />
 			<InsightsSection stories={stories} />
-			<Map />
+			<Map activeCountries={activeCountries} />
 			<ContactSection />
 		</div>
 	);

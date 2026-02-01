@@ -73,6 +73,34 @@ const pcMenu = [
 		},
 	},
 	{
+		title: "In Focus",
+		link: "/focus",
+		hoverContentProps: {
+			overview: {
+				title: "In Focus",
+				description:
+					"Explore our team, success stories, and upcoming events from the field.",
+			},
+			links: {
+				title: "LATEST UPDATES",
+				items: [
+					{ label: "Our Projects", href: "/our-work#projects" },
+					{ label: "Careers", href: "/careers" },
+					{ label: "Success Stories", href: "/our-people#stories" },
+					{ label: "Events", href: "/our-people#events" },
+				],
+			},
+			inFocus: {
+				title: "HIGHLIGHT",
+				image: "/assets/samg.webp",
+				articleTitle: "ACE3 Quality Assurance",
+				articleDescription:
+					"Ensuring laboratory excellence through rigorous external quality assurance panels.",
+				articleLink: "/projects/ace3",
+			},
+		},
+	},
+	{
 		title: "Our People",
 		link: "/our-people",
 		hoverContentProps: {
@@ -84,10 +112,9 @@ const pcMenu = [
 			links: {
 				title: "LATEST UPDATES",
 				items: [
-					{ label: "Our Projects", href: "/our-work#projects" },
 					{ label: "Careers", href: "/careers" },
 					{ label: "Success Stories", href: "/our-people#stories" },
-					{ label: "Events", href: "/our-people#events" },
+					{ label: "People's Stories", href: "/our-people#events" },
 				],
 			},
 			inFocus: {

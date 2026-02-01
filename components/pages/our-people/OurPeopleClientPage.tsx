@@ -10,6 +10,8 @@ import { type ContentItem } from "@/app/actions/content";
 import { type TeamMember } from "@/app/actions/team";
 import { Separator } from "@/components/ui/separator";
 import Leaning from "./leaning";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface OurPeopleClientPageProps {
 	// leadership: TeamMember[];
@@ -200,14 +202,24 @@ export default function OurPeopleClientPage({
 				{/* Resources Section */}
 				<section
 					id="resources"
-					className="scroll-mt-32 min-h-[300px] flex flex-col justify-center items-center text-center"
+					className="scroll-mt-32 space-y-8 min-h-[300px] flex flex-col justify-center items-center text-center"
 				>
 					<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
-						Resources
+						Join Our Talent Community
 					</h2>
+
 					<p className="text-muted-foreground max-w-lg">
-						Downloadable resources and guides will be available here.
+						Share your CV and we’ll reach out when a role matches your skills.
 					</p>
+
+					<div className="flex gap-4">
+						<Button className="rounded-lg">
+							<Link href="/careers/general">Get Started</Link>
+						</Button>
+						<Button className="rounded-lg">
+							<Link href="/careers">View Openings</Link>
+						</Button>
+					</div>
 				</section>
 			</div>
 		</div>

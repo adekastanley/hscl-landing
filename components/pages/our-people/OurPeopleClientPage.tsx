@@ -9,6 +9,7 @@ import OurPeopleGrid from "@/components/pages/projects/OurPeopleGrid"; // Import
 import { type ContentItem } from "@/app/actions/content";
 import { type TeamMember } from "@/app/actions/team";
 import { Separator } from "@/components/ui/separator";
+import Leaning from "./leaning";
 
 interface OurPeopleClientPageProps {
 	// leadership: TeamMember[];
@@ -193,11 +194,9 @@ export default function OurPeopleClientPage({
 					paramName="storiesPage"
 					id="stories"
 				/>
-
 				<Separator />
-
+				<Leaning />
 				<Separator />
-
 				{/* Resources Section */}
 				<section
 					id="resources"

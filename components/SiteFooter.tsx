@@ -1,8 +1,14 @@
 "use client";
 import NavLink from "next/link";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+
 import { Logo } from "./logo";
 import NewsLetterButton from "./ui/newsletter";
+import {
+	IconBrandInstagram,
+	IconBrandFacebook,
+	IconBrandX,
+	IconBrandLinkedin,
+} from "@tabler/icons-react";
 // import { Logo } from "./logo";
 
 const navLinks = {
@@ -66,19 +72,59 @@ export function SiteFooter() {
 							Contact
 						</h3>
 						<ul className="space-y-4 text-sm text-gray-300">
-							<li>
-								<span className="block font-semibold text-white">Office:</span>
-								Plot 871 Ojimadu Nwaeze Crescent, off Olu Awotesu cresent Jabi
-								District, Abuja, Nigeria.
-							</li>
-							<li>
-								<span className="block font-semibold text-white">Phone:</span>
-								+234 903 025 0139
-							</li>
-							<li>
-								<span className="block font-semibold text-white">Email:</span>
-								info@hscgroup.org
-							</li>
+							<ul className="space-y-4">
+								<li>
+									<span className="block font-semibold text-white">
+										Office:
+									</span>
+								</li>
+								<li>
+									<h6>
+										Plot 871 Ojimadu Nwaeze Crescent, off Olu Awotesu cresent
+										Jabi
+									</h6>
+									<div>
+										<span className="block font-semibold text-white">
+											Phone:
+										</span>
+										<p>+234 903 025 0139</p>
+										<span className="block font-semibold text-white">
+											Email:
+										</span>
+										<p> info@hscgroup.org</p>
+									</div>
+								</li>
+								<li>
+									<h6>Plot 104 Mountain Cut Freetown, Sierra Leone.</h6>
+									<div>
+										<span className="block font-semibold text-white">
+											Phone:
+										</span>
+										<p>+23230366991, +23278180445</p>
+									</div>
+								</li>
+								<li>
+									<h6>
+										Plot No 207/208 Kajenge Road, Kinondoni Municipality, Dar Es
+										Salaam Tanzania.
+									</h6>
+									<div>
+										<span className="block font-semibold text-white">
+											Phone:
+										</span>
+										<p>+255758770077, +255784510994</p>
+									</div>
+								</li>
+								<li>
+									<h6>Plot No. 2 Off Vubu Road, Emmasdale, Lusaka Zambia.</h6>
+									<div>
+										<span className="block font-semibold text-white">
+											Phone:
+										</span>
+										<p>+27828027302</p>
+									</div>
+								</li>
+							</ul>
 						</ul>
 					</div>
 
@@ -89,28 +135,28 @@ export function SiteFooter() {
 						</h3>
 						<div className="flex gap-4">
 							<a
-								href="https://facebook.com"
+								href="https://web.facebook.com/HsclNigeria/"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="flex h-10 w-10 items-center justify-center bg-white/10 text-white transition-colors hover:bg-chemonics-lime hover:text-chemonics-navy"
 							>
-								<Facebook className="h-5 w-5" />
+								<IconBrandFacebook className="h-5 w-5" />
 							</a>
 							<a
-								href="https://twitter.com"
+								href="https://x.com/HSCLimited/"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="flex h-10 w-10 items-center justify-center bg-white/10 text-white transition-colors hover:bg-chemonics-lime hover:text-chemonics-navy"
 							>
-								<Twitter className="h-5 w-5" />
+								<IconBrandX className="h-5 w-5" />
 							</a>
 							<a
-								href="https://linkedin.com"
+								href="https://www.linkedin.com/company/health-systems-consult-limited/"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="flex h-10 w-10 items-center justify-center bg-white/10 text-white transition-colors hover:bg-chemonics-lime hover:text-chemonics-navy"
 							>
-								<Linkedin className="h-5 w-5" />
+								<IconBrandLinkedin className="h-5 w-5" />
 							</a>
 							<a
 								href="https://instagram.com"
@@ -118,7 +164,7 @@ export function SiteFooter() {
 								rel="noopener noreferrer"
 								className="flex h-10 w-10 items-center justify-center bg-white/10 text-white transition-colors hover:bg-chemonics-lime hover:text-chemonics-navy"
 							>
-								<Instagram className="h-5 w-5" />
+								<IconBrandInstagram className="h-5 w-5" />
 							</a>
 						</div>
 					</div>

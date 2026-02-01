@@ -1,15 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
+
 import {
-	Facebook,
-	Twitter,
-	Linkedin,
-	Instagram,
-	Mail,
-	Phone,
-	MapPin,
-} from "lucide-react";
+	IconBrandInstagram,
+	IconBrandFacebook,
+	IconBrandX,
+	IconBrandLinkedin,
+} from "@tabler/icons-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 
 export default function ContactPage() {
@@ -97,28 +95,28 @@ export default function ContactPage() {
 								<p className="text-sm font-medium text-gray-500">Follow Us</p>
 								<div className="flex gap-4">
 									<a
-										href="#"
+										href="https://web.facebook.com/HsclNigeria/"
 										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
 									>
-										<Facebook size={20} />
+										<IconBrandFacebook size={20} />
+									</a>
+									<a
+										href="https://x.com/HSCLimited/"
+										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
+									>
+										<IconBrandX size={20} />
+									</a>
+									<a
+										href="https://www.linkedin.com/company/health-systems-consult-limited/"
+										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
+									>
+										<IconBrandLinkedin size={20} />
 									</a>
 									<a
 										href="#"
 										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
 									>
-										<Twitter size={20} />
-									</a>
-									<a
-										href="#"
-										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
-									>
-										<Linkedin size={20} />
-									</a>
-									<a
-										href="#"
-										className="p-2 bg-gray-100 rounded-full text-chemonics-navy hover:bg-chemonics-navy hover:text-white transition-all"
-									>
-										<Instagram size={20} />
+										<IconBrandInstagram size={20} />
 									</a>
 								</div>
 							</div>

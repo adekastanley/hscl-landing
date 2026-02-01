@@ -13,125 +13,17 @@ import {
 } from "@/components/ui/hover-card";
 import NavHoverContent from "./ui/navHoverContent";
 
-const pcMenu = [
-	{
-		title: "Who We Are",
-		link: "/about",
-		hoverContentProps: {
-			overview: {
-				title: "Who We Are",
-				description:
-					"Our mission is to promote meaningful change around the world to help people live healthier, more productive, and more independent lives.",
-			},
-			links: {
-				title: "WHO WE ARE",
-				items: [
-					{ label: "Our Mission", href: "/about#mission" },
-					{ label: "Core Values", href: "/about#values" },
-					{ label: "Leadership", href: "/about#leadership" },
-					{ label: "Our Team", href: "/about#team" },
-				],
-			},
-			inFocus: {
-				link: "/projects",
-				title: "IN FOCUS",
-				image: "/assets/three.jpg",
-				articleTitle: "Driving Sustainable Impact",
-				articleDescription:
-					"Learn how our holistic approach ensures long-term development success across the African continent.",
-				articleLink: "/impact",
-			},
-		},
-	},
-	{
-		title: "What We Do",
-		link: "/our-work",
+import { type ContentItem } from "@/app/actions/content";
 
-		hoverContentProps: {
-			overview: {
-				title: "What We Do",
-				description:
-					"We deliver incisive solutions in health systems strengthening, monitoring & evaluation, and public health interventions.",
-			},
-			links: {
-				title: "SECTORS",
-				items: [
-					{ label: "Health Systems", href: "/our-work#health-systems" },
-					{ label: "Monitoring & Evaluation", href: "/our-work#mel" },
-					{ label: "Public Health", href: "/our-work#public-health" },
-					{ label: "Human Resources", href: "/our-work#hrh" },
-				],
-			},
-			inFocus: {
-				title: "FEATURED WORK",
-				image: "/assets/two.PNG",
-				articleTitle: "Kebbi State HIV Intervention",
-				articleDescription:
-					"Improving case finding and treatment outcomes through targeted index case testing strategies.",
-				articleLink: "/projects/kebbi-hiv",
-			},
-		},
-	},
-	{
-		title: "In Focus",
-		link: "/focus",
-		hoverContentProps: {
-			overview: {
-				title: "In Focus",
-				description:
-					"Explore our team, success stories, and upcoming events from the field.",
-			},
-			links: {
-				title: "LATEST UPDATES",
-				items: [
-					{ label: "Our Projects", href: "/our-work#projects" },
+interface NavbarProps {
+	latestPeopleStory?: ContentItem;
+}
 
-					{ label: "Events", href: "/our-people#events" },
-				],
-			},
-			inFocus: {
-				title: "HIGHLIGHT",
-				image: "/assets/samg.webp",
-				articleTitle: "ACE3 Quality Assurance",
-				articleDescription:
-					"Ensuring laboratory excellence through rigorous external quality assurance panels.",
-				articleLink: "/projects/ace3",
-			},
-		},
-	},
-	{
-		title: "Our People",
-		link: "/our-people",
-		hoverContentProps: {
-			overview: {
-				title: "Our People",
-				description:
-					"Discouver our people's stories, and upcoming events from the field.",
-			},
-			links: {
-				title: "LATEST UPDATES",
-				items: [
-					{ label: "People's Stories", href: "/our-people#people-stories" },
-					{ label: "Success Stories", href: "/our-people#stories" },
-					{ label: "Careers", href: "/careers" },
-					{
-						label: "Learning and development",
-						href: "/our-people#learning-and-development",
-					},
-					{ label: "Resources", href: "/our-people#resources" },
-				],
-			},
-			inFocus: {
-				title: "HIGHLIGHT",
-				image: "/assets/samg.webp",
-				articleTitle: "ACE3 Quality Assurance",
-				articleDescription:
-					"Ensuring laboratory excellence through rigorous external quality assurance panels.",
-				articleLink: "/projects/ace3",
-			},
-		},
-	},
-];
+const itemVariants: Variants = {
+	initial: { opacity: 0, y: 10 },
+	animate: { opacity: 1, y: 0 },
+	exit: { opacity: 0, y: 10 },
+};
 
 const menuVariants: Variants = {
 	initial: {
@@ -159,15 +51,137 @@ const menuVariants: Variants = {
 	},
 };
 
-const itemVariants: Variants = {
-	initial: { opacity: 0, y: 10 },
-	animate: { opacity: 1, y: 0 },
-	exit: { opacity: 0, y: 10 },
-};
-
-export function Navbar() {
+export function Navbar({ latestPeopleStory }: NavbarProps) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const pcMenu = [
+		{
+			title: "Who We Are",
+			link: "/about",
+			hoverContentProps: {
+				overview: {
+					title: "Who We Are",
+					description:
+						"Our mission is to promote meaningful change around the world to help people live healthier, more productive, and more independent lives.",
+				},
+				links: {
+					title: "WHO WE ARE",
+					items: [
+						{ label: "Our Mission", href: "/about#mission" },
+						{ label: "Core Values", href: "/about#values" },
+						{ label: "Leadership", href: "/about#leadership" },
+						{ label: "Our Team", href: "/about#team" },
+					],
+				},
+				inFocus: {
+					link: "/projects",
+					title: "IN FOCUS",
+					image: "/assets/three.jpg",
+					articleTitle: "Driving Sustainable Impact",
+					articleDescription:
+						"Learn how our holistic approach ensures long-term development success across the African continent.",
+					articleLink: "/impact",
+				},
+			},
+		},
+		{
+			title: "What We Do",
+			link: "/our-work",
+
+			hoverContentProps: {
+				overview: {
+					title: "What We Do",
+					description:
+						"We deliver incisive solutions in health systems strengthening, monitoring & evaluation, and public health interventions.",
+				},
+				links: {
+					title: "SECTORS",
+					items: [
+						{ label: "Health Systems", href: "/our-work#health-systems" },
+						{ label: "Monitoring & Evaluation", href: "/our-work#mel" },
+						{ label: "Public Health", href: "/our-work#public-health" },
+						{ label: "Human Resources", href: "/our-work#hrh" },
+					],
+				},
+				inFocus: {
+					title: "FEATURED WORK",
+					image: "/assets/two.PNG",
+					articleTitle: "Kebbi State HIV Intervention",
+					articleDescription:
+						"Improving case finding and treatment outcomes through targeted index case testing strategies.",
+					articleLink: "/projects/kebbi-hiv",
+				},
+			},
+		},
+		{
+			title: "In Focus",
+			link: "/focus",
+			hoverContentProps: {
+				overview: {
+					title: "In Focus",
+					description:
+						"Explore our team, success stories, and upcoming events from the field.",
+				},
+				links: {
+					title: "LATEST UPDATES",
+					items: [
+						{ label: "Our Projects", href: "/our-work#projects" },
+
+						{ label: "Events", href: "/our-people#events" },
+					],
+				},
+				inFocus: {
+					title: "HIGHLIGHT",
+					image: "/assets/samg.webp",
+					articleTitle: "ACE3 Quality Assurance",
+					articleDescription:
+						"Ensuring laboratory excellence through rigorous external quality assurance panels.",
+					articleLink: "/projects/ace3",
+				},
+			},
+		},
+		{
+			title: "Our People",
+			link: "/our-people",
+			hoverContentProps: {
+				overview: {
+					title: "Our People",
+					description:
+						"Discover our people's stories, and upcoming events from the field.",
+				},
+				links: {
+					title: "LATEST UPDATES",
+					items: [
+						{ label: "People's Stories", href: "/our-people#people-stories" },
+						{ label: "Success Stories", href: "/our-people#stories" },
+						{ label: "Careers", href: "/careers" },
+						{
+							label: "Learning and development",
+							href: "/our-people#learning-and-development",
+						},
+						{ label: "Resources", href: "/our-people#resources" },
+					],
+				},
+				inFocus: latestPeopleStory
+					? {
+							title: "PEOPLE'S STORY",
+							image: latestPeopleStory.image_url || "/assets/placeholder.jpg",
+							articleTitle: latestPeopleStory.title,
+							articleDescription: latestPeopleStory.summary,
+							articleLink: `/success-stories/${latestPeopleStory.slug}`, // Assuming stories use this route, or maybe different? Reusing for now.
+						}
+					: {
+							title: "HIGHLIGHT",
+							image: "/assets/samg.webp",
+							articleTitle: "ACE3 Quality Assurance",
+							articleDescription:
+								"Ensuring laboratory excellence through rigorous external quality assurance panels.",
+							articleLink: "/projects/ace3",
+						},
+			},
+		},
+	];
 
 	useEffect(() => {
 		const handleScroll = () => {

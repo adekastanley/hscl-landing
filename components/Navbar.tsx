@@ -12,6 +12,12 @@ import {
 	HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import NavHoverContent from "./ui/navHoverContent";
+import {
+	IconBrandFacebook,
+	IconBrandX,
+	IconBrandLinkedin,
+	IconBrandInstagram,
+} from "@tabler/icons-react";
 
 import { type ContentItem } from "@/app/actions/content";
 
@@ -254,19 +260,60 @@ export function Navbar({ latestPeopleStory }: NavbarProps) {
 						initial="initial"
 						animate="animate"
 						exit="exit"
-						className="absolute top-full h-screen pt-20 left-0 w-full bg-chemonics-navy p-6 shadow-xl md:hidden flex flex-col gap-4"
+						className="absolute top-full h-screen pt-20 left-0 w-full bg-chemonics-navy p-6 shadow-xl md:hidden flex flex-col gap-6"
 					>
 						{[
 							{ title: "Who We Are", link: "/about" },
 							{ title: "What We Do", link: "/our-work" },
-							{ title: "In Focus", link: "/projects" },
+							{ title: "In Focus", link: "/focus" },
+							{ title: "Our People", link: "/our-people" },
+							{ title: "Contact", link: "/contact" },
 						].map((item, index) => (
 							<motion.div key={index} variants={itemVariants}>
-								<Link href={item.link} className="text-white font-medium block">
+								<Link
+									href={item.link}
+									className="text-white text-lg font-medium block border-b border-white/10 pb-4"
+									onClick={() => setIsMenuOpen(false)}
+								>
 									{item.title}
 								</Link>
 							</motion.div>
 						))}
+
+						<motion.div variants={itemVariants} className="mt-4 flex gap-4">
+							<a
+								href="https://web.facebook.com/HsclNigeria/"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+							>
+								<IconBrandFacebook size={24} />
+							</a>
+							<a
+								href="https://x.com/HSCLimited/"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+							>
+								<IconBrandX size={24} />
+							</a>
+							<a
+								href="https://www.linkedin.com/company/health-systems-consult-limited/"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+							>
+								<IconBrandLinkedin size={24} />
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+							>
+								<IconBrandInstagram size={24} />
+							</a>
+						</motion.div>
 					</motion.div>
 				)}
 			</AnimatePresence>

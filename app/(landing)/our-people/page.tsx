@@ -10,6 +10,7 @@ export const metadata = {
 interface OurPeoplePageProps {
 	searchParams: Promise<{
 		storiesPage?: string;
+		peoplePage?: string;
 	}>;
 }
 
@@ -18,26 +19,31 @@ export default async function OurPeoplePage({
 }: OurPeoplePageProps) {
 	const params = await searchParams;
 	const storiesPage = Number(params.storiesPage) || 1;
+	const peoplePage = Number(params.peoplePage) || 1;
 	const storiesLimit = 4;
 
-	// Fetch Team, Stories, and Events in parallel
-	const [stories, events] = await Promise.all([
+	// Fetch Team, Stories, Events, and People Stories in parallel
+	const [stories, peopleStories] = await Promise.all([
 		// getTeamMembers("leadership"), // Fetch leadership
 		// getTeamMembers("team"), // Fetch team members
 		getItems("story", storiesLimit, storiesPage),
-		getItems("event", 4),
+
+		getItems("people_story", storiesLimit, peoplePage),
 	]);
 
 	const hasMoreStories = stories.length === storiesLimit;
+	const hasMorePeopleStories = peopleStories.length === storiesLimit;
 
 	return (
 		<OurPeopleClientPage
 			// leadership={leadership}
 			// team={team}
 			stories={stories}
-			events={events}
+			peopleStories={peopleStories}
 			currentStoriesPage={storiesPage}
 			hasMoreStories={hasMoreStories}
+			currentPeoplePage={peoplePage}
+			hasMorePeopleStories={hasMorePeopleStories}
 		/>
 	);
 }

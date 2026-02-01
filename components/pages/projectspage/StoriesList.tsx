@@ -1,39 +1,57 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Quote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
-
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 interface StoriesListProps {
 	stories: ContentItem[];
 	currentPage: number;
 	hasMore: boolean;
+	title: string;
+	description: string;
+	paramName?: string;
+	id?: string;
 }
 
 export default function StoriesList({
 	stories,
 	currentPage,
 	hasMore,
+	title,
+	description,
+	paramName = "storiesPage",
+	id = "stories",
 }: StoriesListProps) {
-	return (
-		<section id="stories" className="scroll-mt-32">
-			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-				<div>
-					<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
-						Success Stories
-					</h2>
-					<p className="text-muted-foreground">
-						Real impact, real lives. See how we are making a difference.
-					</p>
-				</div>
+	const searchParams = useSearchParams();
 
+	const createQueryString = useCallback(
+		(name: string, value: string) => {
+			const params = new URLSearchParams(searchParams.toString());
+			params.set(name, value);
+			return params.toString();
+		},
+		[searchParams],
+	);
+
+	return (
+		<section id={id} className="scroll-mt-32">
+			<div>
+				<h2 className="text-3xl font-bold text-chemonics-navy mb-2">{title}</h2>
+				<p className="text-muted-foreground">{description}</p>
+			</div>
+
+			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
 				{/* Pagination Controls */}
 				<div className="flex items-center gap-2">
 					{currentPage > 1 && (
 						<Link
-							href={`/projects?storiesPage=${currentPage - 1}#stories`}
+							href={`?${createQueryString(paramName, String(currentPage - 1))}#${id}`}
 							scroll={false}
 						>
 							<Button variant="outline" size="sm">
@@ -48,7 +66,7 @@ export default function StoriesList({
 					)}
 					{hasMore && (
 						<Link
-							href={`/projects?storiesPage=${currentPage + 1}#stories`}
+							href={`?${createQueryString(paramName, String(currentPage + 1))}#${id}`}
 							scroll={false}
 						>
 							<Button variant="outline" size="sm">

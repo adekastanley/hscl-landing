@@ -77,6 +77,11 @@ const data = {
 			icon: IconReport,
 		},
 		{
+			title: "People's Stories",
+			url: "/admin/dashboard/people-stories",
+			icon: IconReport,
+		},
+		{
 			title: "Events",
 			url: "/admin/dashboard/events",
 			icon: IconCalendarEvent,

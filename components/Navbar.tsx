@@ -85,8 +85,7 @@ const pcMenu = [
 				title: "LATEST UPDATES",
 				items: [
 					{ label: "Our Projects", href: "/our-work#projects" },
-					{ label: "Careers", href: "/careers" },
-					{ label: "Success Stories", href: "/our-people#stories" },
+
 					{ label: "Events", href: "/our-people#events" },
 				],
 			},
@@ -107,14 +106,19 @@ const pcMenu = [
 			overview: {
 				title: "Our People",
 				description:
-					"Explore our team, success stories, and upcoming events from the field.",
+					"Discouver our people's stories, and upcoming events from the field.",
 			},
 			links: {
 				title: "LATEST UPDATES",
 				items: [
-					{ label: "Careers", href: "/careers" },
+					{ label: "People's Stories", href: "/our-people#people-stories" },
 					{ label: "Success Stories", href: "/our-people#stories" },
-					{ label: "People's Stories", href: "/our-people#events" },
+					{ label: "Careers", href: "/careers" },
+					{
+						label: "Learning and development",
+						href: "/our-people#learning-and-development",
+					},
+					{ label: "Resources", href: "/our-people#resources" },
 				],
 			},
 			inFocus: {

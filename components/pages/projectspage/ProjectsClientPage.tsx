@@ -177,6 +177,8 @@ export default function ProjectsClientPage({
 					stories={stories}
 					currentPage={currentStoriesPage}
 					hasMore={hasMoreStories}
+					title="Success Stories"
+					description="Real impact, real lives. See how we are making a difference."
 				/>
 
 				<Separator />

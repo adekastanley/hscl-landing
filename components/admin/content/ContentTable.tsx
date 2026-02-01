@@ -50,7 +50,7 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
 interface ContentTableProps {
-	type: "project" | "story" | "event";
+	type: "project" | "story" | "event" | "people_story";
 }
 
 export function ContentTable({ type }: ContentTableProps) {
@@ -292,7 +292,9 @@ export function ContentTable({ type }: ContentTableProps) {
 						? "Projects"
 						: type === "story"
 							? "Success Stories"
-							: "Events & Training"}
+							: type === "people_story"
+								? "People's Stories"
+								: "Events & Training"}
 				</h2>
 				<div className="flex items-center gap-2">
 					{type === "project" && (
@@ -319,7 +321,9 @@ export function ContentTable({ type }: ContentTableProps) {
 							? "Project"
 							: type === "story"
 								? "Story"
-								: "Event"}
+								: type === "people_story"
+									? "People Story"
+									: "Event"}
 					</Button>
 				</div>
 			</div>
@@ -450,7 +454,9 @@ export function ContentTable({ type }: ContentTableProps) {
 								? "Project"
 								: type === "story"
 									? "Success Story"
-									: "Event"}
+									: type === "people_story"
+										? "People Story"
+										: "Event"}
 						</DialogTitle>
 					</DialogHeader>
 					<form onSubmit={handleSubmit} className="space-y-4 py-4">

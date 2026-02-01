@@ -145,6 +145,66 @@ const initDb = async () => {
 	} catch (e) {
 		// Column likely exists
 	}
+
+	// Migration for 'people_story' type in content_items
+	// This requires recreating the table because of the CHECK constraint
+	try {
+		// Check if we need to migrate by trying to insert a dummy item with the new type (and rolling back)
+		// Or simpler: just check if the schema allows it?
+		// Actually, let's just do the migration if we haven't already.
+		// A simple way to check is to try to SELECT from content_items where type = 'people_story'
+		// But that doesn't tell us if it's ALLOWED.
+
+		// Let's assume we need to do it once. We can check if a specific flag column exists, or just try to alter table (which fails for constraints).
+		// Best approach for SQLite constraint modification:
+
+		// 1. Rename table
+		// We only do this if we suspect the constraint is the OLD one.
+		// We can check the table definition from sqlite_master?
+
+		const tableInfo = await db.execute(
+			"SELECT sql FROM sqlite_master WHERE type='table' AND name='content_items'",
+		);
+		const sql = tableInfo.rows[0]?.sql as string;
+
+		if (sql && !sql.includes("'people_story'")) {
+			console.log("Migrating content_items to support people_story...");
+
+			await db.execute("PRAGMA foreign_keys=OFF");
+
+			await db.execute("ALTER TABLE content_items RENAME TO content_items_old");
+
+			await db.execute(`
+              CREATE TABLE IF NOT EXISTS content_items (
+                id TEXT PRIMARY KEY,
+                type TEXT CHECK(type IN ('project', 'story', 'event', 'people_story')) NOT NULL,
+                title TEXT NOT NULL,
+                slug TEXT UNIQUE NOT NULL,
+                summary TEXT,
+                content TEXT,
+                image_url TEXT,
+                published_date TEXT,
+                category TEXT,
+                status TEXT DEFAULT 'open',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+              )
+            `);
+
+			await db.execute(`
+              INSERT INTO content_items (id, type, title, slug, summary, content, image_url, published_date, category, status, created_at)
+              SELECT id, type, title, slug, summary, content, image_url, published_date, category, status, created_at
+              FROM content_items_old
+            `);
+
+			await db.execute("DROP TABLE content_items_old");
+
+			await db.execute("PRAGMA foreign_keys=ON");
+
+			console.log("Migration for people_story successful");
+		}
+	} catch (error) {
+		console.error("Migration for people_story failed:", error);
+	}
 };
 
 let initPromise: Promise<void> | null = null;

@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 export interface ContentItem {
 	id: string;
-	type: "project" | "story" | "event";
+	type: "project" | "story" | "event" | "people_story";
 	title: string;
 	slug: string;
 	summary: string;
@@ -19,7 +19,7 @@ export interface ContentItem {
 }
 
 export async function getItems(
-	type: "project" | "story" | "event",
+	type: "project" | "story" | "event" | "people_story",
 	limit = 100,
 	page = 1,
 	filterYear?: string,
@@ -47,7 +47,7 @@ export async function getItems(
 		const result = await db.execute({ sql, args });
 		return result.rows.map((row) => ({
 			id: row.id as string,
-			type: row.type as "project" | "story",
+			type: row.type as "project" | "story" | "people_story",
 			title: row.title as string,
 			slug: row.slug as string,
 			summary: row.summary as string,
@@ -67,7 +67,7 @@ export async function getItems(
 
 export async function getItemBySlug(
 	slug: string,
-	type?: "project" | "story" | "event",
+	type?: "project" | "story" | "event" | "people_story",
 ): Promise<ContentItem | null> {
 	try {
 		await ensureDbInitialized();
@@ -88,7 +88,7 @@ export async function getItemBySlug(
 
 		return {
 			id: row.id as string,
-			type: row.type as "project" | "story" | "event",
+			type: row.type as "project" | "story" | "event" | "people_story",
 			title: row.title as string,
 			slug: row.slug as string,
 			summary: row.summary as string,
@@ -104,7 +104,7 @@ export async function getItemBySlug(
 }
 
 export async function getYears(
-	type: "project" | "story" | "event",
+	type: "project" | "story" | "event" | "people_story",
 ): Promise<string[]> {
 	try {
 		await ensureDbInitialized();

@@ -14,18 +14,24 @@ interface OurPeopleClientPageProps {
 	// leadership: TeamMember[];
 	// team: TeamMember[];
 	stories: ContentItem[];
-	events: ContentItem[];
+
+	peopleStories: ContentItem[];
 	currentStoriesPage: number;
 	hasMoreStories: boolean;
+	currentPeoplePage: number;
+	hasMorePeopleStories: boolean;
 }
 
 export default function OurPeopleClientPage({
 	// leadership,
 	// team,
 	stories,
-	events,
+
+	peopleStories,
 	currentStoriesPage,
 	hasMoreStories,
+	currentPeoplePage,
+	hasMorePeopleStories,
 }: OurPeopleClientPageProps) {
 	const [activeSection, setActiveSection] = useState("team");
 	const { scrollYProgress } = useScroll();
@@ -88,7 +94,7 @@ export default function OurPeopleClientPage({
 			{ threshold: 0.3, rootMargin: "-100px 0px -50% 0px" },
 		);
 
-		const sections = ["leadership", "team", "stories", "events", "resources"];
+		const sections = ["stories", "people-stories", "resources"];
 		sections.forEach((id) => {
 			const element = document.getElementById(id);
 			if (element) observer.observe(element);
@@ -140,8 +146,13 @@ export default function OurPeopleClientPage({
 						{[
 							// { id: "leadership", label: "Leadership" },
 							// { id: "team", label: "Our Team" },
+							{ id: "people-stories", label: "People Stories" },
 							{ id: "stories", label: "Success Stories" },
-							{ id: "events", label: "Events" },
+							{
+								id: "learning-and-development",
+								label: "Learning and Development",
+							},
+
 							{ id: "resources", label: "Resources" },
 						].map((item) => (
 							<button
@@ -162,79 +173,28 @@ export default function OurPeopleClientPage({
 			</div>
 
 			<div className="container py-16 px-4 md:px-8 max-w-6xl mx-auto space-y-24">
-				{/* Leadership Section */}
-				{/* <section id="leadership" className="scroll-mt-32">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
-							Leadership
-						</h2>
-						<p className="text-muted-foreground max-w-2xl mx-auto">
-							Guiding our vision and strategy for sustainable impact.
-						</p>
-					</div>
-					<OurPeopleGrid team={leadership} />
-				</section> */}
-
-				{/* <Separator /> */}
-
-				{/* Team Section */}
-				{/* <section id="team" className="scroll-mt-32">
-					<div className="text-center mb-12">
-						<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
-							Meet The Team
-						</h2>
-						<p className="text-muted-foreground max-w-2xl mx-auto">
-							A diverse group of professionals working together to deliver
-							impact.
-						</p>
-					</div>
-					<OurPeopleGrid team={team} />
-				</section> */}
-
-				{/* <Separator /> */}
-
+				{/* People's Stories Section */}
+				<StoriesList
+					stories={peopleStories}
+					currentPage={currentPeoplePage}
+					hasMore={hasMorePeopleStories}
+					title="People's Stories"
+					description="Hear from the individuals whose lives have been impacted by our work."
+					paramName="peoplePage"
+					id="people-stories"
+				/>
 				{/* Stories Section */}
 				<StoriesList
 					stories={stories}
 					currentPage={currentStoriesPage}
 					hasMore={hasMoreStories}
+					title="Success Stories"
+					description="Real impact, real lives. See how we are making a difference."
+					paramName="storiesPage"
+					id="stories"
 				/>
 
 				<Separator />
-
-				{/* Events Section */}
-				<section id="events" className="scroll-mt-32">
-					<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-						<div>
-							<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
-								Upcoming Events & Training
-							</h2>
-							<p className="text-muted-foreground">
-								Join us in our upcoming workshops, seminars, and training
-								sessions.
-							</p>
-						</div>
-					</div>
-
-					{events.length === 0 ? (
-						<div className="text-center py-20 bg-muted/30 rounded-lg">
-							<p className="text-muted-foreground">
-								No upcoming events scheduled.
-							</p>
-						</div>
-					) : (
-						<div className="flex overflow-x-auto gap-6 pb-6 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar snap-x">
-							{events.map((event) => (
-								<div
-									key={event.id}
-									className="min-w-[300px] md:min-w-[350px] snap-center"
-								>
-									<EventCard event={event} />
-								</div>
-							))}
-						</div>
-					)}
-				</section>
 
 				<Separator />
 

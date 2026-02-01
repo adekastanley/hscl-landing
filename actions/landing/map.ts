@@ -21,15 +21,27 @@ export async function getActiveCountries(): Promise<ActiveCountry[]> {
 		const countriesResult = await db.execute(
 			"SELECT * FROM active_countries ORDER BY name ASC",
 		);
-		const countries = countriesResult.rows as unknown as ActiveCountry[];
+
+		// Map to plain objects and sanitize
+		const countries = countriesResult.rows.map((row: any) => ({
+			id: row.id,
+			name: row.name,
+			code: row.code,
+			projects: [],
+		})) as ActiveCountry[];
 
 		for (const country of countries) {
 			const projectsResult = await db.execute({
 				sql: "SELECT * FROM active_country_projects WHERE country_id = ?",
 				args: [country.id],
 			});
-			country.projects =
-				projectsResult.rows as unknown as ActiveCountryProject[];
+
+			// Map projects to partial objects to ensure no extra fields like 'link' or 'created_at' leak through
+			country.projects = projectsResult.rows.map((pRow: any) => ({
+				id: pRow.id,
+				country_id: pRow.country_id,
+				title: pRow.title,
+			})) as ActiveCountryProject[];
 		}
 
 		return countries;

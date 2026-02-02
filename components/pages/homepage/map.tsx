@@ -52,10 +52,6 @@ export default function Map({ activeCountries = [] }: MapProps) {
 											key={geo.rsmKey}
 											geography={geo}
 											data-tooltip-id="my-tooltip"
-											// We can't pass complex objects easily to data-tooltip-content usually,
-											// providing unique ID or handling content via onMouseEnter is better.
-											// But react-tooltip v5 allows declarative content via the Tooltip component children implicitly?
-											// Actually best to set content state.
 											onMouseEnter={() => {
 												if (activeCountry) {
 													setContent(
@@ -67,13 +63,11 @@ export default function Map({ activeCountries = [] }: MapProps) {
 															activeCountry.projects.length > 0 ? (
 																<ul className="list-disc pl-4 text-xs">
 																	{activeCountry.projects.map((p) => (
-																		<li key={p.id}>
-																			<Link
-																				href="/our-work"
-																				className="hover:text-blue-200 hover:underline"
-																			>
-																				{p.title}
-																			</Link>
+																		<li
+																			key={p.id}
+																			className="hover:text-blue-200 hover:underline"
+																		>
+																			{p.title}
 																		</li>
 																	))}
 																</ul>

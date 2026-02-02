@@ -35,6 +35,24 @@ export default async function DashboardPage() {
 					description="Published stories"
 					icon={FileText}
 				/>
+				<DashboardStatCard
+					title="People Stories"
+					value={String(stats.content.people_stories)}
+					description="Published stories"
+					icon={FileText}
+				/>
+				<DashboardStatCard
+					title="Leadership Team"
+					value={String(stats.team.leadership)}
+					description="Leadership members"
+					icon={Users}
+				/>
+				<DashboardStatCard
+					title="Team Members"
+					value={String(stats.team.total - stats.team.leadership)}
+					description="General team members"
+					icon={Users}
+				/>
 			</div>
 			<div className="min-h-[50vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-6 flex items-center justify-center text-muted-foreground text-sm">
 				Select a section from the sidebar to manage content.

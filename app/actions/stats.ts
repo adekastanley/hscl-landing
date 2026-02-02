@@ -13,9 +13,14 @@ export interface DashboardStats {
 		upcoming: number;
 		registrations: number;
 	};
+	team: {
+		total: number;
+		leadership: number;
+	};
 	content: {
 		projects: number;
 		stories: number;
+		people_stories: number;
 	};
 }
 
@@ -35,11 +40,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		const listingsActive = Number(listingsRes.rows[0]?.active || 0);
 
 		// Events Stats
-		// Note: We check type='event'. 'upcoming' logic depends on published_date >= current date?
-		// User asked for "how many events are up", implies total/active.
-		// Let's count total events and closed/open events if that field exists, or by date.
-		// For simplicity, let's use the 'status' field if available (we added status to content_items schema).
-
 		const eventsRes = await db.execute(`
             SELECT 
                 COUNT(*) as total,
@@ -59,11 +59,23 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		const contentRes = await db.execute(`
             SELECT 
                 SUM(CASE WHEN type = 'project' THEN 1 ELSE 0 END) as projects,
-                SUM(CASE WHEN type = 'story' THEN 1 ELSE 0 END) as stories
+                SUM(CASE WHEN type = 'story' THEN 1 ELSE 0 END) as stories,
+                SUM(CASE WHEN type = 'people_story' THEN 1 ELSE 0 END) as people_stories
             FROM content_items
         `);
 		const totalProjects = Number(contentRes.rows[0]?.projects || 0);
 		const totalStories = Number(contentRes.rows[0]?.stories || 0);
+		const totalPeopleStories = Number(contentRes.rows[0]?.people_stories || 0);
+
+		// Team Stats
+		const teamRes = await db.execute(`
+			SELECT
+				COUNT(*) as total,
+				SUM(CASE WHEN category = 'leadership' THEN 1 ELSE 0 END) as leadership
+			FROM team_members
+		`);
+		const teamTotal = Number(teamRes.rows[0]?.total || 0);
+		const leadershipCount = Number(teamRes.rows[0]?.leadership || 0);
 
 		return {
 			listings: {
@@ -73,12 +85,17 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			},
 			events: {
 				total: eventsTotal,
-				upcoming: Number(eventsRes.rows[0]?.active || 0), // Using active/open as proxy for "up"
+				upcoming: Number(eventsRes.rows[0]?.active || 0),
 				registrations: totalRegistrations,
 			},
 			content: {
 				projects: totalProjects,
 				stories: totalStories,
+				people_stories: totalPeopleStories,
+			},
+			team: {
+				total: teamTotal,
+				leadership: leadershipCount,
 			},
 		};
 	} catch (error) {
@@ -86,7 +103,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		return {
 			listings: { total: 0, active: 0, inactive: 0 },
 			events: { total: 0, upcoming: 0, registrations: 0 },
-			content: { projects: 0, stories: 0 },
+			content: { projects: 0, stories: 0, people_stories: 0 },
+			team: { total: 0, leadership: 0 },
 		};
 	}
 }

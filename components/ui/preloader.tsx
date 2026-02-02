@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 export function Preloader() {
 	const [textVisible, setTextVisible] = useState(true);
 	const [exitAnimation, setExitAnimation] = useState(false);
+	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
+		setMounted(true);
 		// 1. Text fills for 3 seconds
 		// 2. Text fades out at 3.2s
 		const textTimer = setTimeout(() => {
@@ -25,13 +27,15 @@ export function Preloader() {
 		};
 	}, []);
 
+	if (!mounted) return null;
+
 	return (
 		<AnimatePresence>
 			{/* Main Container - Navy Background (First Layer) */}
 			{!exitAnimation && (
 				<motion.div
 					key="layer-navy"
-					className="fixed inset-0 z-[60] flex items-center justify-center bg-[#001d3d] overflow-hidden"
+					className="fixed inset-0 z-50 flex items-center justify-center bg-chemonics-navy overflow-hidden"
 					exit={{
 						x: "100%",
 						transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
@@ -72,7 +76,7 @@ export function Preloader() {
 			{!exitAnimation && (
 				<motion.div
 					key="layer-teal"
-					className="fixed inset-0 z-[59] bg-[#009ca6]"
+					className="fixed inset-0 z-40 bg-chemonics-teal"
 					exit={{
 						x: "100%",
 						transition: {
@@ -88,13 +92,13 @@ export function Preloader() {
 			{!exitAnimation && (
 				<motion.div
 					key="layer-lime"
-					className="fixed inset-0 z-[58] bg-[#3fa34d]"
+					className="fixed inset-0 z-30 bg-chemonics-lime"
 					exit={{
 						x: "100%",
 						transition: {
 							duration: 0.8,
 							ease: [0.76, 0, 0.24, 1],
-							delay: 0.2, // Slightly more delay for the last swipe
+							delay: 0.2,
 						},
 					}}
 				/>

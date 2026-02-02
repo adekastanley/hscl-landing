@@ -287,7 +287,7 @@ export function ContentTable({ type }: ContentTableProps) {
 	return (
 		<div className="space-y-4">
 			<div className="flex justify-between  items-center">
-				<h2 className="text-xl md:text-2xl mr-1 font-bold tracking-tight capitalize">
+				<h2 className="text-xl md:text-2xl mr-1  font-bold tracking-tight capitalize">
 					{type === "project"
 						? "Projects"
 						: type === "story"
@@ -302,7 +302,7 @@ export function ContentTable({ type }: ContentTableProps) {
 							<SelectTrigger className="w-[120px] text-xs md:text-base">
 								<SelectValue placeholder="All Years" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="">
 								<SelectItem value="all">All Years</SelectItem>
 								{years.map((year) => (
 									<SelectItem key={year} value={year}>

@@ -15,6 +15,8 @@ import { getActiveCountries } from "@/actions/landing/map";
 
 export default async function Home() {
 	const projects = await getItems("project", 3);
+	const latestProjectList = await getItems("project", 1);
+	const featuredProject = latestProjectList[0];
 	const stories = await getItems("story", 3);
 	const activeCountries = await getActiveCountries();
 
@@ -27,7 +29,7 @@ export default async function Home() {
 
 			<ServicesSection />
 			<FeaturedProjectsSection projects={projects} />
-			<InsightsSection stories={stories} />
+			<InsightsSection stories={stories} featuredProject={featuredProject} />
 			<Map activeCountries={activeCountries} />
 			<ContactSection />
 		</div>

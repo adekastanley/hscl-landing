@@ -42,6 +42,7 @@ export default function WhatWeDoManager() {
 
 	const [formData, setFormData] = useState({
 		title: "",
+		slug: "",
 		description: "",
 		content: "",
 		image_url: "",
@@ -63,13 +64,20 @@ export default function WhatWeDoManager() {
 			setEditingId(service.id);
 			setFormData({
 				title: service.title,
+				slug: service.slug || "", // Fallback for old items
 				description: service.description,
 				content: service.content,
 				image_url: service.image_url,
 			});
 		} else {
 			setEditingId(null);
-			setFormData({ title: "", description: "", content: "", image_url: "" });
+			setFormData({
+				title: "",
+				slug: "",
+				description: "",
+				content: "",
+				image_url: "",
+			});
 		}
 		setIsDialogOpen(true);
 	};
@@ -98,7 +106,12 @@ export default function WhatWeDoManager() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!formData.title || !formData.description || !formData.content) {
+		if (
+			!formData.title ||
+			!formData.slug ||
+			!formData.description ||
+			!formData.content
+		) {
 			toast.error("Please fill in all required fields");
 			return;
 		}
@@ -232,11 +245,31 @@ export default function WhatWeDoManager() {
 								id="title"
 								placeholder="e.g. Health Systems Strengthening"
 								value={formData.title}
+								onChange={(e) => {
+									const title = e.target.value;
+									const slug = title
+										.toLowerCase()
+										.replace(/[^a-z0-9]+/g, "-")
+										.replace(/(^-|-$)/g, "");
+									setFormData({ ...formData, title, slug });
+								}}
+								required
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="slug">Slug (URL identifier)</Label>
+							<Input
+								id="slug"
+								placeholder="e.g. health-systems-strengthening"
+								value={formData.slug}
 								onChange={(e) =>
-									setFormData({ ...formData, title: e.target.value })
+									setFormData({ ...formData, slug: e.target.value })
 								}
 								required
 							/>
+							<p className="text-xs text-muted-foreground">
+								Used for hash links (e.g., #health-systems). Must be unique.
+							</p>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="description">Short Description</Label>

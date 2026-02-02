@@ -21,45 +21,32 @@ import {
 
 import { type ContentItem } from "@/app/actions/content";
 
+import { type NavbarData } from "@/actions/landing/navbar";
+
 interface NavbarProps {
 	latestPeopleStory?: ContentItem;
+	navbarData?: NavbarData;
 }
 
-const itemVariants: Variants = {
-	initial: { opacity: 0, y: 10 },
-	animate: { opacity: 1, y: 0 },
-	exit: { opacity: 0, y: 10 },
-};
+// ... existing variants
 
-const menuVariants: Variants = {
-	initial: {
-		opacity: 0,
-		y: -20,
-	},
-	animate: {
-		opacity: 1,
-		y: 0,
-		transition: {
-			duration: 0.3,
-			ease: "easeOut",
-			staggerChildren: 0.1,
-		},
-	},
-	exit: {
-		opacity: 0,
-		y: -20,
-		transition: {
-			duration: 0.2,
-			ease: "easeIn",
-			staggerChildren: 0.05,
-			staggerDirection: -1,
-		},
-	},
-};
-
-export function Navbar({ latestPeopleStory }: NavbarProps) {
+export function Navbar({ latestPeopleStory, navbarData }: NavbarProps) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const servicesLinks = navbarData?.services.length
+		? navbarData.services.map((s) => ({
+				label: s.title,
+				href: `/our-work#${s.slug || s.title.toLowerCase().replace(/\s+/g, "-")}`, // Fallback slug logic just in case
+			}))
+		: [
+				{ label: "Health Systems", href: "/our-work#health-systems" },
+				{ label: "Monitoring & Evaluation", href: "/our-work#mel" },
+				{ label: "Public Health", href: "/our-work#public-health" },
+				{ label: "Human Resources", href: "/our-work#hrh" },
+			];
+
+	const latestProject = navbarData?.latestProject;
 
 	const pcMenu = [
 		{
@@ -103,21 +90,24 @@ export function Navbar({ latestPeopleStory }: NavbarProps) {
 				},
 				links: {
 					title: "SECTORS",
-					items: [
-						{ label: "Health Systems", href: "/our-work#health-systems" },
-						{ label: "Monitoring & Evaluation", href: "/our-work#mel" },
-						{ label: "Public Health", href: "/our-work#public-health" },
-						{ label: "Human Resources", href: "/our-work#hrh" },
-					],
+					items: servicesLinks,
 				},
-				inFocus: {
-					title: "FEATURED WORK",
-					image: "/assets/two.PNG",
-					articleTitle: "Kebbi State HIV Intervention",
-					articleDescription:
-						"Improving case finding and treatment outcomes through targeted index case testing strategies.",
-					articleLink: "/projects/kebbi-hiv",
-				},
+				inFocus: latestProject
+					? {
+							title: "FEATURED WORK",
+							image: latestProject.image_url || "/assets/placeholder.jpg",
+							articleTitle: latestProject.title,
+							articleDescription: latestProject.summary,
+							articleLink: `/projects/${latestProject.slug}`,
+						}
+					: {
+							title: "FEATURED WORK",
+							image: "/assets/two.PNG",
+							articleTitle: "Kebbi State HIV Intervention",
+							articleDescription:
+								"Improving case finding and treatment outcomes through targeted index case testing strategies.",
+							articleLink: "/projects/kebbi-hiv",
+						},
 			},
 		},
 		{

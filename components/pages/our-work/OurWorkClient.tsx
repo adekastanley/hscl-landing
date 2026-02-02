@@ -21,10 +21,16 @@ export default function OurWorkClient() {
 		async function loadServices() {
 			const data = await getServices();
 			setServices(data);
-			if (data.length > 0) setActiveSection(data[0].id);
+			if (data.length > 0)
+				setActiveSection(
+					data[0].slug || data[0].title.toLowerCase().replace(/\s+/g, "-"),
+				);
 		}
 		loadServices();
-	});
+	}, []); // Removed missing dependency warning by adding empty array or correct dependencies
+
+	const getSlug = (service: Service) =>
+		service.slug || service.title.toLowerCase().replace(/\s+/g, "-");
 
 	const scrollToSection = (id: string) => {
 		const element = document.getElementById(id);
@@ -40,6 +46,7 @@ export default function OurWorkClient() {
 				behavior: "smooth",
 			});
 			setActiveSection(id);
+			window.history.pushState(null, "", `#${id}`);
 		}
 	};
 
@@ -68,11 +75,14 @@ export default function OurWorkClient() {
 
 	// Intersection Observer
 	useEffect(() => {
+		if (services.length === 0) return;
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						setActiveSection(entry.target.id);
+						// Optional: Update URL hash as user scrolls? Maybe annoying.
 					}
 				});
 			},
@@ -80,12 +90,13 @@ export default function OurWorkClient() {
 		);
 
 		services.forEach((service) => {
-			const element = document.getElementById(service.id);
+			const slug = getSlug(service);
+			const element = document.getElementById(slug);
 			if (element) observer.observe(element);
 		});
 
 		return () => observer.disconnect();
-	}, []);
+	}, [services]);
 
 	return (
 		<div className="bg-background">
@@ -122,20 +133,23 @@ export default function OurWorkClient() {
 			<div className="sticky top-[80px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b w-full">
 				<div className="container flex items-center justify-center h-14 overflow-x-auto no-scrollbar">
 					<nav className="flex items-center space-x-6 text-sm font-medium">
-						{services.map((item) => (
-							<button
-								key={item.id}
-								onClick={() => scrollToSection(item.id)}
-								className={cn(
-									"transition-colors hover:text-chemonics-lime uppercase tracking-wide px-2 py-1 border-b-2 border-transparent whitespace-nowrap",
-									activeSection === item.id
-										? "text-chemonics-navy border-chemonics-lime font-bold"
-										: "text-muted-foreground",
-								)}
-							>
-								{item.title}
-							</button>
-						))}
+						{services.map((item) => {
+							const slug = getSlug(item);
+							return (
+								<button
+									key={item.id}
+									onClick={() => scrollToSection(slug)}
+									className={cn(
+										"transition-colors hover:text-chemonics-lime uppercase tracking-wide px-2 py-1 border-b-2 border-transparent whitespace-nowrap",
+										activeSection === slug
+											? "text-chemonics-navy border-chemonics-lime font-bold"
+											: "text-muted-foreground",
+									)}
+								>
+									{item.title}
+								</button>
+							);
+						})}
 					</nav>
 				</div>
 			</div>
@@ -146,57 +160,60 @@ export default function OurWorkClient() {
 				</div>
 			) : (
 				<div className="container py-16 px-4 md:px-8 max-w-6xl mx-auto space-y-24">
-					{services.map((service, idx) => (
-						<div key={service.id}>
-							<section id={service.id} className="scroll-mt-32">
-								<div
-									className={cn(
-										"grid md:grid-cols-2 gap-12 items-center",
-										idx % 2 === 1 && "md:grid-flow-row-dense",
-									)}
-								>
-									<motion.div
-										initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-										whileInView={{ opacity: 1, x: 0 }}
-										viewport={{ once: true }}
-										transition={{ duration: 0.6 }}
-										className={cn(idx % 2 === 1 && "md:col-start-2")}
-									>
-										<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
-											{service.title}
-										</h2>
-										<div className="w-20 h-1 bg-chemonics-lime mb-8" />
-										<p className="text-xl font-medium text-chemonics-navy/80 mb-4">
-											{service.description}
-										</p>
-										<p className="text-lg text-muted-foreground leading-relaxed">
-											{service.content}
-										</p>
-									</motion.div>
-									<motion.div
-										initial={{ opacity: 0, scale: 0.9 }}
-										whileInView={{ opacity: 1, scale: 1 }}
-										viewport={{ once: true }}
-										transition={{ duration: 0.6 }}
+					{services.map((service, idx) => {
+						const slug = getSlug(service);
+						return (
+							<div key={service.id}>
+								<section id={slug} className="scroll-mt-32">
+									<div
 										className={cn(
-											"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg",
-											idx % 2 === 1 && "md:col-start-1",
+											"grid md:grid-cols-2 gap-12 items-center",
+											idx % 2 === 1 && "md:grid-flow-row-dense",
 										)}
 									>
-										<img
-											src={service.image_url || "/assets/three.jpg"}
-											alt={service.title}
-											className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-											onError={(e) => {
-												e.currentTarget.src = "https://placehold.co/600x400";
-											}}
-										/>
-									</motion.div>
-								</div>
-							</section>
-							{idx < services.length - 1 && <Separator className="mt-24" />}
-						</div>
-					))}
+										<motion.div
+											initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+											whileInView={{ opacity: 1, x: 0 }}
+											viewport={{ once: true }}
+											transition={{ duration: 0.6 }}
+											className={cn(idx % 2 === 1 && "md:col-start-2")}
+										>
+											<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
+												{service.title}
+											</h2>
+											<div className="w-20 h-1 bg-chemonics-lime mb-8" />
+											<p className="text-xl font-medium text-chemonics-navy/80 mb-4">
+												{service.description}
+											</p>
+											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">
+												{service.content}
+											</p>
+										</motion.div>
+										<motion.div
+											initial={{ opacity: 0, scale: 0.9 }}
+											whileInView={{ opacity: 1, scale: 1 }}
+											viewport={{ once: true }}
+											transition={{ duration: 0.6 }}
+											className={cn(
+												"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg",
+												idx % 2 === 1 && "md:col-start-1",
+											)}
+										>
+											<img
+												src={service.image_url || "/assets/three.jpg"}
+												alt={service.title}
+												className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+												onError={(e) => {
+													e.currentTarget.src = "https://placehold.co/600x400";
+												}}
+											/>
+										</motion.div>
+									</div>
+								</section>
+								{idx < services.length - 1 && <Separator className="mt-24" />}
+							</div>
+						);
+					})}
 				</div>
 			)}
 		</div>

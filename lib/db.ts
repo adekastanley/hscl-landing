@@ -251,12 +251,57 @@ const initDb = async () => {
     CREATE TABLE IF NOT EXISTS services (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
       description TEXT NOT NULL,
       content TEXT NOT NULL,
       image_url TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+	// Migration for services slug
+	try {
+		const servicesTable = await db.execute(
+			"SELECT sql FROM sqlite_master WHERE type='table' AND name='services'",
+		);
+		const sql = servicesTable.rows[0]?.sql as string;
+		if (sql && !sql.includes("slug")) {
+			console.log("Migrating services to include slug...");
+			// This is a bit tricky with NOT NULL UNIQUE.
+			// Simplest approach: Rename, Create New, Copy.
+			await db.execute("PRAGMA foreign_keys=OFF");
+			await db.execute("ALTER TABLE services RENAME TO services_old");
+			await db.execute(`
+            CREATE TABLE IF NOT EXISTS services (
+              id TEXT PRIMARY KEY,
+              title TEXT NOT NULL,
+              slug TEXT UNIQUE NOT NULL,
+              description TEXT NOT NULL,
+              content TEXT NOT NULL,
+              image_url TEXT,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+          `);
+			// Copy data, generating a temporary slug if needed? or just using ID?
+			// Let's us ID as slug fallback if title isn't suitable, but title is there.
+			// We can't do complex transformation in SQL easily in one go if we need to slugify.
+			// Ideally we fetch, transform, insert. But for migration in initDb, maybe we just use title and hope?
+			// Or just make it nullable for now?
+			// The user wants clean links.
+			// Let's do: Copy with slug = id (or title replaced spaces).
+			// SQLite replace: replace(lower(title), ' ', '-')
+			await db.execute(`
+            INSERT INTO services (id, title, slug, description, content, image_url, created_at)
+            SELECT id, title, lower(replace(title, ' ', '-')), description, content, image_url, created_at
+            FROM services_old
+          `);
+			await db.execute("DROP TABLE services_old");
+			await db.execute("PRAGMA foreign_keys=ON");
+			console.log("Migration for services slug successful");
+		}
+	} catch (e) {
+		console.error("Migration for services slug failed:", e);
+	}
 };
 
 let initPromise: Promise<void> | null = null;

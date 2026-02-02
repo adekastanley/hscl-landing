@@ -29,7 +29,57 @@ interface NavbarProps {
 	navbarData?: NavbarData;
 }
 
-// ... existing variants
+const menuVariants: Variants = {
+	initial: {
+		scaleY: 0,
+		opacity: 0,
+		transformOrigin: "top",
+	},
+	animate: {
+		scaleY: 1,
+		opacity: 1,
+		transition: {
+			duration: 0.3,
+			ease: "easeInOut",
+			when: "beforeChildren",
+			staggerChildren: 0.1,
+		},
+	},
+	exit: {
+		scaleY: 0,
+		opacity: 0,
+		transition: {
+			duration: 0.3,
+			ease: "easeInOut",
+			when: "afterChildren",
+			staggerChildren: 0.05,
+			staggerDirection: -1,
+		},
+	},
+};
+
+const itemVariants: Variants = {
+	initial: {
+		y: 20,
+		opacity: 0,
+	},
+	animate: {
+		y: 0,
+		opacity: 1,
+		transition: {
+			duration: 0.3,
+			ease: "easeOut",
+		},
+	},
+	exit: {
+		y: 20,
+		opacity: 0,
+		transition: {
+			duration: 0.2,
+			ease: "easeIn",
+		},
+	},
+};
 
 export function Navbar({
 	latestPeopleStory,

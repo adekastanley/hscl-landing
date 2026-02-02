@@ -143,9 +143,9 @@ export default function OurPeopleClientPage({
 			</section>
 
 			{/* Sticky Sub-navigation */}
-			<div className="sticky top-[80px] z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b w-full">
+			<div className="sticky top-[80px] z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b w-full">
 				<div className="container flex items-center justify-center h-14 overflow-x-auto no-scrollbar">
-					<nav className="flex items-center space-x-6 text-xs ">
+					<nav className="flex items-center space-x-6 text-xs  max-sm:pl-10">
 						{[
 							// { id: "leadership", label: "Leadership" },
 							// { id: "team", label: "Our Team" },

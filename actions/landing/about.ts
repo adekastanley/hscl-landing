@@ -1,22 +1,26 @@
 "use server";
 
 import db from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 // --- Site Content (Mission, etc.) ---
 
-export async function getSiteContent(key: string) {
-	try {
-		const res = await db.execute({
-			sql: "SELECT content FROM site_content WHERE key = ?",
-			args: [key],
-		});
-		return res.rows[0]?.content as string | null;
-	} catch (error) {
-		console.error(`Failed to get site content for key ${key}:`, error);
-		return null;
-	}
-}
+export const getSiteContent = unstable_cache(
+	async (key: string) => {
+		try {
+			const res = await db.execute({
+				sql: "SELECT content FROM site_content WHERE key = ?",
+				args: [key],
+			});
+			return res.rows[0]?.content as string | null;
+		} catch (error) {
+			console.error(`Failed to get site content for key ${key}:`, error);
+			return null;
+		}
+	},
+	["site-content"],
+	{ tags: ["site-content"] },
+);
 
 export async function updateSiteContent(key: string, content: string) {
 	try {
@@ -28,6 +32,7 @@ export async function updateSiteContent(key: string, content: string) {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("site-content");
 		return { success: true };
 	} catch (error) {
 		console.error(`Failed to update site content for key ${key}:`, error);
@@ -43,17 +48,21 @@ export interface CoreValue {
 	description: string;
 }
 
-export async function getCoreValues() {
-	try {
-		const res = await db.execute(
-			"SELECT * FROM core_values ORDER BY created_at ASC",
-		);
-		return JSON.parse(JSON.stringify(res.rows)) as CoreValue[];
-	} catch (error) {
-		console.error("Failed to get core values:", error);
-		return [];
-	}
-}
+export const getCoreValues = unstable_cache(
+	async () => {
+		try {
+			const res = await db.execute(
+				"SELECT * FROM core_values ORDER BY created_at ASC",
+			);
+			return JSON.parse(JSON.stringify(res.rows)) as CoreValue[];
+		} catch (error) {
+			console.error("Failed to get core values:", error);
+			return [];
+		}
+	},
+	["core-values"],
+	{ tags: ["core-values"] },
+);
 
 export async function addCoreValue(data: {
 	title: string;
@@ -67,6 +76,7 @@ export async function addCoreValue(data: {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("core-values");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Failed to add core value:", error);
@@ -85,6 +95,7 @@ export async function updateCoreValue(
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("core-values");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update core value:", error);
@@ -100,6 +111,7 @@ export async function deleteCoreValue(id: string) {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("core-values");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete core value:", error);

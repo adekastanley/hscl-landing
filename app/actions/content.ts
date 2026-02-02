@@ -1,7 +1,7 @@
 "use server";
 
 import db, { ensureDbInitialized } from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 
 export interface ContentItem {
 	id: string;
@@ -18,106 +18,118 @@ export interface ContentItem {
 	created_at: string;
 }
 
-export async function getItems(
-	type: "project" | "story" | "event" | "people_story",
-	limit = 100,
-	page = 1,
-	filterYear?: string,
-): Promise<ContentItem[]> {
-	try {
-		await ensureDbInitialized();
-		const offset = (page - 1) * limit;
-		const args: any[] = [type];
+export const getItems = unstable_cache(
+	async (
+		type: "project" | "story" | "event" | "people_story",
+		limit = 100,
+		page = 1,
+		filterYear?: string,
+	): Promise<ContentItem[]> => {
+		try {
+			await ensureDbInitialized();
+			const offset = (page - 1) * limit;
+			const args: any[] = [type];
 
-		let sql = `
+			let sql = `
 			SELECT c.*, 
 			(SELECT COUNT(*) FROM event_registrations WHERE event_id = c.id) as registration_count 
 			FROM content_items c 
 			WHERE c.type = ?
 		`;
 
-		if (filterYear && filterYear !== "all") {
-			sql += " AND strftime('%Y', c.published_date) = ?";
-			args.push(filterYear);
+			if (filterYear && filterYear !== "all") {
+				sql += " AND strftime('%Y', c.published_date) = ?";
+				args.push(filterYear);
+			}
+
+			sql += " ORDER BY c.published_date DESC LIMIT ? OFFSET ?";
+			args.push(limit, offset);
+
+			const result = await db.execute({ sql, args });
+			return result.rows.map((row) => ({
+				id: row.id as string,
+				type: row.type as "project" | "story" | "people_story",
+				title: row.title as string,
+				slug: row.slug as string,
+				summary: row.summary as string,
+				content: row.content as string,
+				image_url: row.image_url as string,
+				published_date: row.published_date as string,
+				category: row.category as "event" | "training" | undefined,
+				status: row.status as "open" | "closed" | undefined,
+				registration_count: Number(row.registration_count || 0),
+				created_at: String(row.created_at), // Ensure Date/Object is string
+			}));
+		} catch (error) {
+			console.error(`Failed to get ${type} items:`, error);
+			return [];
 		}
+	},
+	["content-items"],
+	{ tags: ["content-items"] },
+);
 
-		sql += " ORDER BY c.published_date DESC LIMIT ? OFFSET ?";
-		args.push(limit, offset);
+export const getItemBySlug = unstable_cache(
+	async (
+		slug: string,
+		type?: "project" | "story" | "event" | "people_story",
+	): Promise<ContentItem | null> => {
+		try {
+			await ensureDbInitialized();
+			let sql = "SELECT * FROM content_items WHERE slug = ?";
+			const args = [slug];
 
-		const result = await db.execute({ sql, args });
-		return result.rows.map((row) => ({
-			id: row.id as string,
-			type: row.type as "project" | "story" | "people_story",
-			title: row.title as string,
-			slug: row.slug as string,
-			summary: row.summary as string,
-			content: row.content as string,
-			image_url: row.image_url as string,
-			published_date: row.published_date as string,
-			category: row.category as "event" | "training" | undefined,
-			status: row.status as "open" | "closed" | undefined,
-			registration_count: Number(row.registration_count || 0),
-			created_at: String(row.created_at), // Ensure Date/Object is string
-		}));
-	} catch (error) {
-		console.error(`Failed to get ${type} items:`, error);
-		return [];
-	}
-}
+			if (type) {
+				sql += " AND type = ?";
+				args.push(type);
+			}
 
-export async function getItemBySlug(
-	slug: string,
-	type?: "project" | "story" | "event" | "people_story",
-): Promise<ContentItem | null> {
-	try {
-		await ensureDbInitialized();
-		let sql = "SELECT * FROM content_items WHERE slug = ?";
-		const args = [slug];
+			const result = await db.execute({
+				sql: sql + " LIMIT 1",
+				args,
+			});
+			const row = result.rows[0];
+			if (!row) return null;
 
-		if (type) {
-			sql += " AND type = ?";
-			args.push(type);
+			return {
+				id: row.id as string,
+				type: row.type as "project" | "story" | "event" | "people_story",
+				title: row.title as string,
+				slug: row.slug as string,
+				summary: row.summary as string,
+				content: row.content as string,
+				image_url: row.image_url as string,
+				published_date: row.published_date as string,
+				created_at: String(row.created_at),
+			};
+		} catch (error) {
+			console.error("Failed to get item by slug:", error);
+			return null;
 		}
+	},
+	["content-item-slug"],
+	{ tags: ["content-item-slug"] },
+);
 
-		const result = await db.execute({
-			sql: sql + " LIMIT 1",
-			args,
-		});
-		const row = result.rows[0];
-		if (!row) return null;
-
-		return {
-			id: row.id as string,
-			type: row.type as "project" | "story" | "event" | "people_story",
-			title: row.title as string,
-			slug: row.slug as string,
-			summary: row.summary as string,
-			content: row.content as string,
-			image_url: row.image_url as string,
-			published_date: row.published_date as string,
-			created_at: String(row.created_at),
-		};
-	} catch (error) {
-		console.error("Failed to get item by slug:", error);
-		return null;
-	}
-}
-
-export async function getYears(
-	type: "project" | "story" | "event" | "people_story",
-): Promise<string[]> {
-	try {
-		await ensureDbInitialized();
-		const result = await db.execute({
-			sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
-			args: [type],
-		});
-		return result.rows.map((row: any) => String(row.year)).filter(Boolean);
-	} catch (error) {
-		console.error("Failed to get years:", error);
-		return [];
-	}
-}
+export const getYears = unstable_cache(
+	async (
+		type: "project" | "story" | "event" | "people_story",
+	): Promise<string[]> => {
+		try {
+			await ensureDbInitialized();
+			const result = await db.execute({
+				sql: "SELECT DISTINCT strftime('%Y', published_date) as year FROM content_items WHERE type = ? ORDER BY year DESC",
+				args: [type],
+			});
+			return result.rows.map((row: any) => String(row.year)).filter(Boolean);
+		} catch (error) {
+			console.error("Failed to get years:", error);
+			return [];
+		}
+	},
+	["content-years"],
+	{ tags: ["content-years"] },
+);
 
 export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 	const id = Math.random().toString(36).substring(2, 15);
@@ -143,6 +155,8 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
+		// revalidateTag("content-items");
+		// revalidateTag("content-years");
 		return { success: true, data: { id, ...data } };
 	} catch (error) {
 		console.error("Failed to create item:", error);
@@ -207,6 +221,9 @@ export async function updateItem(
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
+		// revalidateTag("content-items");
+		// revalidateTag("content-item-slug");
+		// revalidateTag("content-years");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update item:", error);
@@ -229,6 +246,8 @@ export async function deleteItem(id: string) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
+		// revalidateTag("content-items");
+		// revalidateTag("content-years");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete item:", error);

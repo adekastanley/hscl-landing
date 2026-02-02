@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 
 export interface ActiveCountry {
 	id: string;
@@ -16,40 +16,44 @@ export interface ActiveCountryProject {
 	title: string;
 }
 
-export async function getActiveCountries(): Promise<ActiveCountry[]> {
-	try {
-		const countriesResult = await db.execute(
-			"SELECT * FROM active_countries ORDER BY name ASC",
-		);
+export const getActiveCountries = unstable_cache(
+	async (): Promise<ActiveCountry[]> => {
+		try {
+			const countriesResult = await db.execute(
+				"SELECT * FROM active_countries ORDER BY name ASC",
+			);
 
-		// Map to plain objects and sanitize
-		const countries = countriesResult.rows.map((row: any) => ({
-			id: row.id,
-			name: row.name,
-			code: row.code,
-			projects: [],
-		})) as ActiveCountry[];
+			// Map to plain objects and sanitize
+			const countries = countriesResult.rows.map((row: any) => ({
+				id: row.id,
+				name: row.name,
+				code: row.code,
+				projects: [],
+			})) as ActiveCountry[];
 
-		for (const country of countries) {
-			const projectsResult = await db.execute({
-				sql: "SELECT * FROM active_country_projects WHERE country_id = ?",
-				args: [country.id],
-			});
+			for (const country of countries) {
+				const projectsResult = await db.execute({
+					sql: "SELECT * FROM active_country_projects WHERE country_id = ?",
+					args: [country.id],
+				});
 
-			// Map projects to partial objects to ensure no extra fields like 'link' or 'created_at' leak through
-			country.projects = projectsResult.rows.map((pRow: any) => ({
-				id: pRow.id,
-				country_id: pRow.country_id,
-				title: pRow.title,
-			})) as ActiveCountryProject[];
+				// Map projects to partial objects to ensure no extra fields like 'link' or 'created_at' leak through
+				country.projects = projectsResult.rows.map((pRow: any) => ({
+					id: pRow.id,
+					country_id: pRow.country_id,
+					title: pRow.title,
+				})) as ActiveCountryProject[];
+			}
+
+			return countries;
+		} catch (error) {
+			console.error("Error fetching active countries:", error);
+			return [];
 		}
-
-		return countries;
-	} catch (error) {
-		console.error("Error fetching active countries:", error);
-		return [];
-	}
-}
+	},
+	["active-countries"],
+	{ tags: ["active-countries"] },
+);
 
 export async function addActiveCountry(data: { name: string; code?: string }) {
 	const id = crypto.randomUUID();
@@ -93,6 +97,7 @@ export async function deleteActiveCountry(id: string) {
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("active-countries");
 		return { success: true };
 	} catch (error) {
 		console.error("Error deleting active country:", error);
@@ -112,6 +117,7 @@ export async function addProjectToCountry(
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("active-countries");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Error adding project to country:", error);
@@ -127,6 +133,7 @@ export async function removeProjectFromCountry(projectId: string) {
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
+		// revalidateTag("active-countries");
 		return { success: true };
 	} catch (error) {
 		console.error("Error removing project from country:", error);

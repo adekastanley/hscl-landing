@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 export interface Service {
 	id: string;
@@ -11,17 +11,21 @@ export interface Service {
 	image_url: string;
 }
 
-export async function getServices() {
-	try {
-		const res = await db.execute(
-			"SELECT * FROM services ORDER BY created_at ASC",
-		);
-		return JSON.parse(JSON.stringify(res.rows)) as Service[];
-	} catch (error) {
-		console.error("Failed to get services:", error);
-		return [];
-	}
-}
+export const getServices = unstable_cache(
+	async () => {
+		try {
+			const res = await db.execute(
+				"SELECT * FROM services ORDER BY created_at ASC",
+			);
+			return JSON.parse(JSON.stringify(res.rows)) as Service[];
+		} catch (error) {
+			console.error("Failed to get services:", error);
+			return [];
+		}
+	},
+	["services"],
+	{ tags: ["services"] },
+);
 
 export async function addService(data: Omit<Service, "id">) {
 	const id = Math.random().toString(36).substring(2, 15);
@@ -31,8 +35,9 @@ export async function addService(data: Omit<Service, "id">) {
 			args: [id, data.title, data.description, data.content, data.image_url],
 		});
 		revalidatePath("/admin/dashboard/landing");
-		revalidatePath("/what-we-do"); // Assuming this is the public path or relevant path
-		revalidatePath("/our-work"); // Based on file path
+		revalidatePath("/what-we-do");
+		revalidatePath("/our-work");
+		// revalidateTag("services");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Failed to add service:", error);
@@ -49,6 +54,7 @@ export async function updateService(id: string, data: Omit<Service, "id">) {
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
+		// revalidateTag("services");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update service:", error);
@@ -65,6 +71,7 @@ export async function deleteService(id: string) {
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
+		// revalidateTag("services");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete service:", error);

@@ -31,7 +31,7 @@ export const getNavbarData = unstable_cache(
 				? ({
 						...projectRes.rows[0],
 						created_at: String(projectRes.rows[0].created_at),
-					} as ContentItem)
+					} as unknown as ContentItem)
 				: null;
 
 			return { services, latestProject };

@@ -57,6 +57,7 @@ export function TeamManager({
 		linkedin: "",
 		twitter: "",
 		email: "",
+		display_order: 0,
 	});
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -82,6 +83,7 @@ export function TeamManager({
 			linkedin: "",
 			twitter: "",
 			email: "",
+			display_order: 0,
 		});
 		setEditingId(null);
 		if (inputFileRef.current) inputFileRef.current.value = "";
@@ -380,6 +382,21 @@ export function TeamManager({
 										placeholder="email@example.com"
 									/>
 								</div>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="order">Display Order (Lower comes first)</Label>
+								<Input
+									id="order"
+									type="number"
+									value={formData.display_order ?? 0}
+									onChange={(e) =>
+										setFormData({
+											...formData,
+											display_order: parseInt(e.target.value) || 0,
+										})
+									}
+									placeholder="0"
+								/>
 							</div>
 						</div>
 						<DialogFooter>

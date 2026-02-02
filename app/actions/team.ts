@@ -13,13 +13,26 @@ export interface TeamMember {
 	linkedin?: string;
 	twitter?: string;
 	email?: string;
+	display_order?: number;
 }
 
 export async function getTeamMembers(category?: string): Promise<TeamMember[]> {
 	try {
+		// Sort Priority:
+		// 1. Members with display_order > 0 (Explicitly ordered)
+		// 2. Members with display_order = 0 (Default / Unordered)
+		//
+		// CASE statement logic:
+		// - If display_order = 0 -> 1 (Second group)
+		// - Else -> 0 (First group)
+		// Then sort by display_order ASC (for the first group: 1, 2, 3...)
+		// Then by created_at DESC (for tie-breaking and for the zero group)
+		const orderByClause =
+			"ORDER BY CASE WHEN display_order = 0 THEN 1 ELSE 0 END ASC, display_order ASC, created_at DESC";
+
 		const sql = category
-			? "SELECT * FROM team_members WHERE category = ? ORDER BY created_at DESC"
-			: "SELECT * FROM team_members ORDER BY created_at DESC";
+			? `SELECT * FROM team_members WHERE category = ? ${orderByClause}`
+			: `SELECT * FROM team_members ${orderByClause}`;
 
 		const args = category ? [category] : [];
 
@@ -53,7 +66,7 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 
 	try {
 		await db.execute({
-			sql: "INSERT INTO team_members (id, name, role, bio, image_url, category, linkedin, twitter, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			sql: "INSERT INTO team_members (id, name, role, bio, image_url, category, linkedin, twitter, email, display_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			args: [
 				id,
 				data.name,
@@ -64,6 +77,7 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 				data.linkedin || null,
 				data.twitter || null,
 				data.email || null,
+				data.display_order ?? 0,
 			],
 		});
 		revalidatePath("/about");
@@ -82,7 +96,7 @@ export async function updateTeamMember(
 ) {
 	try {
 		await db.execute({
-			sql: "UPDATE team_members SET name = ?, role = ?, bio = ?, image_url = ?, category = ?, linkedin = ?, twitter = ?, email = ? WHERE id = ?",
+			sql: "UPDATE team_members SET name = ?, role = ?, bio = ?, image_url = ?, category = ?, linkedin = ?, twitter = ?, email = ?, display_order = ? WHERE id = ?",
 			args: [
 				data.name,
 				data.role,
@@ -92,6 +106,7 @@ export async function updateTeamMember(
 				data.linkedin || null,
 				data.twitter || null,
 				data.email || null,
+				data.display_order ?? 0,
 				id,
 			],
 		});

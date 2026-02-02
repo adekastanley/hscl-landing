@@ -18,6 +18,7 @@ const initDb = async () => {
       linkedin TEXT,
       twitter TEXT,
       email TEXT,
+      display_order INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -105,6 +106,13 @@ const initDb = async () => {
 	}
 	try {
 		await db.execute("ALTER TABLE team_members ADD COLUMN email TEXT");
+	} catch (e) {
+		// Column likely exists
+	}
+	try {
+		await db.execute(
+			"ALTER TABLE team_members ADD COLUMN display_order INTEGER DEFAULT 0",
+		);
 	} catch (e) {
 		// Column likely exists
 	}

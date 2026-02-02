@@ -4,51 +4,100 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 
 export function Preloader() {
-	const [complete, setComplete] = useState(false);
+	const [textVisible, setTextVisible] = useState(true);
+	const [exitAnimation, setExitAnimation] = useState(false);
 
 	useEffect(() => {
-		// Total animation time roughly 3-4s before revealing
-		const timer = setTimeout(() => {
-			setComplete(true);
+		// 1. Text fills for 3 seconds
+		// 2. Text fades out at 3.2s
+		const textTimer = setTimeout(() => {
+			setTextVisible(false);
+		}, 3200);
+
+		// 3. Start exit swipes shortly after text fade starts
+		const exitTimer = setTimeout(() => {
+			setExitAnimation(true);
 		}, 3500);
-		return () => clearTimeout(timer);
+
+		return () => {
+			clearTimeout(textTimer);
+			clearTimeout(exitTimer);
+		};
 	}, []);
 
 	return (
 		<AnimatePresence>
-			{!complete && (
+			{/* Main Container - Navy Background (First Layer) */}
+			{!exitAnimation && (
 				<motion.div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-chemonics-navy text-white overflow-hidden"
-					initial={{ x: 0 }}
+					key="layer-navy"
+					className="fixed inset-0 z-[60] flex items-center justify-center bg-[#001d3d] overflow-hidden"
 					exit={{
-						x: "-100%",
-						transition: { duration: 0.8, ease: "easeInOut" },
+						x: "100%",
+						transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
 					}}
 				>
-					{/* Breathing Text Container */}
-					<motion.div
-						className="relative"
-						// animate={{ scale: [1, 1.05, 1] }}
-						// transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-					>
-						{/* Background Faded Text */}
-						<h1 className="text-6xl md:text-9xl font-bold font-montserrat text-white/20">
-							HSCL
-						</h1>
-
-						{/* Foreground Fill Text */}
-						<h1 className="absolute top-0 left-0 text-6xl md:text-9xl font-bold font-montserrat text-white overflow-hidden">
-							<motion.span
-								initial={{ width: "0%" }}
-								animate={{ width: "100%" }}
-								transition={{ duration: 3, ease: "easeInOut" }}
-								className="block overflow-hidden whitespace-nowrap"
+					{/* Text Container */}
+					<AnimatePresence>
+						{textVisible && (
+							<motion.div
+								key="preloader-text"
+								className="relative"
+								initial={{ opacity: 1 }}
+								exit={{ opacity: 0, transition: { duration: 0.5 } }}
 							>
-								HSCL
-							</motion.span>
-						</h1>
-					</motion.div>
+								{/* Background Faded Text */}
+								<h1 className="text-6xl md:text-9xl font-bold font-montserrat text-white/20">
+									HSCL
+								</h1>
+
+								{/* Foreground Fill Text */}
+								<h1 className="absolute top-0 left-0 text-6xl md:text-9xl font-bold font-montserrat text-white overflow-hidden">
+									<motion.span
+										initial={{ width: "0%" }}
+										animate={{ width: "100%" }}
+										transition={{ duration: 3, ease: "easeInOut" }}
+										className="block overflow-hidden whitespace-nowrap"
+									>
+										HSCL
+									</motion.span>
+								</h1>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</motion.div>
+			)}
+
+			{/* Second Layer - Teal */}
+			{!exitAnimation && (
+				<motion.div
+					key="layer-teal"
+					className="fixed inset-0 z-[59] bg-[#009ca6]"
+					exit={{
+						x: "100%",
+						transition: {
+							duration: 0.8,
+							ease: [0.76, 0, 0.24, 1],
+							delay: 0.1,
+						},
+					}}
+				/>
+			)}
+
+			{/* Third Layer - Lime */}
+			{!exitAnimation && (
+				<motion.div
+					key="layer-lime"
+					className="fixed inset-0 z-[58] bg-[#3fa34d]"
+					exit={{
+						x: "100%",
+						transition: {
+							duration: 0.8,
+							ease: [0.76, 0, 0.24, 1],
+							delay: 0.2, // Slightly more delay for the last swipe
+						},
+					}}
+				/>
 			)}
 		</AnimatePresence>
 	);

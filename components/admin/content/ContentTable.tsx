@@ -286,8 +286,8 @@ export function ContentTable({ type }: ContentTableProps) {
 
 	return (
 		<div className="space-y-4">
-			<div className="flex justify-between items-center">
-				<h2 className="text-2xl font-bold tracking-tight capitalize">
+			<div className="flex justify-between  items-center">
+				<h2 className="text-xl md:text-2xl mr-1 font-bold tracking-tight capitalize">
 					{type === "project"
 						? "Projects"
 						: type === "story"
@@ -299,7 +299,7 @@ export function ContentTable({ type }: ContentTableProps) {
 				<div className="flex items-center gap-2">
 					{type === "project" && (
 						<Select value={filterYear} onValueChange={setFilterYear}>
-							<SelectTrigger className="w-[120px]">
+							<SelectTrigger className="w-[120px] text-xs md:text-base">
 								<SelectValue placeholder="All Years" />
 							</SelectTrigger>
 							<SelectContent>
@@ -314,9 +314,9 @@ export function ContentTable({ type }: ContentTableProps) {
 					)}
 					<Button
 						onClick={openCreate}
-						className="bg-chemonics-teal hover:bg-chemonics-teal/90"
+						className="text-xs md:text-base bg-chemonics-teal hover:bg-chemonics-teal/90"
 					>
-						<Plus className="mr-2 h-4 w-4" /> Add{" "}
+						<Plus className=" md:mr-2 h-2 w-2" /> Add{" "}
 						{type === "project"
 							? "Project"
 							: type === "story"

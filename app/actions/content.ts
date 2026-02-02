@@ -1,7 +1,7 @@
 "use server";
 
 import db, { ensureDbInitialized } from "@/lib/db";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 export interface ContentItem {
 	id: string;
@@ -155,8 +155,8 @@ export async function createItem(data: Omit<ContentItem, "id" | "created_at">) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
-		// revalidateTag("content-items");
-		// revalidateTag("content-years");
+		revalidateTag("content-items", "default");
+		revalidateTag("content-years", "default");
 		return { success: true, data: { id, ...data } };
 	} catch (error) {
 		console.error("Failed to create item:", error);
@@ -221,9 +221,9 @@ export async function updateItem(
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
-		// revalidateTag("content-items");
-		// revalidateTag("content-item-slug");
-		// revalidateTag("content-years");
+		revalidateTag("content-items", "default");
+		revalidateTag("content-item-slug", "default");
+		revalidateTag("content-years", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update item:", error);
@@ -246,8 +246,8 @@ export async function deleteItem(id: string) {
 		revalidatePath("/admin/dashboard/events");
 		revalidatePath("/projects");
 		revalidatePath("/success-stories");
-		// revalidateTag("content-items");
-		// revalidateTag("content-years");
+		revalidateTag("content-items", "default");
+		revalidateTag("content-years", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete item:", error);

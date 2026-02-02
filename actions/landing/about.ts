@@ -32,7 +32,7 @@ export async function updateSiteContent(key: string, content: string) {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("site-content");
+		revalidateTag("site-content", "default");
 		return { success: true };
 	} catch (error) {
 		console.error(`Failed to update site content for key ${key}:`, error);
@@ -76,7 +76,7 @@ export async function addCoreValue(data: {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("core-values");
+		revalidateTag("core-values", "default");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Failed to add core value:", error);
@@ -95,7 +95,7 @@ export async function updateCoreValue(
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("core-values");
+		revalidateTag("core-values", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update core value:", error);
@@ -111,7 +111,7 @@ export async function deleteCoreValue(id: string) {
 		});
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("core-values");
+		revalidateTag("core-values", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete core value:", error);

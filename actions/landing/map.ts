@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
-import { revalidatePath, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 export interface ActiveCountry {
 	id: string;
@@ -64,6 +64,7 @@ export async function addActiveCountry(data: { name: string; code?: string }) {
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
+		revalidateTag("active-countries", "default");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Error adding active country:", error);
@@ -82,6 +83,7 @@ export async function updateActiveCountry(
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
+		revalidateTag("active-countries", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Error updating active country:", error);
@@ -97,7 +99,7 @@ export async function deleteActiveCountry(id: string) {
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("active-countries");
+		revalidateTag("active-countries", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Error deleting active country:", error);
@@ -117,7 +119,7 @@ export async function addProjectToCountry(
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("active-countries");
+		revalidateTag("active-countries", "default");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Error adding project to country:", error);
@@ -133,7 +135,7 @@ export async function removeProjectFromCountry(projectId: string) {
 		});
 		revalidatePath("/");
 		revalidatePath("/admin/dashboard/landing");
-		// revalidateTag("active-countries");
+		revalidateTag("active-countries", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Error removing project from country:", error);

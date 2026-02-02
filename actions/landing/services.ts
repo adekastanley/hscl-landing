@@ -37,7 +37,7 @@ export async function addService(data: Omit<Service, "id">) {
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
-		// revalidateTag("services");
+		revalidateTag("services", "default");
 		return { success: true, id };
 	} catch (error) {
 		console.error("Failed to add service:", error);
@@ -54,7 +54,7 @@ export async function updateService(id: string, data: Omit<Service, "id">) {
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
-		// revalidateTag("services");
+		revalidateTag("services", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to update service:", error);
@@ -71,7 +71,7 @@ export async function deleteService(id: string) {
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
-		// revalidateTag("services");
+		revalidateTag("services", "default");
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to delete service:", error);

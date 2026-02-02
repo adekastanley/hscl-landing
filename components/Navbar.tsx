@@ -25,12 +25,17 @@ import { type NavbarData } from "@/actions/landing/navbar";
 
 interface NavbarProps {
 	latestPeopleStory?: ContentItem;
+	latestSuccessStory?: ContentItem;
 	navbarData?: NavbarData;
 }
 
 // ... existing variants
 
-export function Navbar({ latestPeopleStory, navbarData }: NavbarProps) {
+export function Navbar({
+	latestPeopleStory,
+	latestSuccessStory,
+	navbarData,
+}: NavbarProps) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -67,17 +72,27 @@ export function Navbar({ latestPeopleStory, navbarData }: NavbarProps) {
 						{ label: "Our Team", href: "/about#team" },
 					],
 				},
-				inFocus: {
-					link: "/projects",
-					title: "IN FOCUS",
-					image: "/assets/three.jpg",
-					articleTitle: "Driving Sustainable Impact",
-					articleDescription:
-						"Learn how our holistic approach ensures long-term development success across the African continent.",
-					articleLink: "/impact",
-				},
+				inFocus: latestSuccessStory
+					? {
+							title: "SUCCESS STORY",
+							image: latestSuccessStory.image_url || "/assets/three.jpg",
+							articleTitle: latestSuccessStory.title,
+							articleDescription: latestSuccessStory.summary,
+							articleLink: `/success-stories/${latestSuccessStory.slug}`, // Assuming route
+						}
+					: {
+							link: "/projects",
+							title: "IN FOCUS",
+							image: "/assets/three.jpg",
+							articleTitle: "Driving Sustainable Impact",
+							articleDescription:
+								"Learn how our holistic approach ensures long-term development success across the African continent.",
+							articleLink: "/impact",
+						},
 			},
 		},
+		// ... rest of pcMenu items (What We Do, In Focus, Our People)
+
 		{
 			title: "What We Do",
 			link: "/our-work",

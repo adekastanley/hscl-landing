@@ -32,11 +32,19 @@ export default async function LandingLayout({
 }>) {
 	const latestPeopleStories = await getItems("people_story", 1);
 	const latestPeopleStory = latestPeopleStories[0];
+
+	const latestSuccessStories = await getItems("story", 1);
+	const latestSuccessStory = latestSuccessStories[0];
+
 	const navbarData = await getNavbarData();
 
 	return (
 		<>
-			<Navbar latestPeopleStory={latestPeopleStory} navbarData={navbarData} />
+			<Navbar
+				latestPeopleStory={latestPeopleStory}
+				latestSuccessStory={latestSuccessStory}
+				navbarData={navbarData}
+			/>
 			{children}
 			<SiteFooter />
 		</>

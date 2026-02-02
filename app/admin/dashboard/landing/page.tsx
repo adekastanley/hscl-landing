@@ -1,5 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MapManager from "@/components/admin/landing/MapManager";
+import MissionManager from "@/components/admin/landing/MissionManager";
+import ValuesManager from "@/components/admin/landing/ValuesManager";
+import WhatWeDoManager from "@/components/admin/landing/WhatWeDoManager";
 
 export default function LandingPageManagement() {
 	return (
@@ -11,6 +14,7 @@ export default function LandingPageManagement() {
 				<TabsList>
 					<TabsTrigger value="home">Home Page</TabsTrigger>
 					<TabsTrigger value="about">About (Who We Are)</TabsTrigger>
+					<TabsTrigger value="what-we-do">What We Do</TabsTrigger>
 					{/* Add more tabs as needed */}
 				</TabsList>
 
@@ -21,10 +25,13 @@ export default function LandingPageManagement() {
 					</div>
 				</TabsContent>
 
-				<TabsContent value="about">
-					<div className="p-4 border rounded-lg bg-muted/20 border-dashed text-center text-muted-foreground">
-						About page content management coming soon.
-					</div>
+				<TabsContent value="about" className="space-y-6">
+					<MissionManager />
+					<ValuesManager />
+				</TabsContent>
+
+				<TabsContent value="what-we-do">
+					<WhatWeDoManager />
 				</TabsContent>
 			</Tabs>
 		</div>

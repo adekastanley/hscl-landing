@@ -5,47 +5,25 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
-const services = [
-	{
-		id: "health-systems",
-		title: "Health Systems Strengthening",
-		description:
-			"Strengthening health systems is ensuring that the system's performance is improved.",
-		content: `HSS aims to improve the six health system building blocks: service delivery, health workforce, information systems, medical products/vaccines/technologies, financing, and leadership/governance. We help countries and organizations identify and implement changes in policy and practice to respond better to health challenges, leading to better health through improvements in access, coverage, quality, and efficiency.`,
-		image: "/assets/three.jpg", // Placeholder
-	},
-	{
-		id: "mel",
-		title: "Monitoring, Evaluation & Learning",
-		description:
-			"Enhancing performance and achieving desired outcomes through data-driven insights.",
-		content: `Our MEL framework is designed to improve current and future management of outputs, outcomes, and impact. We provide continuous assessment to give stakeholders timely information on progress. Our systematic evaluations assess relevance, effectiveness, efficiency, and impact, ensuring accountability and stimulating continuous learning and improvement for projects and institutions.`,
-		image: "/assets/two.PNG", // Placeholder
-	},
-	{
-		id: "public-health",
-		title: "Public Health",
-		description:
-			"Protecting and improving the health of communities through organized efforts.",
-		content: `We focus on protecting and improving the health of entire populations. Our work involves promoting healthy lifestyles, disease and injury prevention, and detecting, preventing, and responding to infectious diseases. We implement educational programs and evidence-based solutions to help communities live longer, healthier lives, ensuring health equity and preparedness.`,
-		image: "/assets/samg.webp", // Placeholder
-	},
-	{
-		id: "hrh",
-		title: "Human Resources for Health",
-		description: "Optimizing the health workforce for better service delivery.",
-		content: `We address the challenges of the health workforce by developing strategies to improve recruitment, training, retention, and performance. Our approach ensures that the right people with the right skills are in the right places to deliver effective health services. We work on strengthening HR management systems and fostering a supportive environment for health workers.`,
-		image: "/assets/three.jpg", // Placeholder
-	},
-];
+import { getServices, type Service } from "@/actions/landing/services";
 
 export default function OurWorkClient() {
-	const [activeSection, setActiveSection] = useState(services[0].id);
+	const [services, setServices] = useState<Service[]>([]);
+	const [activeSection, setActiveSection] = useState("");
 	const { scrollYProgress } = useScroll();
 	const scaleX = useSpring(scrollYProgress, {
 		stiffness: 100,
 		damping: 30,
 		restDelta: 0.001,
+	});
+
+	useEffect(() => {
+		async function loadServices() {
+			const data = await getServices();
+			setServices(data);
+			if (data.length > 0) setActiveSection(data[0].id);
+		}
+		loadServices();
 	});
 
 	const scrollToSection = (id: string) => {
@@ -162,59 +140,65 @@ export default function OurWorkClient() {
 				</div>
 			</div>
 
-			<div className="container py-16 px-4 md:px-8 max-w-6xl mx-auto space-y-24">
-				{services.map((service, idx) => (
-					<div key={service.id}>
-						<section id={service.id} className="scroll-mt-32">
-							<div
-								className={cn(
-									"grid md:grid-cols-2 gap-12 items-center",
-									idx % 2 === 1 && "md:grid-flow-row-dense",
-								)}
-							>
-								<motion.div
-									initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-									whileInView={{ opacity: 1, x: 0 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.6 }}
-									className={cn(idx % 2 === 1 && "md:col-start-2")}
-								>
-									<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
-										{service.title}
-									</h2>
-									<div className="w-20 h-1 bg-chemonics-lime mb-8" />
-									<p className="text-xl font-medium text-chemonics-navy/80 mb-4">
-										{service.description}
-									</p>
-									<p className="text-lg text-muted-foreground leading-relaxed">
-										{service.content}
-									</p>
-								</motion.div>
-								<motion.div
-									initial={{ opacity: 0, scale: 0.9 }}
-									whileInView={{ opacity: 1, scale: 1 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.6 }}
+			{services.length === 0 ? (
+				<div className="container py-24 text-center text-muted-foreground">
+					Loading services...
+				</div>
+			) : (
+				<div className="container py-16 px-4 md:px-8 max-w-6xl mx-auto space-y-24">
+					{services.map((service, idx) => (
+						<div key={service.id}>
+							<section id={service.id} className="scroll-mt-32">
+								<div
 									className={cn(
-										"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg",
-										idx % 2 === 1 && "md:col-start-1",
+										"grid md:grid-cols-2 gap-12 items-center",
+										idx % 2 === 1 && "md:grid-flow-row-dense",
 									)}
 								>
-									<img
-										src={service.image}
-										alt={service.title}
-										className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-										onError={(e) => {
-											e.currentTarget.src = "https://placehold.co/600x400";
-										}}
-									/>
-								</motion.div>
-							</div>
-						</section>
-						{idx < services.length - 1 && <Separator className="mt-24" />}
-					</div>
-				))}
-			</div>
+									<motion.div
+										initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
+										whileInView={{ opacity: 1, x: 0 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.6 }}
+										className={cn(idx % 2 === 1 && "md:col-start-2")}
+									>
+										<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
+											{service.title}
+										</h2>
+										<div className="w-20 h-1 bg-chemonics-lime mb-8" />
+										<p className="text-xl font-medium text-chemonics-navy/80 mb-4">
+											{service.description}
+										</p>
+										<p className="text-lg text-muted-foreground leading-relaxed">
+											{service.content}
+										</p>
+									</motion.div>
+									<motion.div
+										initial={{ opacity: 0, scale: 0.9 }}
+										whileInView={{ opacity: 1, scale: 1 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.6 }}
+										className={cn(
+											"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg",
+											idx % 2 === 1 && "md:col-start-1",
+										)}
+									>
+										<img
+											src={service.image_url || "/assets/three.jpg"}
+											alt={service.title}
+											className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+											onError={(e) => {
+												e.currentTarget.src = "https://placehold.co/600x400";
+											}}
+										/>
+									</motion.div>
+								</div>
+							</section>
+							{idx < services.length - 1 && <Separator className="mt-24" />}
+						</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

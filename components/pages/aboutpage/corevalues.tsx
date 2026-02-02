@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "motion/react";
-export default function CoreValues() {
-	const coreValues = [
+import { CoreValue } from "@/actions/landing/about";
+
+export default function CoreValues({ values }: { values?: CoreValue[] }) {
+	const defaultValues = [
 		{
 			title: "Excellence",
 			description:
@@ -28,6 +30,8 @@ export default function CoreValues() {
 				"HSCL is a hub of innovative minds where we are able to constantly raise the bar to meet the needs of an ever-changing world.",
 		},
 	];
+
+	const displayValues = values && values.length > 0 ? values : defaultValues;
 	return (
 		<section id="values" className="scroll-mt-32">
 			<motion.div
@@ -43,7 +47,7 @@ export default function CoreValues() {
 			</motion.div>
 
 			<div className="grid md:grid-cols-3 gap-6">
-				{coreValues.map((value, idx) => (
+				{displayValues.map((value, idx) => (
 					<motion.div
 						key={idx}
 						initial={{ opacity: 0, y: 20 }}

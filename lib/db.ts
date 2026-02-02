@@ -225,6 +225,38 @@ const initDb = async () => {
       FOREIGN KEY (country_id) REFERENCES active_countries(id) ON DELETE CASCADE
     )
   `);
+
+	// Site Content (Mission, etc.)
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS site_content (
+      key TEXT PRIMARY KEY,
+      content TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+	// Core Values
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS core_values (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+	// Services (What We Do)
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS services (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      content TEXT NOT NULL,
+      image_url TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 };
 
 let initPromise: Promise<void> | null = null;

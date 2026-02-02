@@ -143,7 +143,7 @@ export default function MapManager() {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-start">
 				<div>
 					<h3 className="text-lg font-medium">Active Countries</h3>
 					<p className="text-sm text-muted-foreground">

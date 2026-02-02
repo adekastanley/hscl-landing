@@ -9,15 +9,48 @@ import LeadershipSection from "@/components/pages/aboutpage/leadership";
 import CoreValues from "@/components/pages/aboutpage/corevalues";
 import OurMission from "@/components/pages/aboutpage/OurMission";
 import TeamSection from "@/components/pages/aboutpage/OurTeam";
+import {
+	getSiteContent,
+	getCoreValues,
+	type CoreValue,
+} from "@/actions/landing/about";
 
 export default function About() {
 	const [activeSection, setActiveSection] = useState("mission");
+	const [missionContent, setMissionContent] = useState<{
+		text: string;
+		image: string;
+	} | null>(null);
+	const [coreValues, setCoreValues] = useState<CoreValue[]>([]);
 	const { scrollYProgress } = useScroll();
 	const scaleX = useSpring(scrollYProgress, {
 		stiffness: 100,
 		damping: 30,
 		restDelta: 0.001,
 	});
+
+	useEffect(() => {
+		async function loadData() {
+			try {
+				const [missionData, valuesData] = await Promise.all([
+					getSiteContent("mission"),
+					getCoreValues(),
+				]);
+
+				if (missionData) {
+					try {
+						setMissionContent(JSON.parse(missionData));
+					} catch (e) {
+						setMissionContent({ text: missionData, image: "" });
+					}
+				}
+				setCoreValues(valuesData);
+			} catch (error) {
+				console.error("Failed to load about page data", error);
+			}
+		}
+		loadData();
+	}, []);
 
 	const scrollToSection = (id: string) => {
 		const element = document.getElementById(id);
@@ -142,11 +175,11 @@ export default function About() {
 
 			<div className="container py-16 px-4 md:px-8 max-w-6xl mx-auto space-y-24">
 				{/* Mission Section */}
-				<OurMission />
+				<OurMission missionContent={missionContent} />
 
 				<Separator />
 				{/* Core Values Section */}
-				<CoreValues />
+				<CoreValues values={coreValues} />
 				<Separator />
 
 				{/* Leadership Section */}

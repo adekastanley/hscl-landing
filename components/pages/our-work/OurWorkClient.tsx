@@ -130,9 +130,9 @@ export default function OurWorkClient() {
 			</section>
 
 			{/* Sticky Sub-navigation */}
-			<div className="sticky top-[80px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b w-full">
-				<div className="container flex items-center justify-center h-14 overflow-x-auto no-scrollbar">
-					<nav className="flex items-center space-x-6 text-sm font-medium">
+			<div className="sticky  top-[80px] z-40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b w-full">
+				<div className="container w-full flex items-center justify-center h-14 overflow-x-auto no-scrollbar">
+					<nav className="w-full flex items-center space-x-6 text-sm font-medium ">
 						{services.map((item) => {
 							const slug = getSlug(item);
 							return (
@@ -140,7 +140,7 @@ export default function OurWorkClient() {
 									key={item.id}
 									onClick={() => scrollToSection(slug)}
 									className={cn(
-										"transition-colors hover:text-chemonics-lime uppercase tracking-wide px-2 py-1 border-b-2 border-transparent whitespace-nowrap",
+										"transition-colors  hover:text-chemonics-lime uppercase tracking-wide px-2 py-1 border-b-2 border-transparent whitespace-nowrap",
 										activeSection === slug
 											? "text-chemonics-navy border-chemonics-lime font-bold"
 											: "text-muted-foreground",

@@ -8,6 +8,7 @@ import { ContentItem } from "@/app/actions/content";
 export interface NavbarData {
 	services: { title: string; slug: string }[];
 	latestProject: ContentItem | null;
+	latestEvent: ContentItem | null;
 }
 
 export const getNavbarData = unstable_cache(
@@ -23,7 +24,6 @@ export const getNavbarData = unstable_cache(
 			}));
 
 			// Fetch Latest Project (for "What We Do" -> In Focus)
-			// Assuming 'project' type in content_items
 			const projectRes = await db.execute(
 				"SELECT * FROM content_items WHERE type = 'project' ORDER BY published_date DESC LIMIT 1",
 			);
@@ -34,10 +34,21 @@ export const getNavbarData = unstable_cache(
 					} as unknown as ContentItem)
 				: null;
 
-			return { services, latestProject };
+			// Fetch Latest Event (for "In Focus" -> In Focus)
+			const eventRes = await db.execute(
+				"SELECT * FROM content_items WHERE type = 'event' ORDER BY published_date DESC LIMIT 1",
+			);
+			const latestEvent = eventRes.rows[0]
+				? ({
+						...eventRes.rows[0],
+						created_at: String(eventRes.rows[0].created_at),
+					} as unknown as ContentItem)
+				: null;
+
+			return { services, latestProject, latestEvent };
 		} catch (error) {
 			console.error("Failed to fetch navbar data:", error);
-			return { services: [], latestProject: null };
+			return { services: [], latestProject: null, latestEvent: null };
 		}
 	},
 	["navbar-data"],

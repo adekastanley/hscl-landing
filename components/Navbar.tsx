@@ -192,14 +192,31 @@ export function Navbar({
 						{ label: "Events", href: "/our-people#events" },
 					],
 				},
-				inFocus: {
-					title: "HIGHLIGHT",
-					image: "/assets/samg.webp",
-					articleTitle: "ACE3 Quality Assurance",
-					articleDescription:
-						"Ensuring laboratory excellence through rigorous external quality assurance panels.",
-					articleLink: "/projects/ace3",
-				},
+				inFocus: navbarData?.latestEvent
+					? {
+							title: "LATEST EVENT",
+							// Use event image or fallback
+							image:
+								navbarData.latestEvent.image_url || "/assets/placeholder.jpg",
+							articleTitle: navbarData.latestEvent.title,
+							articleDescription: navbarData.latestEvent.summary,
+							// Assuming events are at /events/[slug] or similar.
+							// If not, we might need to check where events are routed.
+							// Based on 'content_items', maybe /events?
+							// Let's assume /events/[slug] for now as it is common.
+							// Or better, let's check if there is an event page route.
+							// I see 'app/events' directory in previous list_dir.
+							articleLink: `/events/${navbarData.latestEvent.slug}`,
+							buttonText: "View Event",
+						}
+					: {
+							title: "HIGHLIGHT",
+							image: "/assets/samg.webp",
+							articleTitle: "ACE3 Quality Assurance",
+							articleDescription:
+								"Ensuring laboratory excellence through rigorous external quality assurance panels.",
+							articleLink: "/projects/ace3",
+						},
 			},
 		},
 		{

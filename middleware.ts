@@ -1,23 +1,32 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "@/lib/auth";
 
-export function middleware(request: NextRequest) {
-	const authToken = request.cookies.get("auth_token");
-	const { pathname } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+	const path = request.nextUrl.pathname;
 
-	// Case 1: User is already logged in and tries to access the login page
-	if (pathname === "/admin" && authToken) {
-		return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+	// Protect /admin routes
+	if (path.startsWith("/admin")) {
+		const session = request.cookies.get("session")?.value;
+		const user = session ? await decrypt(session) : null;
+
+		if (!user) {
+			// Redirect to login if accessing admin without session
+			return NextResponse.redirect(new URL("/login", request.url));
+		}
 	}
 
-	// Case 2: User is NOT logged in and tries to access protected routes
-	if (pathname.startsWith("/admin/dashboard") && !authToken) {
-		return NextResponse.redirect(new URL("/", request.url));
+	// Redirect authenticated users away from login page
+	if (path === "/login") {
+		const session = request.cookies.get("session")?.value;
+		const user = session ? await decrypt(session) : null;
+		if (user) {
+			return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+		}
 	}
 
 	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ["/admin", "/admin/dashboard/:path*"],
+	matcher: ["/admin/:path*", "/login"],
 };

@@ -276,6 +276,18 @@ const initDb = async () => {
     )
   `);
 
+	// Admins
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id TEXT PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      name TEXT NOT NULL,
+      role TEXT CHECK(role IN ('super_admin', 'admin')) NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
 	// Migration for services slug
 	try {
 		const servicesTable = await db.execute(

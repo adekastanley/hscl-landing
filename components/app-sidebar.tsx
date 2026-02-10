@@ -34,13 +34,13 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-	user: {
-		name: "HSCL Admin",
-		email: "[EMAIL_ADDRESS]",
-		avatar: "/avatars/shadcn.jpg",
-	},
-	navMain: [
+export function AppSidebar({
+	user,
+	...props
+}: React.ComponentProps<typeof Sidebar> & {
+	user: { name: string; email: string; avatar: string; role?: string };
+}) {
+	const navMain = [
 		{
 			title: "Dashboard",
 			url: "/admin/dashboard",
@@ -91,75 +91,16 @@ const data = {
 			url: "/admin/dashboard/partners",
 			icon: IconUsers,
 		},
-	],
-	navClouds: [
-		{
-			title: "Capture",
-			icon: IconCamera,
-			isActive: true,
-			url: "#",
-			items: [
-				{
-					title: "Active Proposals",
-					url: "#",
-				},
-				{
-					title: "Archived",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Proposal",
-			icon: IconFileDescription,
-			url: "#",
-			items: [
-				{
-					title: "Active Proposals",
-					url: "#",
-				},
-				{
-					title: "Archived",
-					url: "#",
-				},
-			],
-		},
-		{
-			title: "Prompts",
-			icon: IconFileAi,
-			url: "#",
-			items: [
-				{
-					title: "Active Proposals",
-					url: "#",
-				},
-				{
-					title: "Archived",
-					url: "#",
-				},
-			],
-		},
-	],
-	navSecondary: [
+	];
+
+	const navSecondary = [
 		{
 			title: "Settings",
-			url: "#",
+			url: "/admin/dashboard/settings",
 			icon: IconSettings,
 		},
-		{
-			title: "Get Help",
-			url: "#",
-			icon: IconHelp,
-		},
-		{
-			title: "Search",
-			url: "#",
-			icon: IconSearch,
-		},
-	],
-};
+	];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="offcanvas" {...props}>
 			<SidebarHeader>
@@ -178,12 +119,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<NavMain items={data.navMain} />
-
-				<NavSecondary items={data.navSecondary} className="mt-auto" />
+				<NavMain items={navMain} />
+				<NavSecondary items={navSecondary} className="mt-auto" />
 			</SidebarContent>
 			<SidebarFooter>
-				<NavUser user={data.user} />
+				<NavUser user={user} />
 			</SidebarFooter>
 		</Sidebar>
 	);

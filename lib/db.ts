@@ -1,8 +1,7 @@
 import { createClient } from "@libsql/client";
 
 const db = createClient({
-	url: process.env.TURSO_DATABASE_URL || "file:hcsl.db",
-	authToken: process.env.TURSO_AUTH_TOKEN,
+	url: "file:hcsl.db",
 });
 
 // Initialize database schema

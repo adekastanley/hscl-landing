@@ -80,10 +80,13 @@ export function PartnersManager() {
 					return;
 				}
 
-				const response = await fetch(`/api/upload?filename=${file.name}`, {
-					method: "POST",
-					body: file,
-				});
+				const response = await fetch(
+					`/api/upload?filename=${file.name}&folder=logos`,
+					{
+						method: "POST",
+						body: file,
+					},
+				);
 
 				if (!response.ok) {
 					throw new Error("Upload failed");

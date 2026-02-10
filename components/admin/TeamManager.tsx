@@ -132,10 +132,15 @@ export function TeamManager({
 			// Handle File Upload if a file is selected
 			if (inputFileRef.current?.files?.length) {
 				const file = inputFileRef.current.files[0];
-				const response = await fetch(`/api/upload?filename=${file.name}`, {
-					method: "POST",
-					body: file,
-				});
+				// Use category for folder if possible, default to 'team'
+				const folder = category === "leadership" ? "team" : "team"; // keeping simple for now
+				const response = await fetch(
+					`/api/upload?filename=${file.name}&folder=${folder}`,
+					{
+						method: "POST",
+						body: file,
+					},
+				);
 				const newBlob = await response.json();
 				imageUrl = newBlob.url;
 			}

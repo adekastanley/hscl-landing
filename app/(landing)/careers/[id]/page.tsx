@@ -1,4 +1,5 @@
 import { getJobById } from "@/app/actions/careers";
+import { format } from "date-fns";
 import { JobApplicationForm } from "@/components/careers/JobApplicationForm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export default async function JobPage({ params }: PageProps) {
 							<span>{job.type}</span>
 						</div>
 						<div className="text-sm">
-							Posted {new Date(job.created_at).toLocaleDateString()}
+							Posted {format(new Date(job.created_at), "dd MMM yyyy")}
 						</div>
 					</div>
 				</div>

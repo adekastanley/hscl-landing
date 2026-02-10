@@ -12,6 +12,7 @@ import {
 import { ArrowLeft, Download, Mail, Phone, Calendar } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 interface Registration {
 	id: string;
@@ -143,7 +144,7 @@ export default function RegistrantsClientPage({
 									<TableCell>
 										<div className="flex items-center gap-2">
 											<Calendar className="h-3 w-3 text-muted-foreground" />
-											{new Date(reg.created_at).toLocaleDateString()}
+											{format(new Date(reg.created_at), "MMM d, yyyy")}
 										</div>
 									</TableCell>
 								</TableRow>

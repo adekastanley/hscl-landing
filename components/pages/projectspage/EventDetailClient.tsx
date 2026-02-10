@@ -10,6 +10,7 @@ import { type ContentItem } from "@/app/actions/content";
 import { EventRegistrationModal } from "@/components/pages/projectspage/EventRegistrationModal";
 import { motion } from "motion/react";
 import Markdown from "react-markdown";
+import { format } from "date-fns";
 
 interface EventDetailClientProps {
 	event: ContentItem;
@@ -73,14 +74,9 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 								<div className="flex items-center gap-2">
 									<Calendar className="h-5 w-5 text-chemonics-teal" />
 									<span className="font-medium">
-										{new Date(event.published_date).toLocaleDateString(
-											"en-US",
-											{
-												weekday: "long",
-												year: "numeric",
-												month: "long",
-												day: "numeric",
-											},
+										{format(
+											new Date(event.published_date),
+											"EEEE, MMMM d, yyyy",
 										)}
 									</span>
 								</div>

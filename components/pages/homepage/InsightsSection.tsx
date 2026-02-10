@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContentItem } from "@/app/actions/content";
+import { format } from "date-fns";
 
 interface InsightsSectionProps {
 	stories: ContentItem[];
@@ -72,9 +73,10 @@ export function InsightsSection({
 									<div className="flex items-center gap-4 text-sm text-gray-400">
 										<span className="flex items-center gap-1">
 											<Calendar size={14} />{" "}
-											{new Date(
-												featuredProject.published_date,
-											).toLocaleDateString()}
+											{format(
+												new Date(featuredProject.published_date),
+												"dd MMM yyyy",
+											)}
 										</span>
 										<span className="flex items-center gap-1">
 											<Clock size={14} /> 5 min read
@@ -122,7 +124,7 @@ export function InsightsSection({
 										</span>
 										<span className="text-gray-500">•</span>
 										<span className="text-gray-400">
-											{new Date(item.published_date).toLocaleDateString()}
+											{format(new Date(item.published_date), "dd MMM yyyy")}
 										</span>
 									</div>
 									<h4 className="text-lg font-bold font-montserrat leading-snug group-hover:text-chemonics-lime transition-colors line-clamp-3">

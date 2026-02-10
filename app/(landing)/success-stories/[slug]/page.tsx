@@ -1,4 +1,5 @@
 import { getItemBySlug } from "@/app/actions/content";
+import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -50,11 +51,7 @@ export default async function SuccessStoryPage({
 					<div className="flex flex-wrap items-center gap-6 text-gray-300">
 						<div className="flex items-center gap-2">
 							<Calendar className="h-4 w-4" />
-							{new Date(story.published_date).toLocaleDateString("en-US", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-							})}
+							{format(new Date(story.published_date), "MMMM d, yyyy")}
 						</div>
 					</div>
 				</div>

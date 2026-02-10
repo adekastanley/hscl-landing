@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, ArrowRight, Lock } from "lucide-react";
 import Image from "next/image";
@@ -45,10 +46,7 @@ export default function EventCard({ event }: EventCardProps) {
 						<div className="flex items-center text-white text-xs font-medium gap-3">
 							<span className="flex items-center gap-1">
 								<Calendar className="h-3 w-3" />
-								{new Date(event.published_date).toLocaleDateString("en-US", {
-									month: "short",
-									day: "numeric",
-								})}
+								{format(new Date(event.published_date), "MMM d, yyyy")}
 							</span>
 							<span className="flex items-center gap-1">
 								<MapPin className="h-3 w-3" />

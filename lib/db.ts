@@ -267,6 +267,16 @@ const initDb = async () => {
     )
   `);
 
+	// Partners
+	await db.execute(`
+    CREATE TABLE IF NOT EXISTS partners (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      logo_url TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
 	// Migration for services slug
 	try {
 		const servicesTable = await db.execute(

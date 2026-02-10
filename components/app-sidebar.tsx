@@ -86,6 +86,11 @@ const data = {
 			url: "/admin/dashboard/events",
 			icon: IconCalendarEvent,
 		},
+		{
+			title: "Partners",
+			url: "/admin/dashboard/partners",
+			icon: IconUsers,
+		},
 	],
 	navClouds: [
 		{

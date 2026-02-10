@@ -12,6 +12,7 @@ import FocusAreasSection from "@/components/pages/homepage/focus";
 import { getItems } from "@/app/actions/content";
 
 import { getActiveCountries } from "@/actions/landing/map";
+import { LogoCloud } from "@/components/ui/logo-cloud";
 
 export default async function Home() {
 	const projects = await getItems("project", 3);
@@ -26,7 +27,7 @@ export default async function Home() {
 			<SectionOne />
 			<FocusAreasSection />
 			<MissionSection />
-
+			<LogoCloud />
 			<ServicesSection />
 			<FeaturedProjectsSection projects={projects} />
 			<InsightsSection stories={stories} featuredProject={featuredProject} />

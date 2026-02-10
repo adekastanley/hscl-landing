@@ -31,7 +31,6 @@ import {
 } from "@/app/actions/team";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { put } from "@vercel/blob";
 
 interface TeamManagerProps {
 	category?: "team" | "leadership";

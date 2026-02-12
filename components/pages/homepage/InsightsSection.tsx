@@ -62,6 +62,7 @@ export function InsightsSection({
 										alt={featuredProject.title}
 										fill
 										className="object-cover transition-transform duration-700 group-hover:scale-105"
+										unoptimized
 									/>
 									<div className="absolute top-6 left-6 z-20">
 										<span className="bg-chemonics-lime text-chemonics-navy px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -115,6 +116,7 @@ export function InsightsSection({
 										alt={item.title}
 										fill
 										className="object-cover transition-transform duration-500 group-hover:scale-110"
+										unoptimized
 									/>
 								</div>
 								<div className="space-y-2">

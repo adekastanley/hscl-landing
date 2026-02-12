@@ -112,6 +112,7 @@ export default function ProjectsList({
 										alt={project.title}
 										fill
 										className="object-cover transition-transform duration-500 group-hover:scale-105"
+										unoptimized
 									/>
 									<div className="absolute top-3 right-3">
 										<Badge className="bg-white/90 text-chemonics-navy hover:bg-white text-xs">

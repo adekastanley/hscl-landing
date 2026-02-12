@@ -33,6 +33,7 @@ export default async function SuccessStoryPage({
 					fill
 					className="object-cover"
 					priority
+					unoptimized
 				/>
 				<div className="absolute inset-0 bg-linear-to-t from-chemonics-navy/90 to-transparent" />
 				<div className="absolute bottom-0 left-0 right-0 container pb-12 text-white">

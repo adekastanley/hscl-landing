@@ -50,6 +50,7 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 							fill
 							className="object-cover"
 							priority
+							unoptimized
 						/>
 						<div className="absolute top-4 left-4">
 							<Badge

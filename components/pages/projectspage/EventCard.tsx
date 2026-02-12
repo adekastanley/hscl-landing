@@ -30,6 +30,7 @@ export default function EventCard({ event }: EventCardProps) {
 						alt={event.title}
 						fill
 						className="object-cover transition-transform duration-500 group-hover:scale-105"
+						unoptimized
 					/>
 					<div className="absolute top-3 left-3">
 						<Badge

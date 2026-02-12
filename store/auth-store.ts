@@ -21,25 +21,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 	isAuthenticated: false,
 	isLoading: true,
 	login: async (email, password) => {
-		// Mock authentication - in a real app this would call an API
-		// For demo purposes, accept any email ending in @hscgroup.org or admin credentials
-		if (
-			(email === "admin@hscgroup.org" && password === "admin") ||
-			email.endsWith("@hscgroup.org") // Allow generic access for checking
-		) {
-			const user: User = {
-				email,
-				name: "Admin User",
-				role: "admin",
-			};
-
-			// Set cookie that expires in 1 day
-			Cookies.set("auth_token", "mock-jwt-token", { expires: 1 });
-			Cookies.set("user_info", JSON.stringify(user), { expires: 1 });
-
-			set({ user, isAuthenticated: true });
-			return true;
-		}
+		// This should be replaced with real API call or Server Action usage
+		// Removing hardcoded credentials for security
+		console.error("Client-side login is deprecated. Use Server Actions.");
 		return false;
 	},
 	logout: () => {

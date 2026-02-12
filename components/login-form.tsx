@@ -41,7 +41,7 @@ export function LoginForm({
 			if (success) {
 				router.push("/admin/dashboard");
 			} else {
-				setError("Invalid credentials. Try admin@hscgroup.org / admin");
+				setError("Invalid email or password");
 			}
 		} catch (err) {
 			setError("An error occurred during login");

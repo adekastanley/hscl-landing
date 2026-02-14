@@ -1,10 +1,9 @@
 import { createClient } from "@libsql/client";
 import path from "path";
 
-const dbPath = path.join(process.cwd(), "hcsl.db");
-
 const db = createClient({
-	url: `file:${dbPath}`,
+	url:
+		process.env.DATABASE_URL || `file:${path.join(process.cwd(), "hcsl.db")}`,
 });
 
 // Initialize database schema

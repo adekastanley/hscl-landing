@@ -25,23 +25,19 @@ export async function POST(request: Request): Promise<NextResponse> {
 		const buffer = Buffer.from(bytes);
 
 		// Ensure directory exists
-		const uploadDir = join(process.cwd(), "public", "assets", folder);
+		const uploadDir = join(process.cwd(), "public", "siteimages");
 		if (!existsSync(uploadDir)) {
 			await mkdir(uploadDir, { recursive: true });
 		}
 
 		// Create unique filename to avoid overwrites (timestamp prefix)
-		// actually, let's keep it simple or use UUID if we want.
-		// User said "assets/logos/name.png", so maybe they want original names?
-		// But collisions are bad. Let's prepend timestamp.
 		const uniqueFilename = `${Date.now()}-${filename}`;
 		const filePath = join(uploadDir, uniqueFilename);
 
 		await writeFile(filePath, buffer);
 
 		// Return the public URL
-		// Assuming site is hosted at root. If subpath, this might need adjustment.
-		const url = `/assets/${folder}/${uniqueFilename}`;
+		const url = `/siteimages/${uniqueFilename}`;
 
 		return NextResponse.json({ url });
 	} catch (error) {

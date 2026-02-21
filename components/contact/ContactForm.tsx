@@ -43,7 +43,7 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 
 	return (
 		<div className={className}>
-			<form className="space-y-8">
+			<form className="space-y-8" suppressHydrationWarning>
 				<div className="grid md:grid-cols-2 gap-8">
 					<div className="space-y-2">
 						<label className={labelClass}>Name (Required)</label>
@@ -63,35 +63,36 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 						type="email"
 						placeholder="you@company.com"
 						className={inputClass}
+						suppressHydrationWarning
 					/>
 				</div>
 
 				<div className="space-y-2">
-					<label className={labelClass}>Service Interest</label>
+					<label className={labelClass}>Subject</label>
 					<Select>
 						<SelectTrigger className={selectTriggerClass}>
 							<SelectValue placeholder="Select a service..." />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="health-systems">
-								Health Systems Strengthening
+							<SelectItem value="services">Request for services</SelectItem>
+							<SelectItem value="information">
+								Request for information
 							</SelectItem>
-							<SelectItem value="monitoring">
-								Monitoring & Evaluation
+							<SelectItem value="partnership">
+								Request for partnership or collaboration
 							</SelectItem>
-							<SelectItem value="public-health">
-								Public Health Policy
+							<SelectItem value="opportunities">
+								Request for opportunities
 							</SelectItem>
-							<SelectItem value="research">Research</SelectItem>
 							<SelectItem value="other">Other</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
 
 				<div className="space-y-2">
-					<label className={labelClass}>Project Description</label>
+					<label className={labelClass}>Your Message</label>
 					<Textarea
-						placeholder="Tell us about your project..."
+						placeholder="Type your message here..."
 						className={cn(inputClass, "resize-none min-h-[100px]")}
 					/>
 				</div>

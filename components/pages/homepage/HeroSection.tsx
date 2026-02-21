@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 // import { useContentful } from "@/hooks/useContentful";
 
 export function HeroSection() {
@@ -43,21 +44,23 @@ export function HeroSection() {
 			{/* Content Container */}
 			<div className="relative z-20 container mx-auto h-full flex items-center px-6 md:px-12">
 				<div className="max-w-xl py-12 lg:pl-8">
-					<h1 className="mb-6 font-montserrat text-5xl font-bold leading-tight text-white md:text-7xl">
-						Providing Innovative <br />
-						<span className="text-chemonics-lime">Solutions</span> for Health &
-						Development
+					<h1 className="mb-6 font-montserrat text-5xl font-bold leading-tight text-white md:text-6xl">
+						We strengthen <br />
+						<span className="text-chemonics-lime">health systems </span> and
+						healthcare business across Africa
 					</h1>
 					<p className="mb-8 max-w-xl font-montserrat text-lg text-gray-200 md:text-xl">
-						Designing Health Systems That Work for People & Places
+						through strategic business advisory and implementation support
 					</p>
 					<div className="mt-8">
-						<Button
-							size="lg"
-							className="rounded-full bg-chemonics-lime text-chemonics-navy font-bold hover:bg-chemonics-lime-hover"
-						>
-							Learn More
-						</Button>
+						<Link href="/our-work">
+							<Button
+								size="lg"
+								className="rounded-full bg-chemonics-lime text-chemonics-navy font-bold hover:bg-chemonics-lime-hover"
+							>
+								Learn More
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>

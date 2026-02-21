@@ -16,9 +16,11 @@ export function MissionSection() {
 			<div className="relative z-10 flex h-full items-center justify-center px-6">
 				<div className="max-w-4xl text-center">
 					<h2 className="font-montserrat text-3xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
-						Turning{" "}
-						<span className="text-chemonics-lime">Data into Decisions</span> and
-						Decisions into <span className="text-chemonics-lime">Impact</span>
+						We use evidence to{" "}
+						<span className="text-chemonics-lime"> strengthen systems,</span>
+						improve decisions, and deliver
+						<span className="text-chemonics-lime mx-2">measurable</span>
+						outcomes.
 					</h2>
 				</div>
 			</div>

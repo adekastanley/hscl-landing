@@ -100,7 +100,7 @@ export default function ServicesSection() {
 						transition={{ duration: 0.8 }}
 						className="font-sans text-4xl md:text-5xl font-bold mb-4 text-primary"
 					>
-						Our Services
+						How We Work | Our Services
 					</motion.h2>
 					<motion.p
 						initial={{ opacity: 0, y: 20 }}

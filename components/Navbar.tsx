@@ -116,7 +116,7 @@ export function Navbar({
 				links: {
 					title: "WHO WE ARE",
 					items: [
-						{ label: "Our Mission", href: "/about#mission" },
+						{ label: "Mission & Vision", href: "/about#mission" },
 						{ label: "Core Values", href: "/about#values" },
 						{ label: "Leadership", href: "/about#leadership" },
 						{ label: "Our Team", href: "/about#team" },
@@ -176,8 +176,8 @@ export function Navbar({
 			},
 		},
 		{
-			title: "In Focus",
-			link: "/focus",
+			title: "Insight",
+			link: "/insight",
 			hoverContentProps: {
 				overview: {
 					title: "In Focus",

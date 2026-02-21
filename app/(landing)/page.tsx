@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/pages/homepage/HeroSection";
 import { MissionSection } from "@/components/pages/homepage/MissionSection";
 import { InsightsSection } from "@/components/pages/homepage/InsightsSection";
-import { FeaturedProjectsSection } from "@/components/pages/homepage/FeaturedProjectsSection";
+import { SelectedEngagementSection } from "@/components/pages/homepage/SelectedEngamentSection";
 import SectionOne from "@/components/pages/homepage/sectionOne";
 import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
@@ -29,7 +29,7 @@ export default async function Home() {
 			<MissionSection />
 			<LogoCloud />
 			<ServicesSection />
-			<FeaturedProjectsSection projects={projects} />
+			<SelectedEngagementSection projects={projects} />
 			<InsightsSection stories={stories} featuredProject={featuredProject} />
 			<Map activeCountries={activeCountries} />
 			<ContactSection />

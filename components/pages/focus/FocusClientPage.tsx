@@ -103,7 +103,7 @@ export default function FocusClientPage({
 			/>
 
 			{/* Hero Section */}
-			<section className="relative h-[40vh] min-h-[400px] flex items-center justify-center bg-chemonics-navy text-white overflow-hidden">
+			<section className="relative h-[70vh] min-h-[400px] flex items-center justify-center bg-chemonics-navy text-white overflow-hidden">
 				<div className="absolute inset-0 bg-black/30 z-10" />
 				<div
 					className="absolute inset-0 z-0 bg-cover bg-center opacity-40"
@@ -116,7 +116,7 @@ export default function FocusClientPage({
 						transition={{ duration: 0.7 }}
 						className="text-5xl md:text-6xl font-bold mb-6"
 					>
-						Our Focus
+						Insight
 					</motion.h1>
 					<div className="h-1 w-24 bg-chemonics-lime mx-auto mb-6"></div>
 					<motion.p

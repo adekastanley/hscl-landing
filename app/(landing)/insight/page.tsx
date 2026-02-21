@@ -2,7 +2,7 @@ import { getItems, getYears } from "@/app/actions/content";
 import FocusClientPage from "@/components/pages/focus/FocusClientPage";
 
 export const metadata = {
-	title: "Focus Areas | HCSL",
+	title: "Insight | HCSL",
 	description:
 		"Our projects and events focusing on health systems strengthening.",
 };

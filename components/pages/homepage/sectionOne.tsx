@@ -1,8 +1,7 @@
 import { TextGradientScroll } from "@/components/ui/scrollingText";
 
 export default function SectionOne() {
-	const whyWeExist = `At HSCL, our cross-cutting and varied experience in providing solutions provides us 
-	with a holistic and deep knowledge of the health and development sector in Africa.`;
+	const whyWeExist = `At HSCL, we deliver strategic healthcare business advisory and systems-level expertise to help health systems and healthcare businesses strengthen institutional performance, achieve financial sustainability, and deliver high-quality services at scale.`;
 
 	return (
 		<section className="text-center min-h-[80vh] justify-center  mx-auto flex-col  flex  w-full  bg-white px-5">

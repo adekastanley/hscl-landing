@@ -34,10 +34,10 @@ export default function LoginPage() {
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-muted/40 px-4 bg-[url('/assets/cloud.jpg')] bg-cover bg-center">
 			<Card className="w-full mx-auto max-w-[420px] border border-white/60 bg-white/40 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2rem] p-4 relative overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+				<div className="absolute inset-0 bg-linear-to-b from-white/40 to-transparent pointer-events-none" />
 				<CardHeader className="text-center pt-8 pb-6 relative z-10">
 					<div className="flex justify-center mb-4">
-						<div className="flex h-14 w-14 items-center justify-center rounded-[1rem] bg-white shadow-sm text-black ring-1 ring-black/5">
+						<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm text-black ring-1 ring-black/5">
 							{/* <IconInnerShadowTop className="size-7" /> */}
 							<Logo />
 						</div>

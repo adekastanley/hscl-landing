@@ -6,7 +6,7 @@ interface FeaturedProjectsSectionProps {
 	projects: ContentItem[];
 }
 
-export function FeaturedProjectsSection({
+export function SelectedEngagementSection({
 	projects,
 }: FeaturedProjectsSectionProps) {
 	return (
@@ -14,8 +14,8 @@ export function FeaturedProjectsSection({
 			<div className="container mx-auto px-6">
 				<div className="mb-12 flex items-end justify-between">
 					<div>
-						<h2 className="mb-4 font-montserrat text-4xl font-bold text-chemonics-navy md:text-5xl">
-							Featured Projects
+						<h2 className="mb-4 font-montserrat text-4xl font-bold text-black md:text-5xl">
+							Selected Engagements
 						</h2>
 						<div className="h-1 w-24 bg-chemonics-lime"></div>
 					</div>

@@ -106,7 +106,7 @@ export default function OurWorkClient() {
 			/>
 
 			{/* Hero Section */}
-			<section className="relative h-[40vh] min-h-[400px] flex items-center justify-center bg-chemonics-navy text-white overflow-hidden">
+			<section className="relative h-[70vh] min-h-[400px] flex items-center justify-center bg-chemonics-navy text-white overflow-hidden">
 				<div className="absolute inset-0 bg-black/20 z-10" />
 				<div className="container relative z-20 text-center px-4">
 					<motion.h1

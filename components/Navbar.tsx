@@ -241,21 +241,20 @@ export function Navbar({
 						{ label: "Resources", href: "/our-people#resources" },
 					],
 				},
-				inFocus: latestPeopleStory
+				inFocus: latestSuccessStory
 					? {
-							title: "PEOPLE'S STORY",
-							image: latestPeopleStory.image_url || "/assets/placeholder.jpg",
-							articleTitle: latestPeopleStory.title,
-							articleDescription: latestPeopleStory.summary,
-							articleLink: `/success-stories/${latestPeopleStory.slug}`, // Assuming stories use this route, or maybe different? Reusing for now.
+							title: "LATEST SUCCESS STORY",
+							image: latestSuccessStory.image_url || "/assets/placeholder.jpg",
+							articleTitle: latestSuccessStory.title,
+							articleDescription: latestSuccessStory.summary,
+							articleLink: `/success-stories/${latestSuccessStory.slug}`,
 						}
 					: {
-							title: "HIGHLIGHT",
-							image: "/assets/samg.webp",
-							articleTitle: "ACE3 Quality Assurance",
-							articleDescription:
-								"Ensuring laboratory excellence through rigorous external quality assurance panels.",
-							articleLink: "/projects/ace3",
+							title: "LATEST SUCCESS STORY",
+							image: "/assets/placeholder.jpg",
+							articleTitle: "No stories available",
+							articleDescription: "Check back later for success stories.",
+							articleLink: "/our-people",
 						},
 			},
 		},

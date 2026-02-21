@@ -1,5 +1,6 @@
 // import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export interface NavHoverContentProps {
 	overview: {
@@ -48,12 +49,12 @@ export default function NavHoverContent({
 							key={item.label}
 							className="border-b border-white/20 pb-2 last:border-0"
 						>
-							<a
+							<Link
 								href={item.href}
 								className="block font-montserrat text-sm font-medium hover:text-chemonics-lime transition-colors"
 							>
 								{item.label}
-							</a>
+							</Link>
 						</li>
 					))}
 				</ul>
@@ -83,9 +84,9 @@ export default function NavHoverContent({
 						className="border-white text-chemonics-lime hover:bg-white hover:text-chemonics-teal rounded-full text-xs px-6"
 						asChild
 					>
-						<a href={inFocus.articleLink}>
+						<Link href={inFocus.articleLink}>
 							{inFocus.buttonText || "Read More"}
-						</a>
+						</Link>
 					</Button>
 				</div>
 			</div>

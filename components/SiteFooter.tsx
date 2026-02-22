@@ -26,8 +26,16 @@ const navLinks = {
 			link: "/our-work",
 		},
 		{
-			title: "Our Impact",
-			link: "/projects",
+			title: "Insight",
+			link: "/insight",
+		},
+		{
+			title: "Our People",
+			link: "/our-people",
+		},
+		{
+			title: "Contact",
+			link: "/contact",
 		},
 		{
 			title: "Careers",

@@ -47,7 +47,7 @@ export function HeroSection() {
 					<h1 className="mb-6 font-montserrat text-2xl font-bold leading-tight text-white md:text-4xl">
 						We strengthen <br />
 						<span className="text-chemonics-lime">health systems </span> and
-						healthcare business across Africa through <br />
+						healthcare businesses across Africa through <br />
 						<span className="mr-2 text-chemonics-lime">
 							strategic business advisory
 						</span>

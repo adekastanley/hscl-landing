@@ -336,7 +336,7 @@ export function Navbar({
 						{[
 							{ title: "Who We Are", link: "/about" },
 							{ title: "What We Do", link: "/our-work" },
-							{ title: "In Focus", link: "/focus" },
+							{ title: "Insight", link: "/insight" },
 							{ title: "Our People", link: "/our-people" },
 							{ title: "Contact", link: "/contact" },
 						].map((item, index) => (

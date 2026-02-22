@@ -27,9 +27,10 @@ export function ContactSection() {
 							<div className="flex gap-4">
 								<MessageCircle className="h-6 w-6 text-gray-600" />
 								<div>
-									<h4 className="font-bold text-gray-900">Email us</h4>
+									<h4 className="font-bold text-gray-900">Get in Touch</h4>
 									<p className="text-gray-600">
-										Our friendly team is here to help.
+										For partnerships, advisory engagements, or collaboration
+										opportunities
 									</p>
 									<a
 										href="mailto:info@hscgroup.org"
@@ -44,7 +45,7 @@ export function ContactSection() {
 							<div className="flex gap-4">
 								<MapPin className="h-6 w-6 text-gray-600" />
 								<div>
-									<h4 className="font-bold text-gray-900">Visit us</h4>
+									<h4 className="font-bold text-gray-900">Visit our office</h4>
 									<p className="text-gray-600">
 										Come say hello at our office HQ.
 									</p>
@@ -54,6 +55,8 @@ export function ContactSection() {
 										off Olu Awotesu cresent Jabi District,
 										<br />
 										Abuja, Nigeria.
+										<br />
+										By appointment only.
 									</p>
 								</div>
 							</div>

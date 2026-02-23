@@ -106,11 +106,6 @@ export default function TeamSection() {
 										{member.role}
 									</CardDescription>
 								</CardHeader>
-								<CardContent>
-									<p className="text-sm text-muted-foreground line-clamp-4">
-										{member.bio}
-									</p>
-								</CardContent>
 							</Card>
 						</Link>
 					</motion.div>

@@ -97,11 +97,6 @@ export default function LeadershipSection() {
 										{leader.role}
 									</CardDescription>
 								</CardHeader>
-								<CardContent>
-									<p className="text-sm text-muted-foreground line-clamp-3">
-										{leader.bio}
-									</p>
-								</CardContent>
 							</Card>
 						</Link>
 					</motion.div>

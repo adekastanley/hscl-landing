@@ -104,9 +104,7 @@ export default function StoriesList({
 									<h3 className="text-xl font-bold text-chemonics-navy group-hover:text-chemonics-teal transition-colors line-clamp-2 mb-2">
 										{story.title}
 									</h3>
-									<p className="text-muted-foreground line-clamp-2 mb-4 text-sm">
-										{story.summary}
-									</p>
+
 									<div className="flex items-center gap-2 text-xs font-semibold text-chemonics-teal mt-auto">
 										Read Full Story <ArrowRight className="h-3 w-3" />
 									</div>

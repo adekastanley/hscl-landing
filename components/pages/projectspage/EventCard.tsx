@@ -60,9 +60,7 @@ export default function EventCard({ event }: EventCardProps) {
 					<h3 className="text-lg font-bold text-chemonics-navy mb-2 group-hover:text-chemonics-teal transition-colors line-clamp-2">
 						{event.title}
 					</h3>
-					<p className="text-muted-foreground line-clamp-3 mb-4 flex-1 text-sm">
-						{event.summary}
-					</p>
+
 					<div className="flex items-center justify-between mt-auto">
 						<div className="text-chemonics-teal font-medium text-xs flex items-center">
 							View Details{" "}

@@ -124,9 +124,7 @@ export default function ProjectsList({
 									<h3 className="text-lg font-bold text-chemonics-navy mb-2 group-hover:text-chemonics-teal transition-colors line-clamp-2">
 										{project.title}
 									</h3>
-									<p className="text-muted-foreground line-clamp-3 mb-4 flex-1 text-sm">
-										{project.summary}
-									</p>
+
 									<div className="flex items-center text-chemonics-teal font-medium text-xs mt-auto">
 										Read More{" "}
 										<ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />

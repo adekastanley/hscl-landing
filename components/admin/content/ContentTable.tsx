@@ -70,7 +70,6 @@ export function ContentTable({ type }: ContentTableProps) {
 		id: string;
 		title: string;
 		slug: string;
-		summary: string;
 		content: string;
 		image_url: string;
 		published_date: string;
@@ -80,7 +79,6 @@ export function ContentTable({ type }: ContentTableProps) {
 		id: "",
 		title: "",
 		slug: "",
-		summary: "",
 		content: "",
 		image_url: "",
 		published_date: new Date().toISOString().split("T")[0],
@@ -153,7 +151,6 @@ export function ContentTable({ type }: ContentTableProps) {
 			id: "",
 			title: "",
 			slug: "",
-			summary: "",
 			content: "",
 			image_url: "",
 			published_date: new Date().toISOString().split("T")[0],
@@ -169,7 +166,6 @@ export function ContentTable({ type }: ContentTableProps) {
 			id: item.id,
 			title: item.title,
 			slug: item.slug,
-			summary: item.summary,
 			content: item.content,
 			image_url: item.image_url,
 			published_date: item.published_date,
@@ -187,7 +183,6 @@ export function ContentTable({ type }: ContentTableProps) {
 			const itemData = {
 				title: formData.title,
 				slug: formData.slug,
-				summary: formData.summary,
 				content: formData.content,
 				image_url: formData.image_url,
 				published_date: formData.published_date,
@@ -564,20 +559,6 @@ export function ContentTable({ type }: ContentTableProps) {
 									)}
 								</div>
 							</div>
-						</div>
-
-						<div className="space-y-2">
-							<Label htmlFor="summary">
-								Summary (Short description for cards)
-							</Label>
-							<Textarea
-								id="summary"
-								value={formData.summary}
-								onChange={(e) =>
-									setFormData({ ...formData, summary: e.target.value })
-								}
-								rows={3}
-							/>
 						</div>
 
 						<div className="space-y-2">

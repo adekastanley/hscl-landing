@@ -8,7 +8,7 @@ export interface ContentItem {
 	type: "project" | "story" | "event" | "people_story";
 	title: string;
 	slug: string;
-	summary: string;
+	summary?: string;
 	content: string;
 	image_url: string;
 	published_date: string;

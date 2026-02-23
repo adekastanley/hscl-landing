@@ -198,14 +198,14 @@ export function TeamManager({
 						<TableRow>
 							<TableHead>Member</TableHead>
 							<TableHead className="hidden md:table-cell">Role</TableHead>
-							<TableHead className="hidden md:table-cell">Bio</TableHead>
+
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{members.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={4} className="h-24 text-center">
+								<TableCell colSpan={3} className="h-24 text-center">
 									No members found.
 								</TableCell>
 							</TableRow>
@@ -223,21 +223,13 @@ export function TeamManager({
 												<div className="text-sm text-muted-foreground md:hidden">
 													{member.role}
 												</div>
-												<div className="text-xs text-muted-foreground/80 md:hidden line-clamp-2">
-													{member.bio}
-												</div>
 											</div>
 										</div>
 									</TableCell>
 									<TableCell className="hidden md:table-cell">
 										{member.role}
 									</TableCell>
-									<TableCell
-										className="hidden md:table-cell max-w-xs truncate"
-										title={member.bio}
-									>
-										{member.bio}
-									</TableCell>
+
 									<TableCell className="text-right">
 										<div className="flex justify-end gap-2">
 											<Button variant="ghost" size="icon" asChild>

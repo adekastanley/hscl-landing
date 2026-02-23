@@ -86,9 +86,7 @@ export function InsightsSection({
 									<h3 className="text-3xl font-bold font-montserrat leading-tight group-hover:text-chemonics-lime transition-colors">
 										{featuredProject.title}
 									</h3>
-									<p className="text-gray-300 text-lg leading-relaxed line-clamp-3">
-										{featuredProject.summary}
-									</p>
+
 									<div className="pt-2">
 										<span className="inline-flex items-center gap-2 text-chemonics-lime font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all">
 											Read Story <ArrowRight size={16} />

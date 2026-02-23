@@ -15,7 +15,7 @@ export interface NavHoverContentProps {
 		title: string;
 		image: string;
 		articleTitle: string;
-		articleDescription: string;
+		articleDescription?: string;
 		articleLink: string;
 		buttonText?: string;
 	};
@@ -76,9 +76,7 @@ export default function NavHoverContent({
 					<h3 className="mb-2 font-montserrat text-lg font-bold leading-tight">
 						{inFocus.articleTitle}
 					</h3>
-					<p className="mb-4 text-xs text-white/80 line-clamp-3">
-						{inFocus.articleDescription}
-					</p>
+
 					<Button
 						variant="outline"
 						className="border-white text-chemonics-lime hover:bg-white hover:text-chemonics-teal rounded-full text-xs px-6"

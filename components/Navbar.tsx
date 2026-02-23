@@ -180,9 +180,9 @@ export function Navbar({
 			link: "/insight",
 			hoverContentProps: {
 				overview: {
-					title: "In Focus",
+					title: "Insights",
 					description:
-						"Explore our team, success stories, and upcoming events from the field.",
+						"Explore our resource center, success stories, and upcoming events from the field.",
 				},
 				links: {
 					title: "LATEST UPDATES",
@@ -241,19 +241,19 @@ export function Navbar({
 						{ label: "Resources", href: "/our-people#resources" },
 					],
 				},
-				inFocus: latestSuccessStory
+				inFocus: latestPeopleStory
 					? {
-							title: "LATEST SUCCESS STORY",
-							image: latestSuccessStory.image_url || "/assets/placeholder.jpg",
-							articleTitle: latestSuccessStory.title,
-							articleDescription: latestSuccessStory.summary,
-							articleLink: `/success-stories/${latestSuccessStory.slug}`,
+							title: "PEOPLE'S STORY",
+							image: latestPeopleStory.image_url || "/assets/placeholder.jpg",
+							articleTitle: latestPeopleStory.title,
+							articleDescription: latestPeopleStory.summary,
+							articleLink: `/our-people#people-stories`,
 						}
 					: {
-							title: "LATEST SUCCESS STORY",
+							title: "PEOPLE'S STORY",
 							image: "/assets/placeholder.jpg",
 							articleTitle: "No stories available",
-							articleDescription: "Check back later for success stories.",
+							articleDescription: "Check back later for people's stories.",
 							articleLink: "/our-people",
 						},
 			},

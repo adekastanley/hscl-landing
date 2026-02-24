@@ -68,6 +68,14 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 				</div>
 
 				<div className="space-y-2">
+					<label className={labelClass}>Organization</label>
+					<Input
+						placeholder="Your Company/Organization"
+						className={inputClass}
+					/>
+				</div>
+
+				<div className="space-y-2">
 					<label className={labelClass}>Subject</label>
 					<Select>
 						<SelectTrigger className={selectTriggerClass}>
@@ -107,7 +115,7 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 								: "bg-chemonics-navy text-white hover:bg-chemonics-navy-light",
 						)}
 					>
-						Submit Message
+						Request a Consultation
 					</Button>
 				</div>
 			</form>

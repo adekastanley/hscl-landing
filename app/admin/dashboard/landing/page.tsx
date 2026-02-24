@@ -3,6 +3,7 @@ import MapManager from "@/components/admin/landing/MapManager";
 import MissionManager from "@/components/admin/landing/MissionManager";
 import ValuesManager from "@/components/admin/landing/ValuesManager";
 import WhatWeDoManager from "@/components/admin/landing/WhatWeDoManager";
+import DocumentManager from "@/components/admin/landing/DocumentManager";
 
 export default function LandingPageManagement() {
 	return (
@@ -20,6 +21,7 @@ export default function LandingPageManagement() {
 
 				<TabsContent value="home" className="space-y-4">
 					<div className="grid gap-4">
+						<DocumentManager />
 						<MapManager />
 						{/* Add other homepage sections here, e.g. Hero, etc. */}
 					</div>

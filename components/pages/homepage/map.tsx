@@ -4,15 +4,21 @@ import React, { useState } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { Tooltip } from "react-tooltip";
 import { ActiveCountry } from "@/actions/landing/map";
-import Link from "next/link"; // Import Link for routing
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { GlobalDocument } from "@/app/actions/documents";
 
 const geoUrl = "/world-countries.json";
 
 interface MapProps {
 	activeCountries: ActiveCountry[];
+	document?: GlobalDocument | null;
 }
 
-export default function Map({ activeCountries = [] }: MapProps) {
+export default function Map({
+	activeCountries = [],
+	document = null,
+}: MapProps) {
 	const [content, setContent] = useState<React.ReactNode>("");
 
 	return (
@@ -22,10 +28,39 @@ export default function Map({ activeCountries = [] }: MapProps) {
 					<h2 className="text-3xl font-bold text-chemonics-navy mb-4">
 						Our Footprint
 					</h2>
-					<p className="text-muted-foreground max-w-2xl mx-auto">
+					<p className="text-muted-foreground max-w-2xl mx-auto mb-6">
 						We have a strong presence across the African continent, delivering
 						impactful health systems strengthening projects.
 					</p>
+
+					<div className="flex justify-center mb-4">
+						<Button
+							disabled={!document}
+							className={`rounded-full px-6 transition-all shadow-sm ${
+								document
+									? "bg-chemonics-lime text-chemonics-navy hover:bg-chemonics-lime-hover"
+									: "bg-gray-200 text-gray-500 cursor-not-allowed"
+							}`}
+							asChild={!!document}
+						>
+							{document ? (
+								<a
+									href={document.file_url}
+									download
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<Download className="w-4 h-4 mr-2" />
+									Download Capability Statement
+								</a>
+							) : (
+								<span className="flex items-center">
+									<Download className="w-4 h-4 mr-2" />
+									Download Capability Statement
+								</span>
+							)}
+						</Button>
+					</div>
 				</div>
 
 				<div className="w-full max-w-4xl mx-auto h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">

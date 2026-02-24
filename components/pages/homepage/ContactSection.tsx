@@ -97,11 +97,13 @@ export function ContactSection() {
 					{/* Right Column: Form */}
 					<div className="bg-chemonics-navy-dark p-12 lg:w-7/12 lg:p-16">
 						<div className="mb-12">
-							<h2 className="mb-4 text-4xl font-bold text-white">
-								Partner with us for better health outcomes.
+							<h2 className="mb-4 text-3xl font-bold text-white">
+								Whether you are shaping national reform, leading a development
+								programme, or growing a healthcare enterprise,
 							</h2>
 							<p className="text-lg text-white">
-								Tell us more about your organization and how we can collaborate.
+								HSCL provides strategic advisory and implementation support
+								grounded in evidence and systems thinking.
 							</p>
 						</div>
 

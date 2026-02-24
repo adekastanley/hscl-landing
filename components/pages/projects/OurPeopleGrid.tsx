@@ -37,12 +37,12 @@ export default function OurPeopleGrid({ team }: OurPeopleGridProps) {
 				>
 					<Link href={`/team/${member.id}`} className="block h-full">
 						<Card className="h-full overflow-hidden group hover:shadow-lg transition-all duration-300 border-chemonics-navy/5">
-							<div className="aspect-4/3 bg-muted relative overflow-hidden">
+							<div className="aspect-square bg-muted relative overflow-hidden">
 								<Avatar className="h-full w-full rounded-none">
 									<AvatarImage
 										src={member.image_url}
 										alt={member.name}
-										className="object-cover transition-transform duration-500 group-hover:scale-105"
+										className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
 									/>
 									<AvatarFallback className="rounded-none text-4xl bg-chemonics-navy/5 text-chemonics-navy/30">
 										{member.name.charAt(0)}

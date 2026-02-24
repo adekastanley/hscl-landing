@@ -35,7 +35,7 @@ export function Preloader() {
 			{!exitAnimation && (
 				<motion.div
 					key="layer-navy"
-					className="fixed inset-0 z-50 flex items-center justify-center bg-chemonics-navy overflow-hidden"
+					className="fixed inset-0 z-100 flex items-center justify-center bg-chemonics-navy overflow-hidden"
 					exit={{
 						x: "100%",
 						transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
@@ -76,7 +76,7 @@ export function Preloader() {
 			{!exitAnimation && (
 				<motion.div
 					key="layer-teal"
-					className="fixed inset-0 z-40 bg-chemonics-teal"
+					className="fixed inset-0 z-90 bg-chemonics-teal"
 					exit={{
 						x: "100%",
 						transition: {
@@ -92,7 +92,7 @@ export function Preloader() {
 			{!exitAnimation && (
 				<motion.div
 					key="layer-lime"
-					className="fixed inset-0 z-30 bg-chemonics-lime"
+					className="fixed inset-0 z-80 bg-chemonics-lime"
 					exit={{
 						x: "100%",
 						transition: {

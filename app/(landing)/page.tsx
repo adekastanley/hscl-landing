@@ -6,6 +6,7 @@ import SectionOne from "@/components/pages/homepage/sectionOne";
 import ServicesSection from "@/components/pages/homepage/services";
 import { ContactSection } from "@/components/pages/homepage/ContactSection";
 import Map from "@/components/pages/homepage/map";
+import { AnimatedImpactCounters } from "@/components/pages/homepage/AnimatedImpactCounters";
 // import Clients from "@/components/pages/homepage/clients";
 import FocusAreasSection from "@/components/pages/homepage/focus";
 
@@ -31,6 +32,7 @@ export default async function Home() {
 			<ServicesSection />
 			<SelectedEngagementSection projects={projects} />
 			<InsightsSection stories={stories} featuredProject={featuredProject} />
+			<AnimatedImpactCounters />
 			<Map activeCountries={activeCountries} />
 			<ContactSection />
 		</div>

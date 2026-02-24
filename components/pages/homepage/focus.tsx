@@ -2,7 +2,9 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 
-const focusAreas = [
+import { FocusArea } from "@/components/admin/landing/FocusAreasManager";
+
+const defaultFocusAreas: FocusArea[] = [
 	{
 		year: "01",
 		title: "Sustainable Systems",
@@ -29,7 +31,17 @@ const focusAreas = [
 	},
 ];
 
-export default function FocusAreasSection() {
+interface FocusAreasSectionProps {
+	focusAreas?: FocusArea[] | null;
+}
+
+export default function FocusAreasSection({
+	focusAreas,
+}: FocusAreasSectionProps) {
+	const displayAreas =
+		focusAreas && focusAreas.length > 0 && focusAreas[0].title
+			? focusAreas
+			: defaultFocusAreas;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { scrollYProgress } = useScroll({
 		target: containerRef,
@@ -65,28 +77,28 @@ export default function FocusAreasSection() {
 					</div>
 
 					<div className="flex flex-col gap-12 md:gap-24">
-						{focusAreas.map((area, index) => (
+						{displayAreas.map((area, index) => (
 							<motion.div
 								key={index}
 								initial={{ opacity: 0, y: 50 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-100px" }}
 								transition={{ duration: 0.6, delay: 0.2 }}
-								className={`relative flex flex-col md:flex-row md:items-center pr-20 ${
-									index % 2 === 0 ? "md:flex-row-reverse lg:pl-52" : ""
+								className={`relative flex flex-col md:flex-row md:items-center pr-20 justify-center ${
+									index % 2 === 0 ? "md:flex-row-reverse lg:pl-52 " : " "
 								}`}
 							>
 								{/* Center Icon */}
 								<div className="absolute left-0 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-chemonics-lime text-xl font-bold text-chemonics-navy shadow-lg shadow-chemonics-lime/50 md:left-1/2 md:-translate-x-1/2">
-									<span className="text-sm">{index + 1}</span>
+									<span className="text-sm">{area.year || index + 1}</span>
 								</div>
 
 								{/* Content Box */}
 								<div
 									className={`ml-12 md:max-w-[45%] ${
 										index % 2 === 0
-											? "md:mr-auto md:ml-0 md:text-right"
-											: "md:ml-auto"
+											? "md:mr-auto md:ml-0 md:text-right ml-20"
+											: "md:ml-auto  mr-20"
 									}`}
 								>
 									<h3 className="mb-3 font-montserrat text-2xl font-bold text-white">

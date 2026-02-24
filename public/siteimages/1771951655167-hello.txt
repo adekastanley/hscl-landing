@@ -1,6 +1,0 @@
-------formdata-undici-010746891246
-Content-Disposition: form-data; name="file"; filename="hello.txt"
-Content-Type: text/plain
-
-hello
-------formdata-undici-010746891246--

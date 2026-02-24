@@ -106,12 +106,7 @@ export default function WhatWeDoManager() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (
-			!formData.title ||
-			!formData.slug ||
-			!formData.description ||
-			!formData.content
-		) {
+		if (!formData.title || !formData.slug || !formData.description) {
 			toast.error("Please fill in all required fields");
 			return;
 		}
@@ -198,7 +193,7 @@ export default function WhatWeDoManager() {
 										<TableCell className="font-medium align-top">
 											{service.title}
 										</TableCell>
-										<TableCell className="align-top">
+										<TableCell className="align-top whitespace-pre-wrap max-w-xs md:max-w-md">
 											{service.description}
 										</TableCell>
 										<TableCell className="text-right align-top">
@@ -256,46 +251,21 @@ export default function WhatWeDoManager() {
 								required
 							/>
 						</div>
+
 						<div className="space-y-2">
-							<Label htmlFor="slug">Slug (URL identifier)</Label>
-							<Input
-								id="slug"
-								placeholder="e.g. health-systems-strengthening"
-								value={formData.slug}
-								onChange={(e) =>
-									setFormData({ ...formData, slug: e.target.value })
-								}
-								required
-							/>
-							<p className="text-xs text-muted-foreground">
-								Used for hash links (e.g., #health-systems). Must be unique.
-							</p>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="description">Short Description</Label>
+							<Label htmlFor="description">Content</Label>
 							<Textarea
 								id="description"
-								placeholder="Brief summary used in cards..."
+								placeholder="Service description..."
 								value={formData.description}
 								onChange={(e) =>
 									setFormData({ ...formData, description: e.target.value })
-								}
-								required
-							/>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="content">Full Content</Label>
-							<Textarea
-								id="content"
-								placeholder="Detailed description..."
-								value={formData.content}
-								onChange={(e) =>
-									setFormData({ ...formData, content: e.target.value })
 								}
 								className="min-h-[150px]"
 								required
 							/>
 						</div>
+
 						<div className="space-y-2">
 							<Label>Image</Label>
 							<div className="flex gap-4 items-start">

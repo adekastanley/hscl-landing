@@ -1,9 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
+import { Service } from "@/actions/landing/services";
 
-const services = [
+const defaultServices: Service[] = [
 	{
+		id: "1",
+		slug: "design",
+		content: "",
 		title: "Health ProgrammesDesign and Implementation",
 		description: `Design and Implementation of development and health protection programmes such as Immunization, Nutrition, FP, HIV, TB,
 Malaria, MNCH, RH,
@@ -14,9 +18,12 @@ around WASH, Climate
 change, Disease
 surveillance, and other
 Public Health concerns.`,
-		image: "/assets/two.jpg",
+		image_url: "/assets/two.jpg",
 	},
 	{
+		id: "2",
+		slug: "hf",
+		content: "",
 		title: `Health Financing & Economic Reviews`,
 		description: `Development of
 innovative financing
@@ -28,9 +35,12 @@ evaluation of health
 programmes and
 public financial
 management.`,
-		image: "/assets/hf.jpg",
+		image_url: "/assets/hf.jpg",
 	},
 	{
+		id: "3",
+		slug: "policy",
+		content: "",
 		title: `Policy Analysis
 & Development`,
 		description: `Provision of technical
@@ -39,9 +49,12 @@ the review and
 development of sector
 wide and program
 specific policies.`,
-		image: "/assets/policy.jpg",
+		image_url: "/assets/policy.jpg",
 	},
 	{
+		id: "4",
+		slug: "merl",
+		content: "",
 		title: `Monitoring, Evaluation,
 Research and Learning`,
 		description: `Development of M&E
@@ -54,9 +67,12 @@ development research
 and evaluation and
 capacity building for
 MERL.`,
-		image: "/assets/eval.jpg",
+		image_url: "/assets/eval.jpg",
 	},
 	{
+		id: "5",
+		slug: "hrh",
+		content: "",
 		title: `Human Resources
 for Health (HRH)
 Development`,
@@ -67,9 +83,12 @@ building and temporary
 placement of
 consultants for defined
 projects/timelines.`,
-		image: "/assets/hr.jpg",
+		image_url: "/assets/hr.jpg",
 	},
 	{
+		id: "6",
+		slug: "psm",
+		content: "",
 		title: `Strengthening
 Procurement Supply
 Chain Management
@@ -84,11 +103,17 @@ improving coordination
 and integration of PSM
 for improved
 efficiency.`,
-		image: "/assets/pro.jpg",
+		image_url: "/assets/pro.jpg",
 	},
 ];
 
-export default function ServicesSection() {
+interface ServicesSectionProps {
+	services?: Service[];
+}
+
+export default function ServicesSection({ services }: ServicesSectionProps) {
+	const displayServices =
+		services && services.length > 0 ? services : defaultServices;
 	return (
 		<section className="py-24 px-6 bg-background">
 			<div className="max-w-7xl mx-auto">
@@ -116,18 +141,18 @@ export default function ServicesSection() {
 				</div>
 
 				<div className="grid md:grid-cols-2 gap-8">
-					{services.map((item, index) => (
+					{displayServices.map((item, index) => (
 						<motion.div
-							key={index}
+							key={item.id || index}
 							initial={{ opacity: 0, y: 40 }}
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true, margin: "-100px" }}
 							transition={{ duration: 0.6, delay: index * 0.1 }}
 							className="group bg-secondary rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300"
 						>
-							<div className="aspect-[3/2] overflow-hidden">
+							<div className="aspect-3/2 overflow-hidden">
 								<img
-									src={item.image || "/placeholder.svg"}
+									src={item.image_url || "/placeholder.svg"}
 									alt={item.title}
 									className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
 								/>

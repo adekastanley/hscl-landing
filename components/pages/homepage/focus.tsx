@@ -6,24 +6,28 @@ import { FocusArea } from "@/components/admin/landing/FocusAreasManager";
 
 const defaultFocusAreas: FocusArea[] = [
 	{
+		id: "default-1",
 		year: "01",
 		title: "Sustainable Systems",
 		description:
 			"Designing resilient health infrastructures that ensure long-term access, equity, and stability for communities.",
 	},
 	{
+		id: "default-2",
 		year: "02",
 		title: "Data-Driven Insight",
 		description:
 			"Leveraging advanced analytics and rigorous research to guide policy decisions and maximize program impact.",
 	},
 	{
+		id: "default-3",
 		year: "03",
 		title: "Workforce Empowerment",
 		description:
 			"Cultivating a skilled, adaptable health workforce capable of meeting evolving public health challenges.",
 	},
 	{
+		id: "default-4",
 		year: "04",
 		title: "Community-Centric Action",
 		description:
@@ -79,7 +83,7 @@ export default function FocusAreasSection({
 					<div className="flex flex-col gap-12 md:gap-24">
 						{displayAreas.map((area, index) => (
 							<motion.div
-								key={index}
+								key={area.id || index}
 								initial={{ opacity: 0, y: 50 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-100px" }}
@@ -104,9 +108,10 @@ export default function FocusAreasSection({
 									<h3 className="mb-3 font-montserrat text-2xl font-bold text-white">
 										{area.title}
 									</h3>
-									<p className="font-montserrat text-gray-300 leading-relaxed">
-										{area.description}
-									</p>
+									<div
+										className="font-montserrat text-gray-300 leading-relaxed [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_p]:mb-2 [&_a]:text-chemonics-lime [&_a]:underline"
+										dangerouslySetInnerHTML={{ __html: area.description }}
+									/>
 								</div>
 
 								{/* Empty side for balance */}

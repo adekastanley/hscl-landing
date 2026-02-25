@@ -1,4 +1,8 @@
-export function MissionSection() {
+interface MissionSectionProps {
+	content?: string | null;
+}
+
+export function MissionSection({ content }: MissionSectionProps) {
 	return (
 		<section className="relative h-[600px] overflow-hidden bg-chemonics-navy-dark">
 			{/* Background Video/Image Layer */}
@@ -15,13 +19,14 @@ export function MissionSection() {
 			{/* Overlay Content */}
 			<div className="relative z-10 flex h-full items-center justify-center px-6">
 				<div className="max-w-4xl text-center">
-					<h2 className="font-montserrat text-3xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
-						We use evidence to{" "}
-						<span className="text-chemonics-lime"> strengthen systems,</span>
-						improve decisions, and deliver
-						<span className="text-chemonics-lime mx-2">measurable</span>
-						outcomes.
-					</h2>
+					<div
+						className="font-montserrat text-3xl font-bold leading-tight text-white md:text-5xl lg:text-6xl [&_span]:text-chemonics-lime"
+						dangerouslySetInnerHTML={{
+							__html:
+								content ||
+								`We use evidence to strengthen systems, improve decisions, and deliver measurable outcomes.`,
+						}}
+					/>
 				</div>
 			</div>
 		</section>

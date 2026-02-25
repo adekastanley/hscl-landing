@@ -101,15 +101,15 @@ export default function FocusAreasSection({
 								<div
 									className={`ml-12 md:max-w-[45%] ${
 										index % 2 === 0
-											? "md:mr-auto md:ml-0 md:text-right lg:ml-20"
-											: "md:ml-auto  lg:mr-20"
+											? "md:mr-auto md:ml-0 lg:ml-20"
+											: "md:ml-auto lg:mr-20"
 									}`}
 								>
 									<h3 className="mb-3 font-montserrat text-2xl font-bold text-white">
 										{area.title}
 									</h3>
 									<div
-										className="font-montserrat text-gray-300 leading-relaxed [&_ul]:list-disc [&_ol]:list-decimal [&_li]:ml-4 [&_p]:mb-2 [&_a]:text-chemonics-lime [&_a]:underline"
+										className="font-montserrat text-gray-300 leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ol]:list-decimal [&_ol]:list-inside [&_li]:mb-1 [&_p]:mb-2 [&_a]:text-chemonics-lime [&_a]:underline"
 										dangerouslySetInnerHTML={{ __html: area.description }}
 									/>
 								</div>

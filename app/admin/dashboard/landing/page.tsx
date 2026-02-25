@@ -5,6 +5,8 @@ import ValuesManager from "@/components/admin/landing/ValuesManager";
 import WhatWeDoManager from "@/components/admin/landing/WhatWeDoManager";
 import DocumentManager from "@/components/admin/landing/DocumentManager";
 import FocusAreasManager from "@/components/admin/landing/FocusAreasManager";
+import HeroContentManager from "@/components/admin/landing/HeroContentManager";
+import MissionTextManager from "@/components/admin/landing/MissionTextManager";
 
 export default function LandingPageManagement() {
 	return (
@@ -20,6 +22,8 @@ export default function LandingPageManagement() {
 
 				<TabsContent value="home" className="space-y-4">
 					<div className="grid gap-4">
+						<HeroContentManager />
+						<MissionTextManager />
 						<FocusAreasManager />
 						<WhatWeDoManager />
 						<DocumentManager />

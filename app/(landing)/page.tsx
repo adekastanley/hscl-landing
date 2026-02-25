@@ -27,13 +27,15 @@ export default async function Home() {
 	const services = await getServices();
 	const focusAreasJson = await getSiteContent("focus_areas");
 	const focusAreas = focusAreasJson ? JSON.parse(focusAreasJson) : null;
+	const heroText = await getSiteContent("hero_text");
+	const missionText = await getSiteContent("mission_statement_text");
 
 	return (
 		<div className="flex min-h-screen flex-col font-sans">
-			<HeroSection />
+			<HeroSection content={heroText} />
 			<SectionOne />
 			<FocusAreasSection focusAreas={focusAreas} />
-			<MissionSection />
+			<MissionSection content={missionText} />
 			<LogoCloud />
 			<ServicesSection services={services} />
 			<SelectedEngagementSection projects={projects} />

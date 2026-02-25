@@ -2,7 +2,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 // import { useContentful } from "@/hooks/useContentful";
 
-export function HeroSection() {
+interface HeroSectionProps {
+	content?: string | null;
+}
+
+export function HeroSection({ content }: HeroSectionProps) {
 	// const { data } = useContentful();
 
 	// const heroVideo = data?.items[0].fields.background.fields.file;
@@ -59,16 +63,14 @@ export function HeroSection() {
 			{/* Content Container */}
 			<div className="relative z-20 container mx-auto h-full flex items-center px-6 md:px-12">
 				<div className="max-w-xl py-12 lg:pl-8">
-					<h1 className="mb-6 font-montserrat text-2xl font-bold leading-tight text-white md:text-4xl">
-						We strengthen <br />
-						<span className="text-chemonics-lime">health systems </span> and
-						healthcare businesses across Africa through <br />
-						<span className="mr-2 text-chemonics-lime">
-							strategic business advisory
-						</span>
-						and{" "}
-						<span className=" text-chemonics-lime">implementation support</span>
-					</h1>
+					<div
+						className="mb-6 font-montserrat text-2xl font-bold leading-tight text-white md:text-4xl [&_span]:text-chemonics-lime"
+						dangerouslySetInnerHTML={{
+							__html:
+								content ||
+								`We strengthen health systems and healthcare businesses across Africa through strategic business advisory and implementation support`,
+						}}
+					/>
 					{/* <p className="mb-8 max-w-xl font-montserrat text-lg text-gray-200 md:text-xl">
 
 					</p> */}

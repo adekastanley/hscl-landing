@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
+import GlobalSearch from "./ui/GlobalSearch";
 import { AnimatePresence, motion, Variants } from "motion/react";
 import {
 	HoverCard,
@@ -88,6 +89,7 @@ export function Navbar({
 }: NavbarProps) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
 	const servicesLinks = navbarData?.services.length
 		? navbarData.services.map((s) => ({
@@ -269,125 +271,146 @@ export function Navbar({
 	}, []);
 
 	return (
-		<nav
-			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-				isScrolled ? "bg-chemonics-navy shadow-md py-4" : "bg-transparent py-6"
-			}`}
-		>
-			<div className="container mx-auto flex items-center justify-between px-6">
-				{/* Logo */}
-				<Link href="/" className="flex items-center gap-2">
-					<Logo />
-				</Link>
+		<>
+			<nav
+				className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+					isScrolled
+						? "bg-chemonics-navy shadow-md py-4"
+						: "bg-transparent py-6"
+				}`}
+			>
+				<div className="container mx-auto flex items-center justify-between px-6">
+					{/* Logo */}
+					<Link href="/" className="flex items-center gap-2">
+						<Logo />
+					</Link>
 
-				{/* Desktop Menu */}
-				<div
-					className={`hidden md:flex items-center gap-8 p-4 ${
-						isScrolled ? "" : "bg-chemonics-navy p-4 rounded-full px-5"
-					}`}
-				>
-					{pcMenu.map((item, index) => {
-						return (
-							<HoverCard key={index} openDelay={0} closeDelay={100}>
-								<HoverCardTrigger asChild>
+					{/* Desktop Menu */}
+					<div
+						className={`hidden md:flex items-center gap-8 p-4 ${
+							isScrolled ? "" : "bg-chemonics-navy p-4 rounded-full px-5"
+						}`}
+					>
+						{pcMenu.map((item, index) => {
+							return (
+								<HoverCard key={index} openDelay={0} closeDelay={100}>
+									<HoverCardTrigger asChild>
+										<Link
+											href={item.link}
+											className="group flex items-center gap-1 text-sm font-medium  text-white transition-colors hover:text-chemonics-lime data-[state=open]:text-chemonics-lime"
+										>
+											{item.title}
+											<ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+										</Link>
+									</HoverCardTrigger>
+									<HoverCardContent className="w-auto border-none bg-transparent p-0 shadow-none">
+										<NavHoverContent {...item.hoverContentProps} />
+									</HoverCardContent>
+								</HoverCard>
+							);
+						})}
+						<button
+							onClick={() => setIsSearchOpen(true)}
+							className="p-2 ml-2 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors flex items-center justify-center bg-white/10"
+						>
+							<Search className="h-5 w-5" />
+						</button>
+					</div>
+
+					{/* Mobile Menu Toggle */}
+					<div className="md:hidden">
+						<button
+							onClick={() => setIsMenuOpen(!isMenuOpen)}
+							className="text-white"
+						>
+							{isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+						</button>
+					</div>
+				</div>
+
+				{/* Mobile Menu */}
+				<AnimatePresence>
+					{isMenuOpen && (
+						<motion.div
+							variants={menuVariants}
+							initial="initial"
+							animate="animate"
+							exit="exit"
+							className="absolute top-full h-screen pt-20 left-0 w-full bg-chemonics-navy p-6 shadow-xl md:hidden flex flex-col gap-6"
+						>
+							{[
+								{ title: "Who We Are", link: "/about" },
+								{ title: "What We Do", link: "/our-work" },
+								{ title: "Insight", link: "/insight" },
+								{ title: "Our People", link: "/our-people" },
+							].map((item, index) => (
+								<motion.div key={index} variants={itemVariants}>
 									<Link
 										href={item.link}
-										className="group flex items-center gap-1 text-sm font-medium  text-white transition-colors hover:text-chemonics-lime data-[state=open]:text-chemonics-lime"
+										className="text-white text-lg font-medium block border-b border-white/10 pb-4"
+										onClick={() => setIsMenuOpen(false)}
 									>
 										{item.title}
-										<ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
 									</Link>
-								</HoverCardTrigger>
-								<HoverCardContent className="w-auto border-none bg-transparent p-0 shadow-none">
-									<NavHoverContent {...item.hoverContentProps} />
-								</HoverCardContent>
-							</HoverCard>
-						);
-					})}
-					<Button
-						asChild
-						className="bg-chemonics-lime text-chemonics-navy font-bold hover:bg-chemonics-lime-hover rounded-full px-6"
-					>
-						<Link href="/contact">Contact</Link>
-					</Button>
-				</div>
+								</motion.div>
+							))}
 
-				{/* Mobile Menu Toggle */}
-				<div className="md:hidden">
-					<button
-						onClick={() => setIsMenuOpen(!isMenuOpen)}
-						className="text-white"
-					>
-						{isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-					</button>
-				</div>
-			</div>
-
-			{/* Mobile Menu */}
-			<AnimatePresence>
-				{isMenuOpen && (
-					<motion.div
-						variants={menuVariants}
-						initial="initial"
-						animate="animate"
-						exit="exit"
-						className="absolute top-full h-screen pt-20 left-0 w-full bg-chemonics-navy p-6 shadow-xl md:hidden flex flex-col gap-6"
-					>
-						{[
-							{ title: "Who We Are", link: "/about" },
-							{ title: "What We Do", link: "/our-work" },
-							{ title: "Insight", link: "/insight" },
-							{ title: "Our People", link: "/our-people" },
-							{ title: "Contact", link: "/contact" },
-						].map((item, index) => (
-							<motion.div key={index} variants={itemVariants}>
-								<Link
-									href={item.link}
-									className="text-white text-lg font-medium block border-b border-white/10 pb-4"
-									onClick={() => setIsMenuOpen(false)}
+							<motion.div variants={itemVariants}>
+								<button
+									onClick={() => {
+										setIsMenuOpen(false);
+										setIsSearchOpen(true);
+									}}
+									className="text-chemonics-lime text-lg font-medium flex items-center gap-2 border-b border-white/10 pb-4 w-full text-left"
 								>
-									{item.title}
-								</Link>
+									<Search className="h-5 w-5" /> Search
+								</button>
 							</motion.div>
-						))}
 
-						<motion.div variants={itemVariants} className="mt-4 flex gap-4">
-							<a
-								href="https://web.facebook.com/HsclNigeria/"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
-							>
-								<IconBrandFacebook size={24} />
-							</a>
-							<a
-								href="https://x.com/HSCLimited/"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
-							>
-								<IconBrandX size={24} />
-							</a>
-							<a
-								href="https://www.linkedin.com/company/health-systems-consult-limited/"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
-							>
-								<IconBrandLinkedin size={24} />
-							</a>
-							<a
-								href="#"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
-							>
-								<IconBrandInstagram size={24} />
-							</a>
+							<motion.div variants={itemVariants} className="mt-4 flex gap-4">
+								<a
+									href="https://web.facebook.com/HsclNigeria/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+								>
+									<IconBrandFacebook size={24} />
+								</a>
+								<a
+									href="https://x.com/HSCLimited/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+								>
+									<IconBrandX size={24} />
+								</a>
+								<a
+									href="https://www.linkedin.com/company/health-systems-consult-limited/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+								>
+									<IconBrandLinkedin size={24} />
+								</a>
+								<a
+									href="#"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="p-2 bg-white/10 rounded-full text-white hover:bg-chemonics-lime hover:text-chemonics-navy transition-colors"
+								>
+									<IconBrandInstagram size={24} />
+								</a>
+							</motion.div>
 						</motion.div>
-					</motion.div>
-				)}
-			</AnimatePresence>
-		</nav>
+					)}
+				</AnimatePresence>
+			</nav>
+
+			{/* Search Overlay */}
+			<GlobalSearch
+				isOpen={isSearchOpen}
+				onClose={() => setIsSearchOpen(false)}
+			/>
+		</>
 	);
 }

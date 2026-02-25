@@ -36,7 +36,22 @@ export function HeroSection() {
 			{/* Chevron/Arrow Content Container */}
 
 			{/* Chevron/Arrow Background Layer */}
-			<div className="absolute top-0 bottom-0 left-0 z-10 hidden h-full w-[65%] bg-linear-to-r from-chemonics-navy/95 to-chemonics-navy/90 md:block lg:w-[55%] md:[clip-path:polygon(0_0,_100%_0,_85%_50%,_100%_100%,_0_100%)] pointer-events-none" />
+			<div className="absolute inset-0 z-10 hidden md:block pointer-events-none">
+				<svg
+					viewBox="0 0 1440 800"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					className="absolute top-0 left-0 w-full h-full object-cover"
+					preserveAspectRatio="xMinYMid slice"
+				>
+					<path
+						d="M-10 4 H 610 Q 650 4, 664 41 L 783 353 Q 800 400, 774 442 L 571 762 Q 550 796, 510 796 H -10 Z"
+						className="fill-chemonics-navy/95 stroke-white/80"
+						strokeWidth="4"
+						vectorEffect="non-scaling-stroke"
+					/>
+				</svg>
+			</div>
 
 			{/* Mobile Background Layer (Full width, no clip) */}
 			<div className="absolute inset-0 z-10 bg-chemonics-navy/80 md:hidden" />

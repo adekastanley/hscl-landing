@@ -85,7 +85,7 @@ export default function FocusAreasSection({
 								viewport={{ once: true, margin: "-100px" }}
 								transition={{ duration: 0.6, delay: 0.2 }}
 								className={`relative flex flex-col md:flex-row md:items-center pr-20 justify-center ${
-									index % 2 === 0 ? "md:flex-row-reverse lg:pl-52 " : " "
+									index % 2 === 0 ? "md:flex-row-reverse lg:pl-52 " : ""
 								}`}
 							>
 								{/* Center Icon */}
@@ -97,8 +97,8 @@ export default function FocusAreasSection({
 								<div
 									className={`ml-12 md:max-w-[45%] ${
 										index % 2 === 0
-											? "md:mr-auto md:ml-0 md:text-right ml-20"
-											: "md:ml-auto  mr-20"
+											? "md:mr-auto md:ml-0 md:text-right lg:ml-20"
+											: "md:ml-auto  lg:mr-20"
 									}`}
 								>
 									<h3 className="mb-3 font-montserrat text-2xl font-bold text-white">

@@ -10,6 +10,7 @@ import MissionTextManager from "@/components/admin/landing/MissionTextManager";
 import SectionHeaderManager from "@/components/admin/landing/SectionHeaderManager";
 import OurWorkItemsManager from "@/components/admin/landing/OurWorkItemsManager";
 import NigeriaMapManager from "@/components/admin/landing/NigeriaMapManager";
+import InsightsManager from "@/components/admin/landing/InsightsManager";
 
 export default function LandingPageManagement() {
 	return (
@@ -61,6 +62,13 @@ export default function LandingPageManagement() {
 								defaultSubtext="Our Services"
 							/>
 							<WhatWeDoManager />
+						</section>
+
+						<section className="space-y-4">
+							<h2 className="text-lg font-semibold border-b pb-2 text-chemonics-navy">
+								Insights Section (Homepage)
+							</h2>
+							<InsightsManager />
 						</section>
 					</div>
 				</TabsContent>

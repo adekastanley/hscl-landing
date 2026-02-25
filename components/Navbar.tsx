@@ -192,8 +192,7 @@ export function Navbar({
 			hoverContentProps: {
 				overview: {
 					title: "Insights",
-					description:
-						"Explore our resource center, success stories, and upcoming events from the field.",
+					description: "Find out more about our work and impact.",
 				},
 				links: {
 					title: "LATEST UPDATES",
@@ -211,12 +210,7 @@ export function Navbar({
 								navbarData.latestEvent.image_url || "/assets/placeholder.jpg",
 							articleTitle: navbarData.latestEvent.title,
 							articleDescription: navbarData.latestEvent.summary,
-							// Assuming events are at /events/[slug] or similar.
-							// If not, we might need to check where events are routed.
-							// Based on 'content_items', maybe /events?
-							// Let's assume /events/[slug] for now as it is common.
-							// Or better, let's check if there is an event page route.
-							// I see 'app/events' directory in previous list_dir.
+
 							articleLink: `/events/${navbarData.latestEvent.slug}`,
 							buttonText: "View Event",
 						}

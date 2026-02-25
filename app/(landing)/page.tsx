@@ -16,13 +16,44 @@ import { getServices } from "@/actions/landing/services";
 import { getActiveCountries } from "@/actions/landing/map";
 import { getGlobalDocument } from "@/app/actions/documents";
 import { getActiveNigeriaStates } from "@/actions/landing/nigeriaMap";
+import { getFeaturedInsightId } from "@/actions/landing/insights";
 import { LogoCloud } from "@/components/ui/logo-cloud";
 
 export default async function Home() {
 	const projects = await getItems("project", 3);
 	const latestProjectList = await getItems("project", 1);
-	const featuredProject = latestProjectList[0];
-	const stories = await getItems("story", 3);
+
+	// Feature Insight Logic
+	const featuredId = await getFeaturedInsightId();
+	let featuredProject = null;
+
+	if (featuredId) {
+		const items = await getItems("project", 100); // Get all to find by ID locally or add specific action
+		const stories = await getItems("story", 100);
+		const peopleStories = await getItems("people_story", 100);
+		const allItems = [...items, ...stories, ...peopleStories];
+		const found = allItems.find((i) => i.id === featuredId);
+		if (found) featuredProject = found;
+	}
+
+	if (!featuredProject) {
+		const latestPeopleStory = await getItems("people_story", 1);
+		if (latestPeopleStory.length > 0) {
+			featuredProject = latestPeopleStory[0];
+		} else {
+			const latestProjectList = await getItems("project", 1);
+			if (latestProjectList.length > 0) {
+				featuredProject = latestProjectList[0];
+			} else {
+				const latestStoryList = await getItems("story", 1);
+				if (latestStoryList.length > 0) {
+					featuredProject = latestStoryList[0];
+				}
+			}
+		}
+	}
+
+	const stories = await getItems("story", 4);
 	const activeCountries = await getActiveCountries();
 	const capabilityStatement = await getGlobalDocument("capability_statement");
 	const nigeriaStates = await getActiveNigeriaStates();
@@ -34,9 +65,14 @@ export default async function Home() {
 
 	const focusHeadersJson = await getSiteContent("focus_areas_headers");
 	const focusHeaders = focusHeadersJson ? JSON.parse(focusHeadersJson) : null;
+
 	const servicesHeadersJson = await getSiteContent("services_headers");
 	const servicesHeaders = servicesHeadersJson
 		? JSON.parse(servicesHeadersJson)
+		: null;
+	const insightsHeadersJson = await getSiteContent("insights_headers");
+	const insightsHeaders = insightsHeadersJson
+		? JSON.parse(insightsHeadersJson)
 		: null;
 
 	return (
@@ -48,7 +84,11 @@ export default async function Home() {
 			<LogoCloud />
 			<ServicesSection services={services} headers={servicesHeaders} />
 			<SelectedEngagementSection projects={projects} />
-			<InsightsSection stories={stories} featuredProject={featuredProject} />
+			<InsightsSection
+				stories={stories}
+				featuredProject={featuredProject}
+				headers={insightsHeaders}
+			/>
 			<AnimatedImpactCounters />
 			<Map
 				activeCountries={activeCountries}

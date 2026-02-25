@@ -10,13 +10,27 @@ import { format } from "date-fns";
 
 interface InsightsSectionProps {
 	stories: ContentItem[];
-	featuredProject?: ContentItem;
+	featuredProject?: ContentItem | null;
+	headers?: {
+		label: string;
+		title1: string;
+		title2: string;
+	} | null;
 }
 
 export function InsightsSection({
 	stories,
 	featuredProject,
+	headers,
 }: InsightsSectionProps) {
+	const label = headers?.label || "Our Insights";
+	const title1 = headers?.title1 || "Thinking Ahead";
+	const title2 = headers?.title2 || "In Healthcare & Development";
+
+	const displayStories = stories
+		.filter((story) => story.id !== featuredProject?.id)
+		.slice(0, 3);
+
 	return (
 		<section className="py-24 bg-chemonics-navy text-white overflow-hidden">
 			<div className="container mx-auto px-6 max-w-7xl">
@@ -28,11 +42,11 @@ export function InsightsSection({
 				>
 					<div>
 						<span className="block font-montserrat text-sm font-bold uppercase tracking-widest text-chemonics-lime mb-2">
-							Our Insights
+							{label}
 						</span>
 						<h2 className="font-montserrat text-4xl md:text-5xl font-bold leading-tight">
-							Thinking Ahead <br />
-							<span className="text-gray-400">In Healthcare & Development</span>
+							{title1} <br />
+							<span className="text-gray-400">{title2}</span>
 						</h2>
 					</div>
 					<Button
@@ -54,7 +68,15 @@ export function InsightsSection({
 							transition={{ duration: 0.8 }}
 							className="lg:col-span-7 group cursor-pointer"
 						>
-							<Link href={`/projects/${featuredProject.slug}`}>
+							<Link
+								href={
+									featuredProject.type === "project"
+										? `/projects/${featuredProject.slug}`
+										: featuredProject.type === "people_story"
+											? `/people-stories/${featuredProject.slug}`
+											: `/success-stories/${featuredProject.slug}`
+								}
+							>
 								<div className="relative aspect-16/10 overflow-hidden rounded-2xl mb-6">
 									<div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors z-10" />
 									<Image
@@ -98,8 +120,8 @@ export function InsightsSection({
 					)}
 
 					{/* Sidebar List - Spans 5 cols */}
-					<div className="lg:col-span-4 flex flex-col justify-between lg:justify-start space-y-8 lg:space-y-8">
-						{stories.map((item, index) => (
+					<div className="lg:col-span-5 flex flex-col justify-between lg:justify-start space-y-8 lg:space-y-8">
+						{displayStories.map((item, index) => (
 							<motion.div
 								key={item.id}
 								initial={{ opacity: 0, x: 30 }}

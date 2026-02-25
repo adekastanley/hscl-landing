@@ -14,7 +14,7 @@ export function SelectedEngagementSection({
 			<div className="container mx-auto px-6">
 				<div className="mb-12 flex items-end justify-between">
 					<div>
-						<h2 className="mb-4 font-montserrat text-4xl font-bold text-black md:text-5xl">
+						<h2 className="mb-4 font-montserrat text-4xl font-bold text-white md:text-5xl">
 							Selected Engagements
 						</h2>
 						<div className="h-1 w-24 bg-chemonics-lime"></div>

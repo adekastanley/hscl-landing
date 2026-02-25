@@ -26,15 +26,15 @@ import { toast } from "sonner";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import RichTextEditor from "@/components/ui/RichTextEditor";
 import {
-	getServices,
-	addService,
-	updateService,
-	deleteService,
-	type Service,
-} from "@/actions/landing/services";
+	getOurWorkItems,
+	addOurWorkItem,
+	updateOurWorkItem,
+	deleteOurWorkItem,
+	type OurWorkItem,
+} from "@/actions/landing/ourWork";
 
-export default function WhatWeDoManager() {
-	const [services, setServices] = useState<Service[]>([]);
+export default function OurWorkItemsManager() {
+	const [items, setItems] = useState<OurWorkItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,38 +44,35 @@ export default function WhatWeDoManager() {
 	const [formData, setFormData] = useState({
 		title: "",
 		slug: "",
-		description: "",
 		content: "",
 		image_url: "",
 	});
 
-	const fetchServices = async () => {
+	const fetchItems = async () => {
 		setLoading(true);
-		const data = await getServices();
-		setServices(data);
+		const data = await getOurWorkItems();
+		setItems(data);
 		setLoading(false);
 	};
 
 	useEffect(() => {
-		fetchServices();
+		fetchItems();
 	}, []);
 
-	const handleOpenDialog = (service?: Service) => {
-		if (service) {
-			setEditingId(service.id);
+	const handleOpenDialog = (item?: OurWorkItem) => {
+		if (item) {
+			setEditingId(item.id);
 			setFormData({
-				title: service.title,
-				slug: service.slug || "", // Fallback for old items
-				description: service.description,
-				content: service.content,
-				image_url: service.image_url,
+				title: item.title,
+				slug: item.slug || "",
+				content: item.content,
+				image_url: item.image_url,
 			});
 		} else {
 			setEditingId(null);
 			setFormData({
 				title: "",
 				slug: "",
-				description: "",
 				content: "",
 				image_url: "",
 			});
@@ -107,7 +104,7 @@ export default function WhatWeDoManager() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!formData.title || !formData.slug || !formData.description) {
+		if (!formData.title || !formData.slug || !formData.content) {
 			toast.error("Please fill in all required fields");
 			return;
 		}
@@ -116,19 +113,17 @@ export default function WhatWeDoManager() {
 		try {
 			let res;
 			if (editingId) {
-				res = await updateService(editingId, formData);
+				res = await updateOurWorkItem(editingId, formData);
 			} else {
-				res = await addService(formData);
+				res = await addOurWorkItem(formData);
 			}
 
 			if (res.success) {
 				toast.success(
-					editingId
-						? "Service updated successfully"
-						: "Service added successfully",
+					editingId ? "Item updated successfully" : "Item added successfully",
 				);
 				setIsDialogOpen(false);
-				fetchServices();
+				fetchItems();
 			} else {
 				toast.error(res.error || "Operation failed");
 			}
@@ -139,15 +134,15 @@ export default function WhatWeDoManager() {
 	};
 
 	const handleDelete = async (id: string) => {
-		if (!confirm("Are you sure you want to delete this service?")) return;
+		if (!confirm("Are you sure you want to delete this item?")) return;
 
 		try {
-			const res = await deleteService(id);
+			const res = await deleteOurWorkItem(id);
 			if (res.success) {
-				toast.success("Service deleted successfully");
-				fetchServices();
+				toast.success("Item deleted successfully");
+				fetchItems();
 			} else {
-				toast.error("Failed to delete service");
+				toast.error("Failed to delete item");
 			}
 		} catch (error) {
 			toast.error("An error occurred");
@@ -157,9 +152,9 @@ export default function WhatWeDoManager() {
 	return (
 		<Card>
 			<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-				<CardTitle>What We Do (Services)</CardTitle>
+				<CardTitle>Our Work Items</CardTitle>
 				<Button onClick={() => handleOpenDialog()} size="sm">
-					<Plus className="mr-2 h-4 w-4" /> Add Service
+					<Plus className="mr-2 h-4 w-4" /> Add Item
 				</Button>
 			</CardHeader>
 			<CardContent>
@@ -179,30 +174,33 @@ export default function WhatWeDoManager() {
 										Loading...
 									</TableCell>
 								</TableRow>
-							) : services.length === 0 ? (
+							) : items.length === 0 ? (
 								<TableRow>
 									<TableCell
 										colSpan={3}
 										className="text-center h-24 text-muted-foreground"
 									>
-										No services added yet.
+										No items added yet.
 									</TableCell>
 								</TableRow>
 							) : (
-								services.map((service) => (
-									<TableRow key={service.id}>
+								items.map((item) => (
+									<TableRow key={item.id}>
 										<TableCell className="font-medium align-top">
-											{service.title}
+											{item.title}
 										</TableCell>
 										<TableCell className="align-top whitespace-pre-wrap max-w-xs md:max-w-md">
-											{service.description}
+											<div
+												className="line-clamp-3 text-muted-foreground text-sm"
+												dangerouslySetInnerHTML={{ __html: item.content }}
+											/>
 										</TableCell>
 										<TableCell className="text-right align-top">
 											<div className="flex justify-end gap-2">
 												<Button
 													variant="ghost"
 													size="icon"
-													onClick={() => handleOpenDialog(service)}
+													onClick={() => handleOpenDialog(item)}
 												>
 													<Pencil className="h-4 w-4" />
 												</Button>
@@ -210,7 +208,7 @@ export default function WhatWeDoManager() {
 													variant="ghost"
 													size="icon"
 													className="text-destructive hover:bg-destructive/10"
-													onClick={() => handleDelete(service.id)}
+													onClick={() => handleDelete(item.id)}
 												>
 													<Trash2 className="h-4 w-4" />
 												</Button>
@@ -227,11 +225,9 @@ export default function WhatWeDoManager() {
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
-						<DialogTitle>
-							{editingId ? "Edit Service" : "Add Service"}
-						</DialogTitle>
+						<DialogTitle>{editingId ? "Edit Item" : "Add Item"}</DialogTitle>
 						<DialogDescription>
-							Add details about a service or area of work.
+							Add details about a specific item for the Our Work page.
 						</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit} className="space-y-4 py-4">
@@ -254,25 +250,11 @@ export default function WhatWeDoManager() {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="description">Short Summary</Label>
-							<Textarea
-								id="description"
-								placeholder="A brief summary for the homepage card..."
-								value={formData.description}
-								onChange={(e) =>
-									setFormData({ ...formData, description: e.target.value })
-								}
-								className="min-h-[100px]"
-								required
-							/>
-						</div>
-
-						<div className="space-y-2">
-							<Label>Detailed Content (Rich Text)</Label>
+							<Label>Description</Label>
 							<RichTextEditor
 								value={formData.content}
 								onChange={(val) => setFormData({ ...formData, content: val })}
-								placeholder="Detailed description for the Our Work page..."
+								placeholder="Enter details about this area of work..."
 							/>
 						</div>
 

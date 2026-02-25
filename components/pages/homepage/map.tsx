@@ -7,19 +7,25 @@ import { ActiveCountry } from "@/actions/landing/map";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlobalDocument } from "@/app/actions/documents";
+import { type ActiveNigeriaState } from "@/actions/landing/nigeriaMap";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const geoUrl = "/world-countries.json";
+const nigeriaGeoUrl = "/nigeria-states.json";
 
 interface MapProps {
 	activeCountries: ActiveCountry[];
 	document?: GlobalDocument | null;
+	nigeriaStates?: ActiveNigeriaState[];
 }
 
 export default function Map({
 	activeCountries = [],
 	document = null,
+	nigeriaStates = [],
 }: MapProps) {
 	const [content, setContent] = useState<React.ReactNode>("");
+	const [activeTab, setActiveTab] = useState("global");
 
 	return (
 		<section className="py-16 bg-white">
@@ -63,109 +69,240 @@ export default function Map({
 					</div>
 				</div>
 
-				<div className="w-full max-w-4xl mx-auto h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
-					<ComposableMap
-						projection="geoMercator"
-						projectionConfig={{
-							scale: 400,
-							center: [20, 0], // Center roughly on Central Africa
-						}}
-						style={{ width: "100%", height: "100%" }}
-					>
-						<Geographies geography={geoUrl}>
-							{({ geographies }: { geographies: any[] }) =>
-								geographies.map((geo: any) => {
-									const countryName = geo.properties.name;
-									// Check if country is active (case-insensitive check might be safer, but start with exact)
-									const activeCountry = activeCountries.find(
-										(c) => c.name === countryName,
-									);
-									const isActive = !!activeCountry;
-
-									return (
-										<Geography
-											key={geo.rsmKey}
-											geography={geo}
-											data-tooltip-id="my-tooltip"
-											onMouseEnter={() => {
-												if (activeCountry) {
-													setContent(
-														<div className="text-left">
-															<div className="font-bold mb-1">
-																{countryName}
-															</div>
-															{activeCountry.projects &&
-															activeCountry.projects.length > 0 ? (
-																<ul className="list-disc pl-4 text-xs">
-																	{activeCountry.projects.map((p) => (
-																		<li
-																			key={p.id}
-																			className="hover:text-blue-200 hover:underline"
-																		>
-																			{p.title}
-																		</li>
-																	))}
-																</ul>
-															) : (
-																<div className="text-xs italic">
-																	Active Presence
-																</div>
-															)}
-														</div>,
-													);
-												} else {
-													setContent(countryName);
-												}
-											}}
-											onMouseLeave={() => {
-												setContent("");
-											}}
-											style={{
-												default: {
-													fill: isActive ? "#000" : "#E5E7EB",
-													outline: "none",
-													stroke: "#ffffff",
-													strokeWidth: 0.5,
-												},
-												hover: {
-													fill: isActive ? "#4c956c" : "#D1D5DB",
-													outline: "none",
-													stroke: "#ffffff",
-													strokeWidth: 0.75,
-													cursor: isActive ? "pointer" : "default",
-												},
-												pressed: {
-													fill: isActive ? "#16425b" : "#9CA3AF",
-													outline: "none",
-												},
-											}}
-										/>
-									);
-								})
-							}
-						</Geographies>
-					</ComposableMap>
-					<Tooltip
-						id="my-tooltip"
-						style={{ backgroundColor: "#1e293b", color: "#fff", zIndex: 50 }}
-					>
-						{content}
-					</Tooltip>
-
-					{/* Legend */}
-					<div className="absolute bottom-6 left-6 bg-white/90 p-4 rounded-lg shadow-sm border text-xs">
-						<div className="flex items-center gap-2 mb-2">
-							<div className="w-3 h-3 bg-black rounded-full"></div>
-							<span className="font-medium text-chemonics-navy">
-								Active Presence
-							</span>
-						</div>
-						<div className="flex items-center gap-2">
-							<div className="w-3 h-3 bg-gray-200 rounded-full"></div>
-							<span className="text-muted-foreground">Other Regions</span>
-						</div>
+				<Tabs
+					value={activeTab}
+					onValueChange={setActiveTab}
+					className="w-full max-w-5xl mx-auto mb-8"
+				>
+					<div className="flex justify-center mb-6">
+						<TabsList className="bg-muted">
+							<TabsTrigger
+								value="global"
+								className="data-[state=active]:bg-white"
+							>
+								Global Footprint
+							</TabsTrigger>
+							<TabsTrigger
+								value="nigeria"
+								className="data-[state=active]:bg-white"
+							>
+								Nigeria Footprint
+							</TabsTrigger>
+						</TabsList>
 					</div>
-				</div>
+
+					<TabsContent value="global" className="mt-0">
+						<div className="w-full h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
+							<ComposableMap
+								projection="geoMercator"
+								projectionConfig={{
+									scale: 400,
+									center: [20, 0], // Center roughly on Central Africa
+								}}
+								style={{ width: "100%", height: "100%" }}
+							>
+								<Geographies geography={geoUrl}>
+									{({ geographies }: { geographies: any[] }) =>
+										geographies.map((geo: any) => {
+											const countryName = geo.properties.name;
+											// Check if country is active (case-insensitive check might be safer, but start with exact)
+											const activeCountry = activeCountries.find(
+												(c) => c.name === countryName,
+											);
+											const isActive = !!activeCountry;
+
+											return (
+												<Geography
+													key={geo.rsmKey}
+													geography={geo}
+													data-tooltip-id="my-tooltip"
+													onMouseEnter={() => {
+														if (activeCountry) {
+															setContent(
+																<div className="text-left">
+																	<div className="font-bold mb-1">
+																		{countryName}
+																	</div>
+																	{activeCountry.projects &&
+																	activeCountry.projects.length > 0 ? (
+																		<ul className="list-disc pl-4 text-xs">
+																			{activeCountry.projects.map((p) => (
+																				<li
+																					key={p.id}
+																					className="hover:text-blue-200 hover:underline"
+																				>
+																					{p.title}
+																				</li>
+																			))}
+																		</ul>
+																	) : (
+																		<div className="text-xs italic">
+																			Active Presence
+																		</div>
+																	)}
+																</div>,
+															);
+														} else {
+															setContent(countryName);
+														}
+													}}
+													onMouseLeave={() => {
+														setContent("");
+													}}
+													style={{
+														default: {
+															fill: isActive ? "#000" : "#E5E7EB",
+															outline: "none",
+															stroke: "#ffffff",
+															strokeWidth: 0.5,
+														},
+														hover: {
+															fill: isActive ? "#4c956c" : "#D1D5DB",
+															outline: "none",
+															stroke: "#ffffff",
+															strokeWidth: 0.75,
+															cursor: isActive ? "pointer" : "default",
+														},
+														pressed: {
+															fill: isActive ? "#16425b" : "#9CA3AF",
+															outline: "none",
+														},
+													}}
+												/>
+											);
+										})
+									}
+								</Geographies>
+							</ComposableMap>
+
+							{/* Legend */}
+							<div className="absolute bottom-6 left-6 bg-white/90 p-4 rounded-lg shadow-sm border text-xs">
+								<div className="flex items-center gap-2 mb-2">
+									<div className="w-3 h-3 bg-black rounded-full"></div>
+									<span className="font-medium text-chemonics-navy">
+										Active Presence
+									</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<div className="w-3 h-3 bg-gray-200 rounded-full"></div>
+									<span className="text-muted-foreground">Other Regions</span>
+								</div>
+							</div>
+						</div>
+					</TabsContent>
+
+					<TabsContent value="nigeria" className="mt-0">
+						<div className="w-full h-[600px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative">
+							<ComposableMap
+								projection="geoMercator"
+								projectionConfig={{
+									scale: 1800,
+									center: [8, 9], // Center properly for Nigeria
+								}}
+								style={{ width: "100%", height: "100%" }}
+							>
+								<Geographies geography={nigeriaGeoUrl}>
+									{({ geographies }: { geographies: any[] }) =>
+										geographies.map((geo: any) => {
+											const stateName = geo.properties.NAME_1;
+
+											// Simple match, could be more robust if names differ slightly
+											const activeState = nigeriaStates.find(
+												(s) => s.name === stateName,
+											);
+											const isActive = !!activeState;
+
+											return (
+												<Geography
+													key={geo.rsmKey}
+													geography={geo}
+													data-tooltip-id="my-tooltip"
+													onMouseEnter={() => {
+														if (activeState) {
+															setContent(
+																<div className="text-left">
+																	<div className="font-bold mb-1">
+																		{stateName}
+																	</div>
+																	{activeState.projects &&
+																	activeState.projects.length > 0 ? (
+																		<ul className="list-disc pl-4 text-xs">
+																			{activeState.projects.map((p) => (
+																				<li
+																					key={p.id}
+																					className="hover:text-blue-200 hover:underline"
+																				>
+																					{p.title}
+																				</li>
+																			))}
+																		</ul>
+																	) : (
+																		<div className="text-xs italic text-blue-200">
+																			Active Presence
+																		</div>
+																	)}
+																</div>,
+															);
+														} else {
+															setContent(stateName);
+														}
+													}}
+													onMouseLeave={() => {
+														setContent("");
+													}}
+													style={{
+														default: {
+															fill: isActive ? "#000" : "#E5E7EB",
+															outline: "none",
+															stroke: "#ffffff",
+															strokeWidth: 0.5,
+														},
+														hover: {
+															fill: isActive ? "#4c956c" : "#D1D5DB",
+															outline: "none",
+															stroke: "#ffffff",
+															strokeWidth: 0.75,
+															cursor: isActive ? "pointer" : "default",
+														},
+														pressed: {
+															fill: isActive ? "#16425b" : "#9CA3AF",
+															outline: "none",
+														},
+													}}
+												/>
+											);
+										})
+									}
+								</Geographies>
+							</ComposableMap>
+
+							{/* Legend */}
+							<div className="absolute bottom-6 left-6 bg-white/90 p-4 rounded-lg shadow-sm border text-xs">
+								<div className="flex items-center gap-2 mb-2">
+									<div className="w-3 h-3 bg-black rounded-full"></div>
+									<span className="font-medium text-chemonics-navy">
+										Active Presence
+									</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<div className="w-3 h-3 bg-gray-200 rounded-full"></div>
+									<span className="text-muted-foreground">Other States</span>
+								</div>
+							</div>
+						</div>
+					</TabsContent>
+				</Tabs>
+
+				<Tooltip
+					id="my-tooltip"
+					style={{
+						backgroundColor: "#1e293b",
+						color: "#fff",
+						zIndex: 50,
+					}}
+				>
+					{content}
+				</Tooltip>
 			</div>
 		</section>
 	);

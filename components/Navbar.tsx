@@ -21,8 +21,8 @@ import {
 } from "@tabler/icons-react";
 
 import { type ContentItem } from "@/app/actions/content";
-
 import { type NavbarData } from "@/actions/landing/navbar";
+import { getOurWorkItems, type OurWorkItem } from "@/actions/landing/ourWork";
 
 interface NavbarProps {
 	latestPeopleStory?: ContentItem;
@@ -90,11 +90,20 @@ export function Navbar({
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const [ourWorkItems, setOurWorkItems] = useState<OurWorkItem[]>([]);
 
-	const servicesLinks = navbarData?.services.length
-		? navbarData.services.map((s) => ({
+	useEffect(() => {
+		async function loadOurWork() {
+			const data = await getOurWorkItems();
+			setOurWorkItems(data);
+		}
+		loadOurWork();
+	}, []);
+
+	const servicesLinks = ourWorkItems.length
+		? ourWorkItems.map((s) => ({
 				label: s.title,
-				href: `/our-work#${s.slug || s.title.toLowerCase().replace(/\s+/g, "-")}`, // Fallback slug logic just in case
+				href: `/our-work#${s.slug || s.title.toLowerCase().replace(/\s+/g, "-")}`,
 			}))
 		: [
 				{ label: "Health Systems", href: "/our-work#health-systems" },
@@ -156,7 +165,7 @@ export function Navbar({
 						"We deliver incisive solutions in health systems strengthening, monitoring & evaluation, and public health interventions.",
 				},
 				links: {
-					title: "SECTORS",
+					title: "WHAT WE DO",
 					items: servicesLinks,
 				},
 				inFocus: latestProject
@@ -178,8 +187,8 @@ export function Navbar({
 			},
 		},
 		{
-			title: "Insight",
-			link: "/insight",
+			title: "Insights",
+			link: "/insights",
 			hoverContentProps: {
 				overview: {
 					title: "Insights",
@@ -303,7 +312,7 @@ export function Navbar({
 											<ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
 										</Link>
 									</HoverCardTrigger>
-									<HoverCardContent className="w-auto border-none bg-transparent p-0 shadow-none">
+									<HoverCardContent className="w-auto border-none bg-transparent p-0 shadow-none mt-6  ">
 										<NavHoverContent {...item.hoverContentProps} />
 									</HoverCardContent>
 								</HoverCard>

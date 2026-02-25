@@ -238,6 +238,24 @@ const initDb = async () => {
     )
   `);
 
+		await db.execute(`
+    CREATE TABLE IF NOT EXISTS active_nigeria_states (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+		await db.execute(`
+    CREATE TABLE IF NOT EXISTS active_nigeria_state_projects (
+      id TEXT PRIMARY KEY,
+      state_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (state_id) REFERENCES active_nigeria_states(id) ON DELETE CASCADE
+    )
+  `);
+
 		// Site Content (Mission, etc.)
 		await db.execute(`
     CREATE TABLE IF NOT EXISTS site_content (
@@ -258,13 +276,25 @@ const initDb = async () => {
     )
   `);
 
-		// Services (What We Do)
+		// Services (What We Do - Homepage)
 		await db.execute(`
     CREATE TABLE IF NOT EXISTS services (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
       description TEXT NOT NULL,
+      content TEXT NOT NULL,
+      image_url TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+		// Our Work (What We Do - Dedicated Page)
+		await db.execute(`
+    CREATE TABLE IF NOT EXISTS our_work_items (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
       content TEXT NOT NULL,
       image_url TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP

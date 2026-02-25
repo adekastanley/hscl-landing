@@ -109,63 +109,83 @@ efficiency.`,
 
 interface ServicesSectionProps {
 	services?: Service[];
+	headers?: { heading: string; subtext: string } | null;
 }
 
-export default function ServicesSection({ services }: ServicesSectionProps) {
+export default function ServicesSection({
+	services,
+	headers,
+}: ServicesSectionProps) {
 	const displayServices =
 		services && services.length > 0 ? services : defaultServices;
 	return (
 		<section className="py-24 px-6 bg-background">
 			<div className="max-w-7xl mx-auto">
-				<div className="text-center mb-16">
-					<motion.h2
+				<div className="text-center mb-16 px-4">
+					<motion.div
 						initial={{ opacity: 0, y: 30 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true, margin: "-100px" }}
 						transition={{ duration: 0.8 }}
-						className="font-sans text-4xl md:text-5xl font-bold mb-4 text-primary"
 					>
-						How We Work | Our Services
-					</motion.h2>
-					<motion.p
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, margin: "-100px" }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-						className="text-lg text-muted-foreground max-w-2xl mx-auto"
-					>
-						We provide a broad spectrum of Consultancy and Implementation
-						services, and we continually strive to deepen our expertise base and
-						expand our portfolio diversity.
-					</motion.p>
+						<span className="mb-2 block font-montserrat text-sm font-bold uppercase tracking-widest text-chemonics-lime">
+							{headers?.heading || "How We Work"}
+						</span>
+						<h2 className="font-sans text-4xl md:text-5xl font-bold mb-4 text-primary">
+							{headers?.subtext || "Our Services"}
+						</h2>
+					</motion.div>
 				</div>
 
-				<div className="grid md:grid-cols-2 gap-8">
+				<div className="flex flex-col gap-24">
 					{displayServices.map((item, index) => (
-						<motion.div
-							key={item.id || index}
-							initial={{ opacity: 0, y: 40 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true, margin: "-100px" }}
-							transition={{ duration: 0.6, delay: index * 0.1 }}
-							className="group bg-secondary rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300"
-						>
-							<div className="aspect-3/2 overflow-hidden">
-								<img
-									src={item.image_url || "/placeholder.svg"}
-									alt={item.title}
-									className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-								/>
+						<div key={item.id || index}>
+							<div
+								className={`grid md:grid-cols-2 gap-12 items-center ${
+									index % 2 === 1 ? "md:grid-flow-row-dense" : ""
+								}`}
+							>
+								{/* Text Content */}
+								<motion.div
+									initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+									whileInView={{ opacity: 1, x: 0 }}
+									viewport={{ once: true, margin: "-100px" }}
+									transition={{ duration: 0.8 }}
+									className={`${index % 2 === 1 ? "md:col-start-2" : ""}`}
+								>
+									<h3 className="text-3xl font-bold text-chemonics-navy mb-6">
+										{item.title}
+									</h3>
+									<div className="w-16 h-1 bg-chemonics-lime mb-8" />
+									<p className="text-xl text-muted-foreground leading-relaxed">
+										{item.description}
+									</p>
+								</motion.div>
+
+								{/* Image */}
+								<motion.div
+									initial={{ opacity: 0, scale: 0.95 }}
+									whileInView={{ opacity: 1, scale: 1 }}
+									viewport={{ once: true, margin: "-100px" }}
+									transition={{ duration: 0.8 }}
+									className={`relative aspect-video rounded-2xl overflow-hidden shadow-xl ${
+										index % 2 === 1 ? "md:col-start-1" : ""
+									}`}
+								>
+									<img
+										src={item.image_url || "/assets/three.jpg"}
+										alt={item.title}
+										className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+										onError={(e) => {
+											e.currentTarget.src = "https://placehold.co/800x600";
+										}}
+									/>
+								</motion.div>
 							</div>
-							<div className="p-8">
-								<div className="text-3xl font-bold text-primary mb-4">
-									{item.title}
-								</div>
-								<p className="text-muted-foreground leading-relaxed">
-									{item.description}
-								</p>
-							</div>
-						</motion.div>
+							{index < displayServices.length - 1 && (
+								<div className="mt-24 h-px bg-border max-w-4xl mx-auto" />
+							)}
+						</div>
 					))}
 				</div>
 			</div>

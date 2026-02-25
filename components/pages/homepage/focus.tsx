@@ -37,10 +37,12 @@ const defaultFocusAreas: FocusArea[] = [
 
 interface FocusAreasSectionProps {
 	focusAreas?: FocusArea[] | null;
+	headers?: { heading: string; subtext: string } | null;
 }
 
 export default function FocusAreasSection({
 	focusAreas,
+	headers,
 }: FocusAreasSectionProps) {
 	const displayAreas =
 		focusAreas && focusAreas.length > 0 && focusAreas[0].title
@@ -62,10 +64,10 @@ export default function FocusAreasSection({
 			<div className="container mx-auto px-6">
 				<div className="mb-16 text-center">
 					<span className="mb-2 block font-montserrat text-sm font-bold uppercase tracking-widest text-chemonics-lime">
-						Our Expertise
+						{headers?.heading || "Our Expertise"}
 					</span>
 					<h2 className="font-montserrat text-4xl font-bold text-white md:text-5xl">
-						Focus Areas
+						{headers?.subtext || "Focus Areas"}
 					</h2>
 				</div>
 

@@ -5,10 +5,14 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
-import { getServices, type Service } from "@/actions/landing/services";
+import { getOurWorkItems, type OurWorkItem } from "@/actions/landing/ourWork";
 
-export default function OurWorkClient() {
-	const [services, setServices] = useState<Service[]>([]);
+interface OurWorkClientProps {
+	headers?: { heading: string; subtext: string } | null;
+}
+
+export default function OurWorkClient({ headers }: OurWorkClientProps) {
+	const [services, setServices] = useState<OurWorkItem[]>([]);
 	const [activeSection, setActiveSection] = useState("");
 	const { scrollYProgress } = useScroll();
 	const scaleX = useSpring(scrollYProgress, {
@@ -19,7 +23,7 @@ export default function OurWorkClient() {
 
 	useEffect(() => {
 		async function loadServices() {
-			const data = await getServices();
+			const data = await getOurWorkItems();
 			setServices(data);
 			if (data.length > 0)
 				setActiveSection(
@@ -29,7 +33,7 @@ export default function OurWorkClient() {
 		loadServices();
 	}, []); // Removed missing dependency warning by adding empty array or correct dependencies
 
-	const getSlug = (service: Service) =>
+	const getSlug = (service: OurWorkItem) =>
 		service.slug || service.title.toLowerCase().replace(/\s+/g, "-");
 
 	const scrollToSection = (id: string) => {
@@ -115,7 +119,7 @@ export default function OurWorkClient() {
 						transition={{ duration: 0.7 }}
 						className="text-5xl md:text-6xl font-bold mb-6"
 					>
-						What We Do
+						{headers?.heading || "What We Do"}
 					</motion.h1>
 					<motion.p
 						initial={{ opacity: 0, y: 20 }}
@@ -123,8 +127,8 @@ export default function OurWorkClient() {
 						transition={{ duration: 0.7, delay: 0.2 }}
 						className="text-lg md:text-xl max-w-2xl mx-auto text-gray-200"
 					>
-						Delivering incisive solutions in health systems strengthening,
-						monitoring & evaluation, and public health interventions.
+						{headers?.subtext ||
+							"Delivering incisive solutions in health systems strengthening, monitoring & evaluation, and public health interventions."}
 					</motion.p>
 				</div>
 			</section>
@@ -182,12 +186,10 @@ export default function OurWorkClient() {
 												{service.title}
 											</h2>
 											<div className="w-20 h-1 bg-chemonics-lime mb-8" />
-											<p className="text-xl font-medium text-chemonics-navy/80 mb-4">
-												{service.description}
-											</p>
-											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-wrap">
-												{service.content}
-											</p>
+											<div
+												className="text-lg text-muted-foreground leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ol]:list-decimal [&_ol]:list-inside [&_li]:mb-1 [&_p]:mb-4 [&_a]:text-chemonics-lime [&_a]:underline font-montserrat"
+												dangerouslySetInnerHTML={{ __html: service.content }}
+											/>
 										</motion.div>
 										<motion.div
 											initial={{ opacity: 0, scale: 0.9 }}

@@ -90,8 +90,8 @@ export default function FocusAreasSection({
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-100px" }}
 								transition={{ duration: 0.6, delay: 0.2 }}
-								className={`relative flex flex-col md:flex-row md:items-center pr-20 justify-center ${
-									index % 2 === 0 ? "md:flex-row-reverse lg:pl-52 " : ""
+								className={`relative flex flex-col md:flex-row md:items-center justify-center ${
+									index % 2 === 0 ? "md:flex-row-reverse lg:pl-5" : ""
 								}`}
 							>
 								{/* Center Icon */}
@@ -101,24 +101,23 @@ export default function FocusAreasSection({
 
 								{/* Content Box */}
 								<div
-									className={`ml-12 md:max-w-[45%] ${
+									className={`ml-16 md:ml-12 md:max-w-[45%] ${
 										index % 2 === 0
 											? "md:mr-auto md:ml-0 lg:ml-20"
 											: "md:ml-auto lg:mr-20"
 									}`}
 								>
-									<h3 className="mb-3 font-montserrat text-2xl font-bold text-white">
+									<h3 className="mb-3 font-montserrat text-xl md:text-2xl font-bold text-white">
 										{area.title}
 									</h3>
 									<div
-										className="font-montserrat text-gray-300 leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ol]:list-decimal [&_ol]:list-inside [&_li]:mb-1 [&_p]:mb-2 [&_a]:text-chemonics-lime [&_a]:underline"
+										className="font-montserrat text-gray-300 leading-relaxed [&_ul]:list-disc [&_ul]:list-outside [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:list-outside [&_ol]:ml-5 [&_li]:mb-1 [&_p]:mb-2 [&_a]:text-chemonics-lime [&_a]:underline"
 										dangerouslySetInnerHTML={{ __html: area.description }}
 									/>
 								</div>
 
 								{/* Empty side for balance */}
-								<div className=" md:block md:w-[45%] bg-red-900 h-full"></div>
-								{/* <div className="hidden md:block md:w-[45%] bg-red-900" /> */}
+								<div className="hidden md:block md:w-[45%]" />
 							</motion.div>
 						))}
 					</div>

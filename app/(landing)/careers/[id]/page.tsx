@@ -26,13 +26,15 @@ export default async function JobPage({ params }: PageProps) {
 		<div className="min-h-screen bg-background pt-24 pb-12">
 			<div className="container px-4 md:px-6 max-w-4xl mx-auto space-y-8">
 				{/* Back Link */}
-				<Link
-					href="/careers"
-					className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-chemonics-teal transition-colors"
-				>
-					<ArrowLeft className="mr-2 h-4 w-4" />
-					Back to Careers
-				</Link>
+				<Button asChild variant="ghost" className="mb-4">
+					<Link
+						href="/careers"
+						className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-chemonics-teal transition-colors"
+					>
+						<ArrowLeft className="mr-2 h-4 w-4" />
+						Back to Careers
+					</Link>
+				</Button>
 
 				{/* Header */}
 				<div className="space-y-4">

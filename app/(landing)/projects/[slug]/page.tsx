@@ -3,24 +3,21 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ClientShareButton } from "@/components/ClientShareButton";
 
-interface SuccessStoryPageProps {
+interface ProjectPageProps {
 	params: Promise<{
 		slug: string;
 	}>;
 }
 
-export default async function SuccessStoryPage({
-	params,
-}: SuccessStoryPageProps) {
+export default async function ProjectPage({ params }: ProjectPageProps) {
 	const { slug } = await params;
-	const story = await getItemBySlug(slug);
+	const project = await getItemBySlug(slug);
 
-	if (!story) {
+	if (!project || project.type !== "project") {
 		notFound();
 	}
 
@@ -29,8 +26,8 @@ export default async function SuccessStoryPage({
 			{/* Hero Section */}
 			<div className="relative h-[50vh] min-h-[400px] w-full">
 				<Image
-					src={story.image_url || "/assets/placeholder.jpg"}
-					alt={story.title}
+					src={project.image_url || "/assets/placeholder.jpg"}
+					alt={project.title}
 					fill
 					className="object-cover"
 					priority
@@ -39,21 +36,21 @@ export default async function SuccessStoryPage({
 				<div className="absolute inset-0 bg-linear-to-t from-chemonics-navy/90 to-transparent" />
 				<div className="absolute bottom-0 left-0 right-0 container pb-12 text-white">
 					<Link
-						href="/projects#stories"
-						className="inline-flex items-center text-sm font-medium hover:text-chemonics-lime mb-6 transition-colors"
+						href="/projects"
+						className="inline-flex items-center text-sm font-medium hover:text-chemonics-lime mb-6 transition-colors relative z-10"
 					>
-						<ArrowLeft className="mr-2 h-4 w-4" /> Back to Success Stories
+						<ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
 					</Link>
-					<Badge className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white mb-4 border-none">
-						Success Story
+					<Badge className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white mb-4 border-none relative z-10">
+						Project
 					</Badge>
-					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-4xl mb-4">
-						{story.title}
+					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-4xl mb-4 relative z-10">
+						{project.title}
 					</h1>
-					<div className="flex flex-wrap items-center gap-6 text-gray-300">
+					<div className="flex flex-wrap items-center gap-6 text-gray-300 relative z-10">
 						<div className="flex items-center gap-2">
 							<Calendar className="h-4 w-4" />
-							{format(new Date(story.published_date), "MMMM d, yyyy")}
+							{format(new Date(project.published_date), "MMMM d, yyyy")}
 						</div>
 					</div>
 				</div>
@@ -64,10 +61,10 @@ export default async function SuccessStoryPage({
 					<div className="flex-1">
 						<div className="prose prose-lg max-w-none prose-headings:text-chemonics-navy prose-a:text-chemonics-teal">
 							<p className="lead text-xl text-muted-foreground mb-8">
-								{story.summary}
+								{project.summary}
 							</p>
 							<div
-								dangerouslySetInnerHTML={{ __html: story.content }}
+								dangerouslySetInnerHTML={{ __html: project.content }}
 								className="whitespace-pre-wrap"
 							/>
 						</div>
@@ -75,16 +72,15 @@ export default async function SuccessStoryPage({
 
 					{/* Sidebar / Share Actions */}
 					<div className="md:w-64 shrink-0 space-y-8">
-						<div className="sticky top-24 p-6 bg-muted/30 rounded-lg">
+						<div className="sticky top-24 p-6 bg-muted/30 rounded-lg z-10">
 							<h3 className="font-bold text-chemonics-navy mb-4">
-								Share this story
+								Share this project
 							</h3>
 							<div className="flex flex-col gap-3">
 								<ClientShareButton
-									title={story.title}
-									text={story.summary || ""}
+									title={project.title}
+									text={project.summary || ""}
 								/>
-								{/* Add real social share buttons here if needed */}
 							</div>
 						</div>
 					</div>

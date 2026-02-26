@@ -25,7 +25,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 		const buffer = Buffer.from(bytes);
 
 		// Ensure directory exists
-		const uploadDir = join(process.cwd(), "public", "siteimages");
+		const uploadDir = join(process.cwd(), "public", folder);
 		if (!existsSync(uploadDir)) {
 			await mkdir(uploadDir, { recursive: true });
 		}
@@ -37,7 +37,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 		await writeFile(filePath, buffer);
 
 		// Return the public URL
-		const url = `/siteimages/${uniqueFilename}`;
+		const url = `/${folder}/${uniqueFilename}`;
 
 		return NextResponse.json({ url });
 	} catch (error) {

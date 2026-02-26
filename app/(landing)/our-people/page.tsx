@@ -1,4 +1,5 @@
 import { getItems } from "@/app/actions/content";
+import { getResources } from "@/app/actions/resources";
 import { getTeamMembers } from "@/app/actions/team";
 import OurPeopleClientPage from "@/components/pages/our-people/OurPeopleClientPage";
 
@@ -23,12 +24,12 @@ export default async function OurPeoplePage({
 	const storiesLimit = 4;
 
 	// Fetch Team, Stories, Events, and People Stories in parallel
-	const [stories, peopleStories] = await Promise.all([
+	const [stories, peopleStories, resources] = await Promise.all([
 		// getTeamMembers("leadership"), // Fetch leadership
 		// getTeamMembers("team"), // Fetch team members
 		getItems("story", storiesLimit, storiesPage),
-
 		getItems("people_story", storiesLimit, peoplePage),
+		getResources(),
 	]);
 
 	const hasMoreStories = stories.length === storiesLimit;
@@ -44,6 +45,7 @@ export default async function OurPeoplePage({
 			hasMoreStories={hasMoreStories}
 			currentPeoplePage={peoplePage}
 			hasMorePeopleStories={hasMorePeopleStories}
+			resources={resources}
 		/>
 	);
 }

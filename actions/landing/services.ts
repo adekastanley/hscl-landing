@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { deleteLocalFile } from "@/lib/file";
 
 export interface Service {
 	id: string;
@@ -91,10 +92,21 @@ export async function updateService(id: string, data: Omit<Service, "id">) {
 
 export async function deleteService(id: string) {
 	try {
+		const result = await db.execute({
+			sql: "SELECT image_url FROM services WHERE id = ?",
+			args: [id],
+		});
+		const imageUrl = result.rows[0]?.image_url as string | null;
+
 		await db.execute({
 			sql: "DELETE FROM services WHERE id = ?",
 			args: [id],
 		});
+
+		if (imageUrl) {
+			await deleteLocalFile(imageUrl);
+		}
+
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");

@@ -18,6 +18,7 @@ import {
 	IconSettings,
 	IconUsers,
 	IconCalendarEvent,
+	IconBook,
 } from "@tabler/icons-react";
 
 import { NavDocuments } from "@/components/nav-documents";
@@ -87,9 +88,9 @@ export function AppSidebar({
 			icon: IconCalendarEvent,
 		},
 		{
-			title: "Partners",
-			url: "/admin/dashboard/partners",
-			icon: IconUsers,
+			title: "Resources",
+			url: "/admin/dashboard/resources",
+			icon: IconBook,
 		},
 	];
 

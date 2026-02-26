@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { deleteLocalFile } from "@/lib/file";
 
 export interface TeamMember {
 	id: string;
@@ -122,10 +123,21 @@ export async function updateTeamMember(
 
 export async function deleteTeamMember(id: string) {
 	try {
+		const result = await db.execute({
+			sql: "SELECT image_url FROM team_members WHERE id = ?",
+			args: [id],
+		});
+		const imageUrl = result.rows[0]?.image_url as string | null;
+
 		await db.execute({
 			sql: "DELETE FROM team_members WHERE id = ?",
 			args: [id],
 		});
+
+		if (imageUrl) {
+			await deleteLocalFile(imageUrl);
+		}
+
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/team");
 		revalidatePath("/admin/dashboard/leadership");

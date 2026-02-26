@@ -17,185 +17,15 @@ import {
 	ChevronRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-
-interface LearningResource {
-	id: string;
-	title: string;
-	description: string;
-	type: "free" | "paid";
-	cost: string;
-	tags: string[];
-	downloadLink: string;
-}
-
-const resources: LearningResource[] = [
-	// Free Resources
-	{
-		id: "f1",
-		title: "Community Health Guide",
-		description:
-			"A comprehensive guide to community health engagement strategies.",
-		type: "free",
-		cost: "Free",
-		tags: ["PDF", "Guide"],
-		downloadLink: "#",
-	},
-	{
-		id: "f2",
-		title: "HCSL Annual Report 2024",
-		description:
-			"Overview of our impact, projects, and financials for the year.",
-		type: "free",
-		cost: "Free",
-		tags: ["Report", "Annual"],
-		downloadLink: "#",
-	},
-	{
-		id: "f3",
-		title: "Malaria Prevention Toolkit",
-		description:
-			"Tools and resources for implementing effective malaria prevention programs.",
-		type: "free",
-		cost: "Free",
-		tags: ["Toolkit", "Health"],
-		downloadLink: "#",
-	},
-	{
-		id: "f4",
-		title: "Data Collection Best Practices",
-		description:
-			"Standard operating procedures for field data collection in rural areas.",
-		type: "free",
-		cost: "Free",
-		tags: ["SOP", "Data"],
-		downloadLink: "#",
-	},
-	{
-		id: "f5",
-		title: "Volunteer Handbook",
-		description:
-			"Essential information for new volunteers joining our missions.",
-		type: "free",
-		cost: "Free",
-		tags: ["Handbook", "Onboarding"],
-		downloadLink: "#",
-	},
-	{
-		id: "f6",
-		title: "Nutrition Workshop Slides",
-		description:
-			"Presentation decks from our recent nutrition awareness workshops.",
-		type: "free",
-		cost: "Free",
-		tags: ["Presentation", "Nutrition"],
-		downloadLink: "#",
-	},
-	{
-		id: "f7",
-		title: "Grant Writing Basics",
-		description: "A starter guide for NGOs looking to secure funding.",
-		type: "free",
-		cost: "Free",
-		tags: ["Guide", "Funding"],
-		downloadLink: "#",
-	},
-	{
-		id: "f8",
-		title: "Impact Story Template",
-		description: "Template for documenting and sharing success stories.",
-		type: "free",
-		cost: "Free",
-		tags: ["Template", "Communications"],
-		downloadLink: "#",
-	},
-	// Paid Resources
-	{
-		id: "p1",
-		title: "Advanced MEL Certification",
-		description:
-			"Complete course materials for the Advanced Monitoring & Evaluation capability framework.",
-		type: "paid",
-		cost: "$150",
-		tags: ["Course", "Certification"],
-		downloadLink: "#",
-	},
-	{
-		id: "p2",
-		title: "Health Systems Leadership Masterclass",
-		description: "Exclusive video series and workbook for health leaders.",
-		type: "paid",
-		cost: "$200",
-		tags: ["Video", "Leadership"],
-		downloadLink: "#",
-	},
-	{
-		id: "p3",
-		title: "Project Management for Development",
-		description:
-			"Comprehensive training module for managing development projects.",
-		type: "paid",
-		cost: "$120",
-		tags: ["Training", "Management"],
-		downloadLink: "#",
-	},
-	{
-		id: "p4",
-		title: "Grant Proposal Master Template Suite",
-		description: "A collection of winning proposal templates for major donors.",
-		type: "paid",
-		cost: "$85",
-		tags: ["Template", "Grants"],
-		downloadLink: "#",
-	},
-	{
-		id: "p5",
-		title: "Statistical Analysis for Public Health",
-		description:
-			"In-depth guide and dataset examples for health data analysis.",
-		type: "paid",
-		cost: "$95",
-		tags: ["Data", "Analysis"],
-		downloadLink: "#",
-	},
-	{
-		id: "p6",
-		title: "NGO Financial Management Course",
-		description:
-			"Financial planning, reporting, and compliance for non-profits.",
-		type: "paid",
-		cost: "$180",
-		tags: ["Finance", "Course"],
-		downloadLink: "#",
-	},
-	{
-		id: "p7",
-		title: "Effective Advocacy Strategies",
-		description: "Strategic frameworks for policy advocacy and change.",
-		type: "paid",
-		cost: "$110",
-		tags: ["Strategy", "Advocacy"],
-		downloadLink: "#",
-	},
-	{
-		id: "p8",
-		title: "Remote Team Management Kit",
-		description:
-			"Tools and policies for managing distributed development teams.",
-		type: "paid",
-		cost: "$75",
-		tags: ["Management", "Remote Work"],
-		downloadLink: "#",
-	},
-];
+import { Resource } from "@/app/actions/resources";
 
 const ITEMS_PER_PAGE = 4;
 
-export default function Leaning() {
+export default function Leaning({ resources = [] }: { resources: Resource[] }) {
 	const [activeTab, setActiveTab] = useState<"free" | "paid">("free");
 	const [currentPage, setCurrentPage] = useState(1);
-
 	const filteredResources = resources.filter((res) => res.type === activeTab);
-	const totalPages = Math.ceil(filteredResources.length / ITEMS_PER_PAGE);
+	const totalPages = Math.ceil(filteredResources.length / ITEMS_PER_PAGE) || 1;
 
 	const currentResources = filteredResources.slice(
 		(currentPage - 1) * ITEMS_PER_PAGE,
@@ -296,12 +126,27 @@ export default function Leaning() {
 									</CardContent>
 									<CardFooter className="pt-0 flex items-center justify-between border-t bg-muted/10 px-6 py-4 mt-auto">
 										<span className="font-bold text-lg text-chemonics-navy">
-											{resource.cost}
+											{resource.type === "free" ? "Free" : resource.cost}
 										</span>
-										<Button size="sm" className="gap-2">
-											Download
-											<Download className="h-3 w-3" />
-										</Button>
+										{resource.type === "free" ? (
+											<Button asChild size="sm" className="gap-2">
+												<a href={resource.file_url || "#"} download>
+													Download
+													<Download className="h-3 w-3" />
+												</a>
+											</Button>
+										) : (
+											<Button asChild size="sm" className="gap-2">
+												<a
+													href={resource.link_url || "#"}
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													Get Access
+													<ChevronRight className="h-3 w-3" />
+												</a>
+											</Button>
+										)}
 									</CardFooter>
 								</Card>
 							</motion.div>

@@ -300,6 +300,22 @@ const initDb = async () => {
     )
   `);
 
+		// Resources (Learning and Development)
+		await db.execute(`
+    CREATE TABLE IF NOT EXISTS resources (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      type TEXT CHECK(type IN ('free', 'paid')) NOT NULL,
+      cost TEXT,
+      tags TEXT,
+      file_url TEXT,
+      link_url TEXT,
+      image_url TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
 		// Partners
 		await db.execute(`
     CREATE TABLE IF NOT EXISTS partners (

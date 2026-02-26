@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import Leaning from "./leaning";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Resource } from "@/app/actions/resources";
 
 interface OurPeopleClientPageProps {
 	// leadership: TeamMember[];
@@ -23,6 +24,7 @@ interface OurPeopleClientPageProps {
 	hasMoreStories: boolean;
 	currentPeoplePage: number;
 	hasMorePeopleStories: boolean;
+	resources: Resource[];
 }
 
 export default function OurPeopleClientPage({
@@ -35,6 +37,7 @@ export default function OurPeopleClientPage({
 	hasMoreStories,
 	currentPeoplePage,
 	hasMorePeopleStories,
+	resources,
 }: OurPeopleClientPageProps) {
 	const [activeSection, setActiveSection] = useState("team");
 	const { scrollYProgress } = useScroll();
@@ -197,7 +200,7 @@ export default function OurPeopleClientPage({
 					id="stories"
 				/>
 				<Separator />
-				<Leaning />
+				<Leaning resources={resources} />
 				<Separator />
 				{/* Resources Section */}
 				<section

@@ -2,6 +2,7 @@
 
 import db, { ensureDbInitialized } from "@/lib/db";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { deleteLocalFile } from "@/lib/file";
 
 export interface ContentItem {
 	id: string;
@@ -237,10 +238,23 @@ export async function updateItem(
 export async function deleteItem(id: string) {
 	try {
 		await ensureDbInitialized();
+
+		// Fetch the item first to get its image_url
+		const result = await db.execute({
+			sql: "SELECT image_url FROM content_items WHERE id = ?",
+			args: [id],
+		});
+		const imageUrl = result.rows[0]?.image_url as string | null;
+
 		await db.execute({
 			sql: "DELETE FROM content_items WHERE id = ?",
 			args: [id],
 		});
+
+		// Cleanup orphaned file
+		if (imageUrl) {
+			await deleteLocalFile(imageUrl);
+		}
 		revalidatePath("/admin/dashboard/projects");
 		revalidatePath("/admin/dashboard/stories");
 		revalidatePath("/admin/dashboard/events");

@@ -6,12 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
 
-interface ProjectsListProps {
+interface ProjectListProps {
 	projects: ContentItem[];
 	years: string[];
 	currentYear: string;
 	currentPage: number;
 	hasMore: boolean;
+	baseUrl?: string;
 }
 
 export default function ProjectsList({
@@ -20,7 +21,8 @@ export default function ProjectsList({
 	currentYear,
 	currentPage,
 	hasMore,
-}: ProjectsListProps) {
+	baseUrl = "/projects",
+}: ProjectListProps) {
 	return (
 		<section id="projects" className="scroll-mt-32">
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -41,7 +43,7 @@ export default function ProjectsList({
 						</span>
 						<div className="flex gap-1">
 							<Link
-								href={`/projects?year=all#projects`}
+								href={`${baseUrl}?year=all#projects`}
 								scroll={false}
 								className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
 									currentYear === "all"
@@ -54,7 +56,7 @@ export default function ProjectsList({
 							{years.slice(0, 3).map((y) => (
 								<Link
 									key={y}
-									href={`/projects?year=${y}#projects`}
+									href={`${baseUrl}?year=${y}#projects`}
 									scroll={false}
 									className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
 										currentYear === y
@@ -71,7 +73,7 @@ export default function ProjectsList({
 					<div className="flex items-center gap-1 ml-2">
 						{currentPage > 1 && (
 							<Link
-								href={`/projects?page=${currentPage - 1}&year=${currentYear}#projects`}
+								href={`${baseUrl}?page=${currentPage - 1}&year=${currentYear}#projects`}
 								scroll={false}
 							>
 								<Button variant="outline" size="icon" className="h-8 w-8">
@@ -81,7 +83,7 @@ export default function ProjectsList({
 						)}
 						{hasMore && (
 							<Link
-								href={`/projects?page=${currentPage + 1}&year=${currentYear}#projects`}
+								href={`${baseUrl}?page=${currentPage + 1}&year=${currentYear}#projects`}
 								scroll={false}
 							>
 								<Button variant="outline" size="icon" className="h-8 w-8">

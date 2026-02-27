@@ -4,6 +4,8 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 
+import { deleteLocalFile } from "@/lib/file";
+
 export interface GlobalDocument {
 	id: string;
 	key: string;
@@ -60,6 +62,7 @@ export async function upsertGlobalDocument(
 	await ensureGlobalDocumentsTable();
 	try {
 		const existing = await getGlobalDocument(key);
+		const oldFileUrl = existing?.file_url;
 
 		if (fileUrl === null) {
 			// Delete
@@ -68,6 +71,9 @@ export async function upsertGlobalDocument(
 					sql: "DELETE FROM global_documents WHERE key = ?",
 					args: [key],
 				});
+				if (oldFileUrl) {
+					await deleteLocalFile(oldFileUrl);
+				}
 			}
 		} else if (existing) {
 			// Update
@@ -75,6 +81,9 @@ export async function upsertGlobalDocument(
 				sql: "UPDATE global_documents SET title = ?, file_url = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?",
 				args: [title, fileUrl, key],
 			});
+			if (oldFileUrl && oldFileUrl !== fileUrl) {
+				await deleteLocalFile(oldFileUrl);
+			}
 		} else {
 			// Insert
 			await db.execute({

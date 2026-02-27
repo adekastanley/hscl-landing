@@ -3,6 +3,8 @@
 import db from "@/lib/db";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
+import { deleteLocalFile } from "@/lib/file";
+
 export interface OurWorkItem {
 	id: string;
 	title: string;
@@ -58,10 +60,23 @@ export async function updateOurWorkItem(
 	data: Omit<OurWorkItem, "id">,
 ) {
 	try {
+		// Get old image_url for cleanup
+		const current = await db.execute({
+			sql: "SELECT image_url FROM our_work_items WHERE id = ?",
+			args: [id],
+		});
+		const oldImageUrl = current.rows[0]?.image_url as string | null;
+
 		await db.execute({
 			sql: "UPDATE our_work_items SET title = ?, slug = ?, content = ?, image_url = ? WHERE id = ?",
 			args: [data.title, data.slug, data.content, data.image_url, id],
 		});
+
+		// Cleanup old image if changed
+		if (oldImageUrl && oldImageUrl !== data.image_url) {
+			await deleteLocalFile(oldImageUrl);
+		}
+
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");
@@ -83,10 +98,22 @@ export async function updateOurWorkItem(
 
 export async function deleteOurWorkItem(id: string) {
 	try {
+		// Get image_url for cleanup
+		const current = await db.execute({
+			sql: "SELECT image_url FROM our_work_items WHERE id = ?",
+			args: [id],
+		});
+		const imageUrl = current.rows[0]?.image_url as string | null;
+
 		await db.execute({
 			sql: "DELETE FROM our_work_items WHERE id = ?",
 			args: [id],
 		});
+
+		if (imageUrl) {
+			await deleteLocalFile(imageUrl);
+		}
+
 		revalidatePath("/admin/dashboard/landing");
 		revalidatePath("/what-we-do");
 		revalidatePath("/our-work");

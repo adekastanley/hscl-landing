@@ -52,7 +52,7 @@ export default function DocumentManager() {
 		try {
 			toast.loading("Uploading document...");
 			const response = await fetch(
-				`/api/upload?filename=${encodeURIComponent(file.name)}`,
+				`/api/upload?filename=${encodeURIComponent(file.name)}&folder=documents`,
 				{
 					method: "POST",
 					headers: { "Content-Type": file.type },

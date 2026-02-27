@@ -131,8 +131,8 @@ export function TeamManager({
 			// Handle File Upload if a file is selected
 			if (inputFileRef.current?.files?.length) {
 				const file = inputFileRef.current.files[0];
-				// Use category for folder if possible, default to 'team'
-				const folder = category === "leadership" ? "team" : "team"; // keeping simple for now
+				// Use category for folder
+				const folder = category === "leadership" ? "leadership" : "team";
 				const response = await fetch(
 					`/api/upload?filename=${file.name}&folder=${folder}`,
 					{

@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { deleteLocalFile } from "@/lib/file";
 
 // --- Site Content (Mission, etc.) ---
 
@@ -24,12 +25,27 @@ export const getSiteContent = unstable_cache(
 
 export async function updateSiteContent(key: string, content: string) {
 	try {
-		// UPSERT strategy: SQLite support depends on version, but `INSERT OR REPLACE` is standard enough or we check existence.
-		// Let's use INSERT OR REPLACE INTO for simplicity.
+		// Fetch old content for cleanup if it involves images
+		const oldContentStr = await getSiteContent(key);
+
 		await db.execute({
 			sql: "INSERT OR REPLACE INTO site_content (key, content, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)",
 			args: [key, content],
 		});
+
+		// Cleanup old images if this is a JSON content (like mission)
+		if (oldContentStr) {
+			try {
+				const oldData = JSON.parse(oldContentStr);
+				const newData = JSON.parse(content);
+				if (oldData.image && oldData.image !== newData.image) {
+					await deleteLocalFile(oldData.image);
+				}
+			} catch (e) {
+				// Not JSON or same structure, ignore
+			}
+		}
+
 		revalidatePath("/about");
 		revalidatePath("/admin/dashboard/landing");
 		revalidateTag("site-content", "default");

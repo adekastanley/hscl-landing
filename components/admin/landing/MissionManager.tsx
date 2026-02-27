@@ -41,7 +41,7 @@ export default function MissionManager() {
 
 		try {
 			const response = await fetch(
-				`/api/upload?filename=${encodeURIComponent(file.name)}`,
+				`/api/upload?filename=${encodeURIComponent(file.name)}&folder=mission`,
 				{ method: "POST", body: file },
 			);
 			if (!response.ok) throw new Error("Upload failed");

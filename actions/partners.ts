@@ -4,6 +4,8 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 
+import { deleteLocalFile } from "@/lib/file";
+
 export async function getPartners() {
 	try {
 		const result = await db.execute(
@@ -43,10 +45,21 @@ export async function createPartner(formData: FormData) {
 
 export async function deletePartner(id: string) {
 	try {
+		// Get logo_url for cleanup
+		const current = await db.execute({
+			sql: "SELECT logo_url FROM partners WHERE id = ?",
+			args: [id],
+		});
+		const logoUrl = current.rows[0]?.logo_url as string | null;
+
 		await db.execute({
 			sql: "DELETE FROM partners WHERE id = ?",
 			args: [id],
 		});
+
+		if (logoUrl) {
+			await deleteLocalFile(logoUrl);
+		}
 
 		revalidatePath("/admin/dashboard/partners");
 		revalidatePath("/");

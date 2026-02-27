@@ -87,7 +87,7 @@ export default function OurWorkItemsManager() {
 
 		try {
 			const response = await fetch(
-				`/api/upload?filename=${encodeURIComponent(file.name)}`,
+				`/api/upload?filename=${encodeURIComponent(file.name)}&folder=ourwork`,
 				{ method: "POST", body: file },
 			);
 			if (!response.ok) throw new Error("Upload failed");

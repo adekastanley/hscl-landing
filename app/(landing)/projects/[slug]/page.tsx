@@ -36,14 +36,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 				<div className="absolute inset-0 bg-linear-to-t from-chemonics-navy/90 to-transparent" />
 				<div className="absolute bottom-0 left-0 right-0 container pb-12 text-white">
 					<Link
-						href="/projects"
+						href="/insights"
 						className="inline-flex items-center text-sm font-medium hover:text-chemonics-lime mb-6 transition-colors relative z-10"
 					>
-						<ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
+						<ArrowLeft className="mr-2 h-4 w-4" /> Back to Insights
 					</Link>
-					<Badge className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white mb-4 border-none relative z-10">
+					{/* <Badge className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white mb-4 border-none relative z-10">
 						Project
-					</Badge>
+					</Badge> */}
 					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-4xl mb-4 relative z-10">
 						{project.title}
 					</h1>

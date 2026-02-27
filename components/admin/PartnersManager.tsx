@@ -81,7 +81,7 @@ export function PartnersManager() {
 				}
 
 				const response = await fetch(
-					`/api/upload?filename=${file.name}&folder=logos`,
+					`/api/upload?filename=${file.name}&folder=partners`,
 					{
 						method: "POST",
 						body: file,

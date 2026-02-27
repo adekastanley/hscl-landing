@@ -165,6 +165,7 @@ export default function FocusClientPage({
 						currentYear={currentProjectYear}
 						currentPage={currentProjectPage}
 						hasMore={hasMoreProjects}
+						baseUrl="/insights"
 					/>
 				</div>
 

@@ -180,14 +180,17 @@ export default function OurWorkClient({ headers }: OurWorkClientProps) {
 											whileInView={{ opacity: 1, x: 0 }}
 											viewport={{ once: true }}
 											transition={{ duration: 0.6 }}
-											className={cn(idx % 2 === 1 && "md:col-start-2")}
+											className={cn(
+												"min-w-0",
+												idx % 2 === 1 && "md:col-start-2",
+											)}
 										>
-											<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
+											<h2 className="text-3xl font-bold text-chemonics-navy mb-6 wrap-break-word">
 												{service.title}
 											</h2>
 											<div className="w-20 h-1 bg-chemonics-lime mb-8" />
 											<div
-												className="text-lg text-muted-foreground leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ol]:list-decimal [&_ol]:list-inside [&_li]:mb-1 [&_p]:mb-4 [&_a]:text-chemonics-lime [&_a]:underline font-montserrat"
+												className="text-lg text-muted-foreground leading-relaxed [&_ul]:list-disc [&_ul]:list-inside [&_ol]:list-decimal [&_ol]:list-inside [&_li]:mb-1 [&_p]:mb-4 [&_a]:text-chemonics-lime [&_a]:underline font-montserrat wrap-break-word"
 												dangerouslySetInnerHTML={{ __html: service.content }}
 											/>
 										</motion.div>
@@ -197,7 +200,7 @@ export default function OurWorkClient({ headers }: OurWorkClientProps) {
 											viewport={{ once: true }}
 											transition={{ duration: 0.6 }}
 											className={cn(
-												"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg",
+												"bg-muted aspect-video rounded-xl overflow-hidden flex items-center justify-center shadow-lg min-w-0",
 												idx % 2 === 1 && "md:col-start-1",
 											)}
 										>

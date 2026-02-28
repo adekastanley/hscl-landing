@@ -11,6 +11,7 @@ import SectionHeaderManager from "@/components/admin/landing/SectionHeaderManage
 import OurWorkItemsManager from "@/components/admin/landing/OurWorkItemsManager";
 import NigeriaMapManager from "@/components/admin/landing/NigeriaMapManager";
 import InsightsManager from "@/components/admin/landing/InsightsManager";
+import SelectedEngagementsManager from "@/components/admin/landing/SelectedEngagementsManager";
 
 export default function LandingPageManagement() {
 	return (
@@ -69,6 +70,13 @@ export default function LandingPageManagement() {
 								Insights Section (Homepage)
 							</h2>
 							<InsightsManager />
+						</section>
+
+						<section className="space-y-4">
+							<h2 className="text-lg font-semibold border-b pb-2 text-chemonics-navy">
+								Selected Engagements Section (Homepage)
+							</h2>
+							<SelectedEngagementsManager />
 						</section>
 					</div>
 				</TabsContent>

@@ -20,8 +20,36 @@ import { getFeaturedInsightId } from "@/actions/landing/insights";
 import { LogoCloud } from "@/components/ui/logo-cloud";
 
 export default async function Home() {
-	const projects = await getItems("project", 3);
-	const latestProjectList = await getItems("project", 1);
+	const defaultProjects = await getItems("project", 3);
+	let displayProjects = [...defaultProjects];
+
+	const selectedEngagementsJson = await getSiteContent(
+		"selected_engagements_projects",
+	);
+
+	if (selectedEngagementsJson) {
+		try {
+			const selectedIds = JSON.parse(selectedEngagementsJson);
+			if (Array.isArray(selectedIds)) {
+				const allProjects = await getItems("project", 100);
+				const matchedProjects = selectedIds
+					.map((id) => allProjects.find((p) => p.id === id))
+					.filter((p): p is NonNullable<typeof p> => p !== undefined);
+
+				if (matchedProjects.length > 0) {
+					displayProjects = matchedProjects;
+					if (displayProjects.length < 3) {
+						const remaining = defaultProjects.filter(
+							(p) => !displayProjects.some((dp) => dp.id === p.id),
+						);
+						displayProjects = [...displayProjects, ...remaining].slice(0, 3);
+					}
+				}
+			}
+		} catch (e) {
+			console.error("Failed to parse selected engagements", e);
+		}
+	}
 
 	// Feature Insight Logic
 	const featuredId = await getFeaturedInsightId();
@@ -83,7 +111,7 @@ export default async function Home() {
 			<MissionSection content={missionText} />
 			<LogoCloud />
 			<ServicesSection services={services} headers={servicesHeaders} />
-			<SelectedEngagementSection projects={projects} />
+			<SelectedEngagementSection projects={displayProjects} />
 			<InsightsSection
 				stories={stories}
 				featuredProject={featuredProject}

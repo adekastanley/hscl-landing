@@ -20,7 +20,7 @@ export function SelectedEngagementSection({
 						<div className="h-1 w-24 bg-chemonics-lime"></div>
 					</div>
 					<Link
-						href="/projects"
+						href="/insights"
 						className="hidden items-center gap-2 font-montserrat font-bold text-chemonics-navy hover:text-chemonics-lime md:flex"
 					>
 						View All Projects <ArrowRight className="h-5 w-5" />
@@ -69,7 +69,7 @@ export function SelectedEngagementSection({
 
 				<div className="mt-12 text-center md:hidden">
 					<Link
-						href="/projects"
+						href="/insights"
 						className="inline-flex items-center gap-2 font-montserrat font-bold text-chemonics-navy hover:text-chemonics-lime"
 					>
 						View All Projects <ArrowRight className="h-5 w-5" />

@@ -1,13 +1,12 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Quote } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { ArticleCard } from "@/components/ArticleCard";
 
 interface StoriesListProps {
 	stories: ContentItem[];
@@ -41,77 +40,78 @@ export default function StoriesList({
 
 	return (
 		<section id={id} className="scroll-mt-32">
-			<div>
-				<h2 className="text-3xl font-bold text-chemonics-navy mb-2">{title}</h2>
-				<p className="text-muted-foreground">{description}</p>
+			<div className="mb-12">
+				<h2 className="text-3xl font-bold text-chemonics-navy mb-4 tracking-tight">
+					{title}
+				</h2>
+				<p className="text-muted-foreground max-w-2xl">{description}</p>
 			</div>
 
-			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-				{/* Pagination Controls */}
-				<div className="flex items-center gap-2">
+			{stories.length === 0 ? (
+				<div className="text-center py-20 border border-dashed border-border rounded-lg">
+					<p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">
+						No stories yet.
+					</p>
+				</div>
+			) : (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 -mx-px border-l border-t border-border">
+					{stories.map((story) => (
+						<div
+							key={story.id}
+							className="border-r border-b border-border ml-0 mt-0"
+						>
+							<ArticleCard
+								title={story.title}
+								summary={story.summary}
+								image_url={story.image_url}
+								published_date={story.published_date}
+								category={
+									story.type === "people_story"
+										? "People Story"
+										: "Success Story"
+								}
+								slug={story.slug}
+								basePath="/success-stories"
+							/>
+						</div>
+					))}
+				</div>
+			)}
+
+			{/* Pagination Controls */}
+			{(hasMore || currentPage > 1) && (
+				<div className="flex justify-center items-center gap-6 mt-16 pb-8">
 					{currentPage > 1 && (
 						<Link
 							href={`?${createQueryString(paramName, String(currentPage - 1))}#${id}`}
 							scroll={false}
 						>
-							<Button variant="outline" size="sm">
+							<Button
+								variant="outline"
+								className="rounded-full px-8 border-chemonics-teal text-chemonics-teal hover:bg-chemonics-teal hover:text-white font-bold text-xs uppercase tracking-widest transition-all"
+							>
 								Previous
 							</Button>
 						</Link>
 					)}
-					{(hasMore || currentPage > 1) && (
-						<span className="text-xs text-muted-foreground font-medium px-2">
-							Page {currentPage}
-						</span>
-					)}
+
+					<span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+						Page {currentPage}
+					</span>
+
 					{hasMore && (
 						<Link
 							href={`?${createQueryString(paramName, String(currentPage + 1))}#${id}`}
 							scroll={false}
 						>
-							<Button variant="outline" size="sm">
-								Next
+							<Button
+								variant="outline"
+								className="rounded-full px-8 border-chemonics-teal text-chemonics-teal hover:bg-chemonics-teal hover:text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-chemonics-teal/20"
+							>
+								Next Page
 							</Button>
 						</Link>
 					)}
-				</div>
-			</div>
-
-			{stories.length === 0 ? (
-				<div className="text-center py-20 bg-muted/30 rounded-lg">
-					<p className="text-muted-foreground">No stories yet.</p>
-				</div>
-			) : (
-				<div className="grid gap-8 md:grid-cols-2">
-					{stories.map((story) => (
-						<Link
-							key={story.id}
-							href={`/success-stories/${story.slug}`}
-							className="group h-full"
-						>
-							<Card className="overflow-hidden border-none shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col md:flex-row bg-card">
-								<div className="relative h-48 md:h-auto md:w-2/5 overflow-hidden">
-									<Image
-										src={story.image_url || "/assets/placeholder.jpg"}
-										alt={story.title}
-										fill
-										className="object-cover transition-transform duration-500 group-hover:scale-105"
-										unoptimized
-									/>
-								</div>
-								<CardContent className="flex-1 p-6 flex flex-col justify-center">
-									<Quote className="h-6 w-6 text-chemonics-teal/30 fill-current mb-2" />
-									<h3 className="text-xl font-bold text-chemonics-navy group-hover:text-chemonics-teal transition-colors line-clamp-2 mb-2">
-										{story.title}
-									</h3>
-
-									<div className="flex items-center gap-2 text-xs font-semibold text-chemonics-teal mt-auto">
-										Read Full Story <ArrowRight className="h-3 w-3" />
-									</div>
-								</CardContent>
-							</Card>
-						</Link>
-					))}
 				</div>
 			)}
 		</section>

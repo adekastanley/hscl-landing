@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Share2, ArrowLeft } from "lucide-react";
+import { Calendar, MapPin, Share2, ArrowLeft, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
@@ -23,113 +23,139 @@ export default function EventDetailClient({ event }: EventDetailClientProps) {
 	const isClosed = event.status === "closed";
 
 	return (
-		<main className="min-h-screen pt-24 pb-16">
-			{/* Back Navigation */}
-			<div className="container mx-auto px-4 mb-8">
-				<Link
-					href="/projects"
-					className="inline-flex items-center text-chemonics-teal hover:text-chemonics-teal/80 transition-colors font-medium mb-4"
-				>
-					<ArrowLeft className="mr-2 h-4 w-4" />
-					Back to Events
-				</Link>
-			</div>
-
-			{/* Hero Section */}
-			<section className="container mx-auto px-4 mb-12">
+		<main className="min-h-screen bg-background pb-20 pt-24 md:pt-32">
+			{/* Header Section */}
+			<div className="container max-w-5xl mx-auto px-4 text-center mb-12">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
+					transition={{ duration: 0.5 }}
 				>
-					{/* Image */}
-					<div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-xl">
-						<Image
-							src={event.image_url || "/assets/placeholder.jpg"}
-							alt={event.title}
-							fill
-							className="object-cover"
-							priority
-							unoptimized
-						/>
-						<div className="absolute top-4 left-4">
-							<Badge
-								className={`${
-									isTraining
-										? "bg-chemonics-teal text-white"
-										: "bg-chemonics-lime text-chemonics-navy"
-								} border-none text-sm px-3 py-1 font-semibold`}
-							>
-								{isTraining ? "Training" : "Event"}
-							</Badge>
-						</div>
-					</div>
+					<Link
+						href="/projects"
+						className="inline-flex items-center text-sm font-medium text-chemonics-teal hover:text-chemonics-teal/80 mb-8 transition-colors group"
+					>
+						<ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />{" "}
+						Back to Events
+					</Link>
 
-					{/* Content Info */}
-					<div className="space-y-6">
-						<div>
-							<h1 className="text-4xl lg:text-5xl font-bold text-chemonics-navy mb-4 leading-tight">
-								{event.title}
-							</h1>
-							<div className="flex flex-wrap gap-4 text-muted-foreground mb-6">
-								<div className="flex items-center gap-2">
-									<Calendar className="h-5 w-5 text-chemonics-teal" />
-									<span className="font-medium">
-										{format(
-											new Date(event.published_date),
-											"EEEE, MMMM d, yyyy",
-										)}
-									</span>
-								</div>
-								<div className="flex items-center gap-2">
-									<MapPin className="h-5 w-5 text-chemonics-teal" />
-									<span className="font-medium">Location TBD</span>
-								</div>
+					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-chemonics-navy mb-6">
+						{event.title}
+					</h1>
+
+					<div className="flex flex-wrap items-center justify-center gap-3">
+						<Badge
+							className={`${
+								isTraining
+									? "bg-chemonics-teal/10 text-chemonics-teal border-chemonics-teal/20"
+									: "bg-chemonics-lime/10 text-chemonics-lime border-chemonics-lime/20"
+							} px-3 py-1 font-semibold uppercase tracking-wider text-[10px]`}
+						>
+							{isTraining ? "Training" : "Event"}
+						</Badge>
+						{isClosed && (
+							<Badge className="bg-destructive/10 text-destructive border-destructive/20 px-3 py-1 font-semibold uppercase tracking-wider text-[10px]">
+								Registration Closed
+							</Badge>
+						)}
+					</div>
+				</motion.div>
+			</div>
+
+			{/* Featured Image */}
+			<div className="container max-w-6xl mx-auto px-4 mb-16">
+				<motion.div
+					initial={{ opacity: 0, scale: 0.95 }}
+					animate={{ opacity: 1, scale: 1 }}
+					transition={{ duration: 0.6, delay: 0.2 }}
+					className="relative aspect-21/9 w-full rounded-4xl overflow-hidden shadow-2xl"
+				>
+					<Image
+						src={event.image_url || "/assets/placeholder.jpg"}
+						alt={event.title}
+						fill
+						className="object-cover"
+						priority
+						unoptimized
+					/>
+				</motion.div>
+			</div>
+
+			{/* Main Content Area */}
+			<div className="container max-w-5xl mx-auto px-4">
+				<div className="flex flex-col md:grid md:grid-cols-[200px_1fr] gap-12 lg:gap-20">
+					{/* Left Sidebar - Meta Info */}
+					<aside className="space-y-10 order-2 md:order-1">
+						{/* Date */}
+						<div className="space-y-4">
+							<h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
+								Date
+							</h4>
+							<div className="flex items-center gap-3 text-chemonics-navy">
+								<Calendar className="h-5 w-5 opacity-40" />
+								<span className="text-sm font-bold">
+									{format(new Date(event.published_date), "MMM d, yyyy")}
+								</span>
 							</div>
 						</div>
 
-						<div className="prose prose-lg text-muted-foreground">
-							<p className="lead text-xl text-chemonics-navy/80">
-								{event.summary}
-							</p>
+						{/* Location */}
+						<div className="space-y-4">
+							<h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
+								Location
+							</h4>
+							<div className="flex items-center gap-3 text-chemonics-navy">
+								<MapPin className="h-5 w-5 opacity-40" />
+								<span className="text-sm font-bold">Location TBD</span>
+							</div>
 						</div>
 
-						{/* Action Buttons */}
-						<div className="flex flex-wrap gap-4 pt-4 border-t">
+						{/* Quick Actions */}
+						<div className="space-y-6 pt-6 border-t border-border/50">
 							<Button
-								size="lg"
-								className={`px-8 text-lg font-semibold shadow-lg transition-all ${
+								className={`w-full font-bold transition-all ${
 									isClosed
-										? "bg-muted text-muted-foreground cursor-not-allowed"
-										: "bg-chemonics-teal hover:bg-chemonics-teal/90 hover:scale-105"
+										? "bg-muted text-muted-foreground"
+										: "bg-chemonics-teal hover:bg-chemonics-teal/90 shadow-lg hover:shadow-chemonics-teal/20"
 								}`}
 								disabled={isClosed}
+								size="lg"
 								onClick={() => !isClosed && setIsModalOpen(true)}
 							>
-								{isClosed ? "Registration Closed" : "Register Now"}
+								{isClosed ? "Closed" : "Register Now"}
 							</Button>
 
 							<Button
 								variant="outline"
+								className="w-full border-border hover:bg-muted/50 text-chemonics-navy font-bold"
 								size="lg"
-								className="border-chemonics-teal text-chemonics-teal hover:bg-chemonics-teal/10"
 							>
-								<Share2 className="mr-2 h-5 w-5" /> Share Event
+								<Share2 className="mr-2 h-4 w-4" /> Share
 							</Button>
 						</div>
-					</div>
-				</motion.div>
-			</section>
+					</aside>
 
-			{/* Full Content */}
-			<section className="container mx-auto px-4 max-w-4xl">
-				<div className="prose prose-slate max-w-none">
-					<h2 className="text-3xl font-bold text-chemonics-navy mb-6">
-						Event Details
-					</h2>
-					<Markdown>{event.content}</Markdown>
+					{/* Main Column - Event Info */}
+					<article className="order-1 md:order-2">
+						<div className="prose prose-lg prose-chemonics max-w-none">
+							{event.summary && (
+								<p className="lead text-xl md:text-2xl text-chemonics-navy/80 font-medium mb-12 border-l-4 border-chemonics-lime pl-8 py-2">
+									{event.summary}
+								</p>
+							)}
+
+							<div>
+								<h2 className="text-2xl font-bold text-chemonics-navy mb-6">
+									Event Details
+								</h2>
+								<div className="text-chemonics-navy/90 leading-relaxed">
+									<Markdown>{event.content}</Markdown>
+								</div>
+							</div>
+						</div>
+					</article>
 				</div>
-			</section>
+			</div>
 
 			<EventRegistrationModal
 				isOpen={isModalOpen}

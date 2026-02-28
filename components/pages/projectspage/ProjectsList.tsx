@@ -1,10 +1,8 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Calendar, Filter } from "lucide-react";
-import Image from "next/image";
+import { Filter } from "lucide-react";
 import Link from "next/link";
 import { type ContentItem } from "@/app/actions/content";
+import { ArticleCard } from "@/components/ArticleCard";
 
 interface ProjectListProps {
 	projects: ContentItem[];
@@ -25,116 +23,112 @@ export default function ProjectsList({
 }: ProjectListProps) {
 	return (
 		<section id="projects" className="scroll-mt-32">
-			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
 				<div>
-					<h2 className="text-3xl font-bold text-chemonics-navy mb-2">
+					<h2 className="text-3xl font-bold text-chemonics-navy mb-4 tracking-tight">
 						Key Projects
 					</h2>
-					<p className="text-muted-foreground">
-						Explore our ongoing and completed initiatives.
+					<p className="text-muted-foreground max-w-2xl">
+						Explore our ongoing and completed initiatives in health systems
+						strengthening.
 					</p>
 				</div>
 
-				{/* Filter & Pagination Controls */}
-				<div className="flex flex-wrap items-center gap-2">
-					<div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-						<span className="text-xs font-medium px-2 text-muted-foreground uppercase flex items-center gap-1">
-							<Filter className="h-3 w-3" /> Year
-						</span>
-						<div className="flex gap-1">
+				{/* Filter Controls */}
+				<div className="flex flex-wrap items-center gap-3 bg-muted/50 p-2 rounded-2xl border border-border/50">
+					<span className="text-[10px] font-bold px-3 text-muted-foreground/60 uppercase flex items-center gap-2 tracking-widest">
+						<Filter className="h-3 w-3" /> Filter By Year
+					</span>
+					<div className="flex gap-1">
+						<Link
+							href={`${baseUrl}?year=all#projects`}
+							scroll={false}
+							className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all uppercase tracking-wider ${
+								currentYear === "all"
+									? "bg-white shadow-sm text-chemonics-teal"
+									: "text-muted-foreground hover:text-chemonics-teal"
+							}`}
+						>
+							All
+						</Link>
+						{years.slice(0, 4).map((y) => (
 							<Link
-								href={`${baseUrl}?year=all#projects`}
+								key={y}
+								href={`${baseUrl}?year=${y}#projects`}
 								scroll={false}
-								className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-									currentYear === "all"
+								className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all uppercase tracking-wider ${
+									currentYear === y
 										? "bg-white shadow-sm text-chemonics-teal"
-										: "hover:text-chemonics-teal"
+										: "text-muted-foreground hover:text-chemonics-teal"
 								}`}
 							>
-								All
+								{y}
 							</Link>
-							{years.slice(0, 3).map((y) => (
-								<Link
-									key={y}
-									href={`${baseUrl}?year=${y}#projects`}
-									scroll={false}
-									className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-										currentYear === y
-											? "bg-white shadow-sm text-chemonics-teal"
-											: "hover:text-chemonics-teal"
-									}`}
-								>
-									{y}
-								</Link>
-							))}
-						</div>
-					</div>
-
-					<div className="flex items-center gap-1 ml-2">
-						{currentPage > 1 && (
-							<Link
-								href={`${baseUrl}?page=${currentPage - 1}&year=${currentYear}#projects`}
-								scroll={false}
-							>
-								<Button variant="outline" size="icon" className="h-8 w-8">
-									<ArrowRight className="h-4 w-4 rotate-180" />
-								</Button>
-							</Link>
-						)}
-						{hasMore && (
-							<Link
-								href={`${baseUrl}?page=${currentPage + 1}&year=${currentYear}#projects`}
-								scroll={false}
-							>
-								<Button variant="outline" size="icon" className="h-8 w-8">
-									<ArrowRight className="h-4 w-4" />
-								</Button>
-							</Link>
-						)}
+						))}
 					</div>
 				</div>
 			</div>
 
 			{projects.length === 0 ? (
-				<div className="text-center py-20 bg-muted/30 rounded-lg">
-					<p className="text-muted-foreground">No projects found.</p>
+				<div className="text-center py-20 border border-dashed border-border rounded-2xl">
+					<p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">
+						No projects found for this selection.
+					</p>
 				</div>
 			) : (
-				<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 -mx-px border-l border-t border-border">
 					{projects.map((project) => (
-						<Link
-							key={project.id}
-							href={`/projects/${project.slug}`}
-							className="group"
-						>
-							<Card className="overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-								<div className="relative h-48 w-full overflow-hidden">
-									<Image
-										src={project.image_url || "/assets/placeholder.jpg"}
-										alt={project.title}
-										fill
-										className="object-cover transition-transform duration-500 group-hover:scale-105"
-										unoptimized
-									/>
-									<div className="absolute top-3 right-3">
-										<Badge className="bg-white/90 text-chemonics-navy hover:bg-white text-xs">
-											{new Date(project.published_date).getFullYear()}
-										</Badge>
-									</div>
-								</div>
-								<CardContent className="flex-1 p-5 flex flex-col">
-									<h3 className="text-lg font-bold text-chemonics-navy mb-2 group-hover:text-chemonics-teal transition-colors line-clamp-2">
-										{project.title}
-									</h3>
-
-									<div className="flex items-center text-chemonics-teal font-medium text-xs mt-auto">
-										Read More{" "}
-										<ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
-									</div>
-								</CardContent>
-							</Card>
-						</Link>
+						<div key={project.id} className="border-r border-b border-border">
+							<ArticleCard
+								title={project.title}
+								summary={project.summary}
+								image_url={project.image_url}
+								published_date={project.published_date}
+								category={new Date(project.published_date)
+									.getFullYear()
+									.toString()}
+								slug={project.slug}
+								basePath="/projects"
+							/>
+						</div>
 					))}
+				</div>
+			)}
+
+			{/* Pagination Controls */}
+			{(hasMore || currentPage > 1) && (
+				<div className="flex justify-center items-center gap-6 mt-16">
+					{currentPage > 1 && (
+						<Link
+							href={`${baseUrl}?page=${currentPage - 1}&year=${currentYear}#projects`}
+							scroll={false}
+						>
+							<Button
+								variant="outline"
+								className="rounded-full px-8 border-chemonics-teal text-chemonics-teal hover:bg-chemonics-teal hover:text-white font-bold text-xs uppercase tracking-widest transition-all"
+							>
+								Previous
+							</Button>
+						</Link>
+					)}
+
+					<span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+						Page {currentPage}
+					</span>
+
+					{hasMore && (
+						<Link
+							href={`${baseUrl}?page=${currentPage + 1}&year=${currentYear}#projects`}
+							scroll={false}
+						>
+							<Button
+								variant="outline"
+								className="rounded-full px-8 border-chemonics-teal text-chemonics-teal hover:bg-chemonics-teal hover:text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-chemonics-teal/20"
+							>
+								Next Page
+							</Button>
+						</Link>
+					)}
 				</div>
 			)}
 		</section>

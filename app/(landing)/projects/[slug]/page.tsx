@@ -1,11 +1,6 @@
 import { getItemBySlug } from "@/app/actions/content";
-import { format } from "date-fns";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { ClientShareButton } from "@/components/ClientShareButton";
+import { ArticleLayout } from "@/components/ArticleLayout";
 
 interface ProjectPageProps {
 	params: Promise<{
@@ -22,70 +17,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 	}
 
 	return (
-		<div className="min-h-screen bg-background pb-20">
-			{/* Hero Section */}
-			<div className="relative h-[50vh] min-h-[400px] w-full">
-				<Image
-					src={project.image_url || "/assets/placeholder.jpg"}
-					alt={project.title}
-					fill
-					className="object-cover"
-					priority
-					unoptimized
-				/>
-				<div className="absolute inset-0 bg-linear-to-t from-chemonics-navy/90 to-transparent" />
-				<div className="absolute bottom-0 left-0 right-0 container pb-12 text-white">
-					<Link
-						href="/insights"
-						className="inline-flex items-center text-sm font-medium hover:text-chemonics-lime mb-6 transition-colors relative z-10"
-					>
-						<ArrowLeft className="mr-2 h-4 w-4" /> Back to Insights
-					</Link>
-					{/* <Badge className="bg-chemonics-teal hover:bg-chemonics-teal/90 text-white mb-4 border-none relative z-10">
-						Project
-					</Badge> */}
-					<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-4xl mb-4 relative z-10">
-						{project.title}
-					</h1>
-					<div className="flex flex-wrap items-center gap-6 text-gray-300 relative z-10">
-						<div className="flex items-center gap-2">
-							<Calendar className="h-4 w-4" />
-							{format(new Date(project.published_date), "MMMM d, yyyy")}
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="container max-w-4xl mx-auto mt-12 px-4">
-				<div className="flex flex-col md:flex-row gap-12">
-					<div className="flex-1">
-						<div className="prose prose-lg max-w-none prose-headings:text-chemonics-navy prose-a:text-chemonics-teal">
-							<p className="lead text-xl text-muted-foreground mb-8">
-								{project.summary}
-							</p>
-							<div
-								dangerouslySetInnerHTML={{ __html: project.content }}
-								className="whitespace-pre-wrap"
-							/>
-						</div>
-					</div>
-
-					{/* Sidebar / Share Actions */}
-					<div className="md:w-64 shrink-0 space-y-8">
-						<div className="sticky top-24 p-6 bg-muted/30 rounded-lg z-10">
-							<h3 className="font-bold text-chemonics-navy mb-4">
-								Share this project
-							</h3>
-							<div className="flex flex-col gap-3">
-								<ClientShareButton
-									title={project.title}
-									text={project.summary || ""}
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<ArticleLayout
+			title={project.title}
+			summary={project.summary}
+			content={project.content}
+			image_url={project.image_url}
+			published_date={project.published_date}
+			typeLabel="Project"
+			backLink={{
+				href: "/insights",
+				label: "Back to Insights",
+			}}
+		/>
 	);
 }

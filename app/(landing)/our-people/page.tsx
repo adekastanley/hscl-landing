@@ -21,7 +21,7 @@ export default async function OurPeoplePage({
 	const params = await searchParams;
 	const storiesPage = Number(params.storiesPage) || 1;
 	const peoplePage = Number(params.peoplePage) || 1;
-	const storiesLimit = 4;
+	const storiesLimit = 6;
 
 	// Fetch Team, Stories, Events, and People Stories in parallel
 	const [stories, peopleStories, resources] = await Promise.all([

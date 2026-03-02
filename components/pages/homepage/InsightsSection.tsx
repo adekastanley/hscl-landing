@@ -54,7 +54,9 @@ export function InsightsSection({
 						className="border-chemonics-lime text-chemonics-lime hover:bg-chemonics-lime hover:text-chemonics-navy rounded-full"
 						asChild
 					>
-						<Link href="/insights">View All Insights</Link>
+						<Link href="/our-people#learning-and-development">
+							View Learning and development
+						</Link>
 					</Button>
 				</motion.div>
 

@@ -3,6 +3,14 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
+export const config = {
+	api: {
+		bodyParser: {
+			sizeLimit: "15mb",
+		},
+	},
+};
+
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const { searchParams } = new URL(request.url);

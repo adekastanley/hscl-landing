@@ -172,3 +172,45 @@ export async function deleteResource(id: string) {
 		return { success: false, error: "Failed to delete resource" };
 	}
 }
+
+export async function trackResourceDownload(data: {
+	resource_id: string;
+	full_name: string;
+	email: string;
+	industry: string;
+}) {
+	const id = Math.random().toString(36).substring(2, 15);
+	try {
+		await ensureDbInitialized();
+		await db.execute({
+			sql: `
+        INSERT INTO resource_downloads (id, resource_id, full_name, email, industry)
+        VALUES (?, ?, ?, ?, ?)
+      `,
+			args: [id, data.resource_id, data.full_name, data.email, data.industry],
+		});
+		revalidatePath("/admin/dashboard/downloads");
+		return { success: true };
+	} catch (error) {
+		console.error("Failed to track resource download:", error);
+		return { success: false, error: "Failed to track download" };
+	}
+}
+
+export async function getResourceDownloads() {
+	try {
+		await ensureDbInitialized();
+		const res = await db.execute(`
+      SELECT 
+        rd.*, 
+        r.title as resource_title 
+      FROM resource_downloads rd
+      LEFT JOIN resources r ON rd.resource_id = r.id
+      ORDER BY rd.created_at DESC
+    `);
+		return res.rows as any[];
+	} catch (error) {
+		console.error("Failed to get resource downloads:", error);
+		return [];
+	}
+}

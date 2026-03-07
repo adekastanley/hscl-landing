@@ -381,6 +381,19 @@ const initDb = async () => {
 		} catch (e) {
 			console.error("Migration for services slug failed:", e);
 		}
+
+		// Resource Downloads Tracking
+		await db.execute(`
+    CREATE TABLE IF NOT EXISTS resource_downloads (
+      id TEXT PRIMARY KEY,
+      resource_id TEXT NOT NULL,
+      full_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      industry TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
+    )
+  `);
 	} catch (error) {
 		console.error(
 			"Database initialization failed (likely read-only FS):",

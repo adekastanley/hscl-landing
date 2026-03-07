@@ -17,14 +17,23 @@ import {
 	Share2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { Resource } from "@/app/actions/resources";
+import { Resource, trackResourceDownload } from "@/app/actions/resources";
 import { toast } from "sonner";
+import {
+	DownloadFormModal,
+	UserData,
+} from "@/components/modals/DownloadFormModal";
 
 const ITEMS_PER_PAGE = 4;
 
 export default function Leaning({ resources = [] }: { resources: Resource[] }) {
 	const [activeTab, setActiveTab] = useState<"free" | "paid">("free");
 	const [currentPage, setCurrentPage] = useState(1);
+	const [selectedResource, setSelectedResource] = useState<Resource | null>(
+		null,
+	);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	const filteredResources = resources.filter((res) => res.type === activeTab);
 	const totalPages = Math.ceil(filteredResources.length / ITEMS_PER_PAGE) || 1;
 
@@ -66,6 +75,46 @@ export default function Leaning({ resources = [] }: { resources: Resource[] }) {
 				console.error("Failed to copy:", err);
 				toast.error("Failed to copy link.");
 			}
+		}
+	};
+
+	const handleDownloadClick = (e: React.MouseEvent, resource: Resource) => {
+		// Only check for free resources
+		if (resource.type !== "free") return;
+
+		const storedUser = localStorage.getItem("hscl_user_info");
+		if (storedUser) {
+			try {
+				const userData = JSON.parse(storedUser);
+				// Silent tracking
+				trackResourceDownload({
+					resource_id: resource.id,
+					full_name: userData.fullName,
+					email: userData.email,
+					industry: userData.industry,
+				});
+				// Allow default download behavior (the <a> tag will handle it)
+				return;
+			} catch (e) {
+				// Invalid data in localStorage, show modal
+			}
+		}
+
+		// Show modal
+		e.preventDefault();
+		setSelectedResource(resource);
+		setIsModalOpen(true);
+	};
+
+	const handleModalSuccess = (userData: UserData) => {
+		if (selectedResource?.file_url) {
+			// Trigger download programmatically after form submission
+			const link = document.createElement("a");
+			link.href = selectedResource.file_url;
+			link.download = "";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 		}
 	};
 
@@ -164,6 +213,7 @@ export default function Leaning({ resources = [] }: { resources: Resource[] }) {
 												<a
 													href={resource.file_url || "#"}
 													download
+													onClick={(e) => handleDownloadClick(e, resource)}
 													className="inline-flex items-center justify-center text-sm font-medium transition-colors text-chemonics-navy group-hover:text-chemonics-green"
 												>
 													<span className="mr-2">Download</span>
@@ -224,6 +274,16 @@ export default function Leaning({ resources = [] }: { resources: Resource[] }) {
 					</div>
 				)}
 			</div>
+
+			{selectedResource && (
+				<DownloadFormModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					resourceId={selectedResource.id}
+					resourceTitle={selectedResource.title}
+					onSuccess={handleModalSuccess}
+				/>
+			)}
 		</section>
 	);
 }

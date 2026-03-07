@@ -144,9 +144,9 @@ export function DownloadFormModal({
 									exit={{ opacity: 0, scale: 1.1 }}
 									className="h-full flex flex-col items-center justify-center text-center space-y-4"
 								>
-									{/* <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+									<div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
 										<IconCheck size={40} stroke={3} />
-									</div> */}
+									</div>
 									<h2 className="text-2xl font-bold text-chemonics-navy font-montserrat">
 										Thank You!
 									</h2>

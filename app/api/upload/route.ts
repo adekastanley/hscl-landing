@@ -3,10 +3,22 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
+function slugifyFilename(filename: string): string {
+	const lastDot = filename.lastIndexOf(".");
+	const ext = lastDot !== -1 ? filename.slice(lastDot) : "";
+	const name = lastDot !== -1 ? filename.slice(0, lastDot) : filename;
+	const slug = name
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+	return `${slug}${ext}`;
+}
+
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const { searchParams } = new URL(request.url);
-		const filename = searchParams.get("filename") || "file.bin";
+		const rawFilename = searchParams.get("filename") || "file.bin";
+		const filename = slugifyFilename(rawFilename);
 		const folder = searchParams.get("folder") || "misc"; // Default folder
 
 		if (!request.body) {

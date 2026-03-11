@@ -31,7 +31,7 @@ import {
 } from "@/app/actions/team";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/file";
+import { normalizeImageUrl } from "@/lib/utils";
 
 interface TeamManagerProps {
 	category?: "team" | "leadership";

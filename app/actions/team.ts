@@ -2,7 +2,8 @@
 
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { deleteLocalFile, normalizeImageUrl } from "@/lib/file";
+import { deleteLocalFile } from "@/lib/file";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export interface TeamMember {
 	id: string;

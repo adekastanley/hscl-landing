@@ -3,7 +3,8 @@
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
-import { deleteLocalFile, normalizeImageUrl } from "@/lib/file";
+import { deleteLocalFile } from "@/lib/file";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function getPartners() {
 	try {

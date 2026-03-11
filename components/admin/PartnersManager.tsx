@@ -24,7 +24,7 @@ import {
 import { getPartners, createPartner, deletePartner } from "@/actions/partners";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/file";
+import { normalizeImageUrl } from "@/lib/utils";
 
 interface Partner {
 	id: string;

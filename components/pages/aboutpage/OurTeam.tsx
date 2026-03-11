@@ -11,7 +11,7 @@ import {
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/file";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export default function TeamSection() {
 	const [team, setTeam] = useState<TeamMember[]>([]);

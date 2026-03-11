@@ -4,107 +4,107 @@ import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 
 const logoCLoud = [
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/bmgf-logo.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/bmgf-logo.jpg",
 		name: "Bill & Melinda Gates Foundation",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/usaid.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/usaid.jpg",
 		name: "USAID",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Department_for_Intenational_Development.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Department_for_Intenational_Development.jpg",
 		name: "Department for International Development",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/TheGlobalFund.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/TheGlobalFund.jpg",
 		name: "The Global Fund",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Afican_Risk_Capacity.png",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Afican_Risk_Capacity.png",
 		name: "African Risk Capacity",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Gavi.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Gavi.jpg",
 		name: "Gavi",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Malaria.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Malaria.jpg",
 		name: "Malaria Consortium",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/CDC.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/CDC.jpg",
 		name: "CDC",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Federal_ministry_of_health_Nigeria.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Federal_ministry_of_health_Nigeria.jpg",
 		name: "Federal Ministry of Health Nigeria",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Clinton_Health_Access_Initiative.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Clinton_Health_Access_Initiative.jpg",
 		name: "Clinton Health Access Initiative",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Cristian_aid.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Cristian_aid.jpg",
 		name: "Christian Aid",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Results_for_development.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Results_for_development.jpg",
 		name: "Results for Development",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Caritas.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Caritas.jpg",
 		name: "Caritas Nigeria",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/HP.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/HP.jpg",
 		name: "Health Policy Plus",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Intra_Health.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Intra_Health.jpg",
 		name: "IntraHealth International",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Maternal_and_child_Survival.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Maternal_and_child_Survival.jpg",
 		name: "Maternal and Child Survival",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Ministry_of_Health_Serra_Leone.png",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Ministry_of_Health_Serra_Leone.png",
 		name: "Ministry of Health Sierra Leone",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Society_of_family_health.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Society_of_family_health.jpg",
 		name: "Society for Family Health",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/NACA.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/NACA.jpg",
 		name: "NACA",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Unicef.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Unicef.jpg",
 		name: "UNICEF",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Pepfar.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Pepfar.jpg",
 		name: "PEPFAR",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/The_World_bank.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/The_World_bank.jpg",
 		name: "The World Bank",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Unitaid.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Unitaid.jpg",
 		name: "UNITAID",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Primary_Health.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Primary_Health.jpg",
 		name: "National Primary Healthcare Development Agency",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/Privat_Sector.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/Privat_Sector.jpg",
 		name: "Private Sector Health Alliance of Nigeria",
 	},
 	{
-		url: "https://hscgroup.org/wp-content/uploads/2020/03/United_Nations.jpg",
+		url: "https://hscgroup.com/wp-content/uploads/2020/03/United_Nations.jpg",
 		name: "United Nations Foundation",
 	},
 ];

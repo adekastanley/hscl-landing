@@ -24,6 +24,7 @@ import {
 import { getPartners, createPartner, deletePartner } from "@/actions/partners";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { normalizeImageUrl } from "@/lib/file";
 
 interface Partner {
 	id: string;
@@ -182,7 +183,7 @@ export function PartnersManager() {
 									<TableCell>
 										<div className="h-10 w-20 relative flex items-center justify-center bg-gray-100 rounded p-1 dark:bg-gray-800">
 											<img
-												src={partner.logo_url}
+												src={normalizeImageUrl(partner.logo_url)}
 												alt={partner.name}
 												className="max-h-full max-w-full object-contain"
 											/>

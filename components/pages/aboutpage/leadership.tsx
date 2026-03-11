@@ -11,6 +11,7 @@ import {
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { normalizeImageUrl } from "@/lib/file";
 
 export default function LeadershipSection() {
 	const [leadershipTeam, setLeadershipTeam] = useState<TeamMember[]>([]);
@@ -80,7 +81,7 @@ export default function LeadershipSection() {
 								<div className="aspect-square bg-muted relative overflow-hidden">
 									<Avatar className="h-full w-full rounded-none">
 										<AvatarImage
-											src={leader.image_url}
+											src={normalizeImageUrl(leader.image_url)}
 											alt={leader.name}
 											className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
 										/>

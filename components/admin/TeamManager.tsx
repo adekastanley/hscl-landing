@@ -31,6 +31,7 @@ import {
 } from "@/app/actions/team";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { normalizeImageUrl } from "@/lib/file";
 
 interface TeamManagerProps {
 	category?: "team" | "leadership";
@@ -215,7 +216,10 @@ export function TeamManager({
 									<TableCell className="font-medium">
 										<div className="flex items-center gap-3">
 											<Avatar className="h-10 w-10">
-												<AvatarImage src={member.image_url} alt={member.name} />
+												<AvatarImage
+													src={normalizeImageUrl(member.image_url)}
+													alt={member.name}
+												/>
 												<AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
 											</Avatar>
 											<div className="flex flex-col gap-1">
@@ -330,7 +334,9 @@ export function TeamManager({
 								<div className="flex items-center gap-4">
 									{formData.image_url && (
 										<Avatar className="h-16 w-16 border">
-											<AvatarImage src={formData.image_url} />
+											<AvatarImage
+												src={normalizeImageUrl(formData.image_url)}
+											/>
 											<AvatarFallback>IMG</AvatarFallback>
 										</Avatar>
 									)}

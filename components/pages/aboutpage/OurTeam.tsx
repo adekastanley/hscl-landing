@@ -11,6 +11,7 @@ import {
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { normalizeImageUrl } from "@/lib/file";
 
 export default function TeamSection() {
 	const [team, setTeam] = useState<TeamMember[]>([]);
@@ -89,7 +90,7 @@ export default function TeamSection() {
 								<div className="aspect-square bg-muted relative overflow-hidden">
 									<Avatar className="h-full w-full rounded-none">
 										<AvatarImage
-											src={member.image_url}
+											src={normalizeImageUrl(member.image_url)}
 											alt={member.name}
 											className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
 										/>

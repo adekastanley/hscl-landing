@@ -74,6 +74,11 @@ export function AppSidebar({
 			icon: IconUsers,
 		},
 		{
+			title: "Partners",
+			url: "/admin/dashboard/partners",
+			icon: IconUsers,
+		},
+		{
 			title: "Stories",
 			url: "/admin/dashboard/stories",
 			icon: IconReport,

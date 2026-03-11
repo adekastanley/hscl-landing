@@ -2,7 +2,7 @@
 
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { deleteLocalFile } from "@/lib/file";
+import { deleteLocalFile, normalizeImageUrl } from "@/lib/file";
 
 export interface TeamMember {
 	id: string;
@@ -73,7 +73,7 @@ export async function addTeamMember(data: Omit<TeamMember, "id">) {
 				data.name,
 				data.role,
 				data.bio,
-				data.image_url || null,
+				normalizeImageUrl(data.image_url) || null,
 				data.category || "team",
 				data.linkedin || null,
 				data.twitter || null,
@@ -102,7 +102,7 @@ export async function updateTeamMember(
 				data.name,
 				data.role,
 				data.bio,
-				data.image_url || null,
+				normalizeImageUrl(data.image_url) || null,
 				data.category,
 				data.linkedin || null,
 				data.twitter || null,

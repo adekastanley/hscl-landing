@@ -3,6 +3,24 @@ import { InfiniteSlider } from "./infinite-slider";
 // import { ProgressiveBlur } from '@/components/motion-primitives/progressive-blur'
 import { ProgressiveBlur } from "./progressive-blur";
 
+/**
+ * Converts an image URL to the file-serving API route format.
+ * - /api/files/... paths are returned as-is (already correct).
+ * - Legacy /folder/filename paths (relative, uploaded before the API route fix) are
+ *   rewritten to /api/files/folder/filename so they're served from the filesystem.
+ * - Absolute URLs (http/https) are returned unchanged so external logos still work.
+ */
+function resolveUploadUrl(url: string): string {
+	if (!url) return url;
+	// Already using the new API route
+	if (url.startsWith("/api/files/")) return url;
+	// Absolute URL — serve directly (external domain)
+	if (url.startsWith("http://") || url.startsWith("https://")) return url;
+	// Legacy relative path: /folder/filename → /api/files/folder/filename
+	if (url.startsWith("/")) return `/api/files${url}`;
+	return url;
+}
+
 export const LogoCloud = async () => {
 	const partners = await getPartners();
 
@@ -35,7 +53,7 @@ export const LogoCloud = async () => {
 								>
 									<img
 										className="mx-auto h-12 w-auto object-contain dark:invert opacity-80 hover:opacity-100 transition-opacity"
-										src={partner.logo_url}
+										src={resolveUploadUrl(partner.logo_url)}
 										alt={`${partner.name} Logo`}
 										height="48"
 										width="auto"

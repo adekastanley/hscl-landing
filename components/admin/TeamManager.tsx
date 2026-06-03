@@ -31,7 +31,15 @@ import {
 } from "@/app/actions/team";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/utils";
+
+/** Rewrites legacy /folder/file upload paths to /api/files/folder/file for VPS compatibility. */
+function resolveUploadUrl(url: string): string {
+	if (!url) return url;
+	if (url.startsWith("/api/files/")) return url;
+	if (url.startsWith("http://") || url.startsWith("https://")) return url;
+	if (url.startsWith("/")) return `/api/files${url}`;
+	return url;
+}
 
 interface TeamManagerProps {
 	category?: "team" | "leadership";
@@ -217,7 +225,7 @@ export function TeamManager({
 										<div className="flex items-center gap-3">
 											<Avatar className="h-10 w-10">
 												<AvatarImage
-													src={normalizeImageUrl(member.image_url)}
+													src={resolveUploadUrl(member.image_url ?? "")}
 													alt={member.name}
 												/>
 												<AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
@@ -335,7 +343,7 @@ export function TeamManager({
 									{formData.image_url && (
 										<Avatar className="h-16 w-16 border">
 											<AvatarImage
-												src={normalizeImageUrl(formData.image_url)}
+												src={resolveUploadUrl(formData.image_url ?? "")}
 											/>
 											<AvatarFallback>IMG</AvatarFallback>
 										</Avatar>

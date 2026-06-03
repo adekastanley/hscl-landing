@@ -48,8 +48,12 @@ export async function POST(request: Request): Promise<NextResponse> {
 
 		await writeFile(filePath, buffer);
 
-		// Return the public URL
-		const url = `/${folder}/${uniqueFilename}`;
+		// Return the public URL via the file-serving API route.
+		// We use /api/files/ instead of a direct static path because on VPS/production,
+		// files uploaded at runtime are NOT served by Next.js static file serving
+		// (which only serves files that existed at build time in /public).
+		// The /api/files/ route reads directly from the filesystem at process.cwd().
+		const url = `/api/files/${folder}/${uniqueFilename}`;
 
 		return NextResponse.json({ url });
 	} catch (error) {

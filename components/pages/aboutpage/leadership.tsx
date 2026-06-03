@@ -11,7 +11,15 @@ import {
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/utils";
+
+/** Rewrites legacy /folder/file upload paths to /api/files/folder/file for VPS compatibility. */
+function resolveUploadUrl(url: string): string {
+	if (!url) return url;
+	if (url.startsWith("/api/files/")) return url;
+	if (url.startsWith("http://") || url.startsWith("https://")) return url;
+	if (url.startsWith("/")) return `/api/files${url}`;
+	return url;
+}
 
 export default function LeadershipSection() {
 	const [leadershipTeam, setLeadershipTeam] = useState<TeamMember[]>([]);
@@ -81,7 +89,7 @@ export default function LeadershipSection() {
 								<div className="aspect-square bg-muted relative overflow-hidden">
 									<Avatar className="h-full w-full rounded-none">
 										<AvatarImage
-											src={normalizeImageUrl(leader.image_url)}
+											src={resolveUploadUrl(leader.image_url ?? "")}
 											alt={leader.name}
 											className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
 										/>

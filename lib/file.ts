@@ -4,14 +4,25 @@ import { existsSync } from "fs";
 
 /**
  * Safely deletes a file from the local public directory if it exists.
- * @param url The public URL of the file (e.g., /projects/123-file.png)
+ * @param url The public URL of the file.
+ *   Accepts both:
+ *     - Legacy format:  /folder/filename.jpg
+ *     - New API format: /api/files/folder/filename.jpg
  */
 export async function deleteLocalFile(url?: string | null) {
-	if (!url || !url.startsWith("/")) return;
+	if (!url) return;
+
+	// Normalise: strip the /api/files prefix so we always work with /folder/filename
+	let normalised = url;
+	if (url.startsWith("/api/files/")) {
+		normalised = url.slice("/api/files".length); // → /folder/filename
+	}
+
+	if (!normalised.startsWith("/")) return;
 
 	try {
 		// Split the path to get folder and filename
-		const parts = url.split("/").filter(Boolean);
+		const parts = normalised.split("/").filter(Boolean);
 		if (parts.length < 2) return; // Need at least /folder/filename
 
 		const folderName = parts[0];

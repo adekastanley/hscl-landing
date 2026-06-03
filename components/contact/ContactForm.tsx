@@ -45,11 +45,11 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 		<div className={className}>
 			<form className="space-y-8" suppressHydrationWarning>
 				<div className="grid md:grid-cols-2 gap-8">
-					<div className="space-y-2">
+					<div className="space-y-2" suppressHydrationWarning>
 						<label className={labelClass}>Name (Required)</label>
 						<Input placeholder="First Name" className={inputClass} />
 					</div>
-					<div className="space-y-2">
+					<div className="space-y-2" suppressHydrationWarning>
 						<label className={cn(labelClass, "opacity-0 md:opacity-100")}>
 							Last Name
 						</label>
@@ -57,7 +57,7 @@ export function ContactForm({ theme = "light", className }: ContactFormProps) {
 					</div>
 				</div>
 
-				<div className="space-y-2">
+				<div className="space-y-2" suppressHydrationWarning>
 					<label className={labelClass}>Email (Required)</label>
 					<Input
 						type="email"

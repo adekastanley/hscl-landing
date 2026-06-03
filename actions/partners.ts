@@ -4,7 +4,6 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 import { deleteLocalFile } from "@/lib/file";
-import { normalizeImageUrl } from "@/lib/utils";
 
 export async function getPartners() {
 	try {
@@ -31,7 +30,7 @@ export async function createPartner(formData: FormData) {
 
 		await db.execute({
 			sql: "INSERT INTO partners (id, name, logo_url) VALUES (?, ?, ?)",
-			args: [id, name, normalizeImageUrl(logoUrl)],
+			args: [id, name, logoUrl],
 		});
 
 		revalidatePath("/admin/dashboard/partners");
@@ -42,6 +41,7 @@ export async function createPartner(formData: FormData) {
 		return { error: "Failed to create partner" };
 	}
 }
+
 
 export async function deletePartner(id: string) {
 	try {

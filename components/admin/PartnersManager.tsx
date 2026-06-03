@@ -24,7 +24,15 @@ import {
 import { getPartners, createPartner, deletePartner } from "@/actions/partners";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/utils";
+
+/** Rewrites legacy /folder/file upload paths to /api/files/folder/file for VPS compatibility. */
+function resolveUploadUrl(url: string): string {
+	if (!url) return url;
+	if (url.startsWith("/api/files/")) return url;
+	if (url.startsWith("http://") || url.startsWith("https://")) return url;
+	if (url.startsWith("/")) return `/api/files${url}`;
+	return url;
+}
 
 interface Partner {
 	id: string;
@@ -183,7 +191,7 @@ export function PartnersManager() {
 									<TableCell>
 										<div className="h-10 w-20 relative flex items-center justify-center bg-gray-100 rounded p-1 dark:bg-gray-800">
 											<img
-												src={normalizeImageUrl(partner.logo_url)}
+												src={resolveUploadUrl(partner.logo_url)}
 												alt={partner.name}
 												className="max-h-full max-w-full object-contain"
 											/>

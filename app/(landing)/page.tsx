@@ -51,6 +51,11 @@ export default async function Home() {
 		}
 	}
 
+	// Deduplicate projects to ensure unique keys in the list
+	const uniqueDisplayProjects = displayProjects.filter(
+		(project, index, self) => self.findIndex((p) => p.id === project.id) === index
+	);
+
 	// Feature Insight Logic
 	const featuredId = await getFeaturedInsightId();
 	let featuredProject = null;
@@ -84,6 +89,16 @@ export default async function Home() {
 	const stories = await getItems("story", 4);
 	const activeCountries = await getActiveCountries();
 	const capabilityStatement = await getGlobalDocument("capability_statement");
+	const plainCapabilityStatement = capabilityStatement
+		? {
+				id: capabilityStatement.id,
+				key: capabilityStatement.key,
+				title: capabilityStatement.title,
+				file_url: capabilityStatement.file_url,
+				created_at: capabilityStatement.created_at,
+				updated_at: capabilityStatement.updated_at,
+			}
+		: null;
 	const nigeriaStates = await getActiveNigeriaStates();
 	const services = await getServices();
 	const focusAreasJson = await getSiteContent("focus_areas");
@@ -111,7 +126,7 @@ export default async function Home() {
 			<MissionSection content={missionText} />
 			<LogoCloud />
 			<ServicesSection services={services} headers={servicesHeaders} />
-			<SelectedEngagementSection projects={displayProjects} />
+			<SelectedEngagementSection projects={uniqueDisplayProjects} />
 			<InsightsSection
 				stories={stories}
 				featuredProject={featuredProject}
@@ -120,7 +135,7 @@ export default async function Home() {
 			<AnimatedImpactCounters />
 			<Map
 				activeCountries={activeCountries}
-				document={capabilityStatement}
+				document={plainCapabilityStatement}
 				nigeriaStates={nigeriaStates}
 			/>
 			<ContactSection />

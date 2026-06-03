@@ -11,7 +11,15 @@ import {
 import { getTeamMembers, type TeamMember } from "@/app/actions/team";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { normalizeImageUrl } from "@/lib/utils";
+
+/** Rewrites legacy /folder/file upload paths to /api/files/folder/file for VPS compatibility. */
+function resolveUploadUrl(url: string): string {
+	if (!url) return url;
+	if (url.startsWith("/api/files/")) return url;
+	if (url.startsWith("http://") || url.startsWith("https://")) return url;
+	if (url.startsWith("/")) return `/api/files${url}`;
+	return url;
+}
 
 export default function TeamSection() {
 	const [team, setTeam] = useState<TeamMember[]>([]);
@@ -90,7 +98,7 @@ export default function TeamSection() {
 								<div className="aspect-square bg-muted relative overflow-hidden">
 									<Avatar className="h-full w-full rounded-none">
 										<AvatarImage
-											src={normalizeImageUrl(member.image_url)}
+											src={resolveUploadUrl(member.image_url ?? "")}
 											alt={member.name}
 											className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
 										/>

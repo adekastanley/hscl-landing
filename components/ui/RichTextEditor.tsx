@@ -34,7 +34,6 @@ export default function RichTextEditor({
 		"underline",
 		"strike",
 		"list",
-		"bullet",
 		"color",
 		"background",
 		"link",

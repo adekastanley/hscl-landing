@@ -39,6 +39,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import RichTextEditor from "@/components/ui/RichTextEditor";
 
 export function JobListingsTable() {
 	const [jobs, setJobs] = useState<JobListing[]>([]);
@@ -279,13 +280,12 @@ export function JobListingsTable() {
 							</div>
 							<div className="space-y-2">
 								<Label>Description</Label>
-								<Textarea
-									required
-									className="min-h-[150px]"
+								<RichTextEditor
 									value={formData.description}
-									onChange={(e) =>
-										setFormData({ ...formData, description: e.target.value })
+									onChange={(val) =>
+										setFormData({ ...formData, description: val })
 									}
+									placeholder="Job description..."
 								/>
 							</div>
 						</div>

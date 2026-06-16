@@ -40,7 +40,7 @@ export default function RichTextEditor({
 	];
 
 	return (
-		<div className="bg-white rounded-md border border-input [&_.ql-toolbar]:rounded-t-md [&_.ql-toolbar]:border-none [&_.ql-toolbar]:border-b [&_.ql-container]:rounded-b-md [&_.ql-container]:border-none [&_.ql-container]:min-h-[150px] [&_.ql-editor]:min-h-[150px] [&_.ql-editor]:text-base">
+		<div className="bg-white rounded-md border border-input [&_.ql-toolbar]:rounded-t-md [&_.ql-toolbar]:border-none [&_.ql-toolbar]:border-b [&_.ql-container]:rounded-b-md [&_.ql-container]:border-none [&_.ql-container]:min-h-[150px] [&_.ql-editor]:min-h-[150px] [&_.ql-editor]:max-h-[400px] [&_.ql-editor]:overflow-y-auto [&_.ql-editor]:text-base">
 			<ReactQuill
 				theme="snow"
 				value={value}

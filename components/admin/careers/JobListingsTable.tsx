@@ -230,7 +230,7 @@ export function JobListingsTable() {
 			</div>
 
 			<Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-				<DialogContent className="max-w-2xl">
+				<DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>{isEdit ? "Edit Job" : "Post a New Job"}</DialogTitle>
 					</DialogHeader>

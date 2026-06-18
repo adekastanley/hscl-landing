@@ -80,7 +80,7 @@ export default async function JobPage({ params }: PageProps) {
 				<div className="prose dark:prose-invert max-w-none">
 					<h3 className="text-xl font-semibold mb-3">About the Role</h3>
 					<div 
-						className="leading-relaxed text-muted-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+						className="leading-relaxed text-muted-foreground [&_p]:min-h-[1rem] [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4 [&_li]:mb-1"
 						dangerouslySetInnerHTML={{ __html: job.description }}
 					/>
 				</div>

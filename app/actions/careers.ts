@@ -10,6 +10,8 @@ export interface JobListing {
 	location: string;
 	type: string;
 	status: "open" | "closed";
+	department?: string;
+	reports_to?: string;
 	created_at: string;
 }
 
@@ -32,6 +34,7 @@ export interface JobApplication {
 // --- Jobs ---
 
 export async function getJobListings(openOnly = false): Promise<JobListing[]> {
+	await ensureDbInitialized();
 	try {
 		// ... (sql construction)
 		let sql = "SELECT * FROM job_listings WHERE status != 'deleted'";
@@ -50,6 +53,7 @@ export async function getJobListings(openOnly = false): Promise<JobListing[]> {
 }
 
 export async function getJobById(id: string): Promise<JobListing | null> {
+	await ensureDbInitialized();
 	try {
 		const result = await db.execute({
 			sql: "SELECT * FROM job_listings WHERE id = ? LIMIT 1",
@@ -68,11 +72,12 @@ export async function getJobById(id: string): Promise<JobListing | null> {
 export async function createJob(
 	data: Omit<JobListing, "id" | "status" | "created_at">,
 ) {
+	await ensureDbInitialized();
 	const id = Math.random().toString(36).substring(2, 15);
 	try {
 		await db.execute({
-			sql: "INSERT INTO job_listings (id, title, description, location, type, status) VALUES (?, ?, ?, ?, ?, 'open')",
-			args: [id, data.title, data.description, data.location, data.type],
+			sql: "INSERT INTO job_listings (id, title, description, location, type, status, department, reports_to) VALUES (?, ?, ?, ?, ?, 'open', ?, ?)",
+			args: [id, data.title, data.description, data.location, data.type, data.department || null, data.reports_to || null],
 		});
 		revalidatePath("/careers");
 		revalidatePath("/admin/dashboard/careers");
@@ -87,6 +92,7 @@ export async function updateJob(
 	id: string,
 	data: Partial<Omit<JobListing, "id" | "created_at">>,
 ) {
+	await ensureDbInitialized();
 	try {
 		// Only update fields that are present
 		const fields = [];
@@ -112,6 +118,14 @@ export async function updateJob(
 			fields.push("status = ?");
 			args.push(data.status);
 		}
+		if (data.department !== undefined) {
+			fields.push("department = ?");
+			args.push(data.department);
+		}
+		if (data.reports_to !== undefined) {
+			fields.push("reports_to = ?");
+			args.push(data.reports_to);
+		}
 
 		if (fields.length === 0) return;
 
@@ -132,6 +146,7 @@ export async function updateJobStatus(id: string, status: "open" | "closed") {
 }
 
 export async function deleteJob(id: string) {
+	await ensureDbInitialized();
 	try {
 		// Soft delete
 		await db.execute({
@@ -205,6 +220,7 @@ export async function submitApplication(data: {
 export async function getApplications(
 	jobId?: string,
 ): Promise<JobApplication[]> {
+	await ensureDbInitialized();
 	try {
 		// Join with jobs to get title and status
 		let sql = `
@@ -233,6 +249,7 @@ export async function getApplications(
 }
 
 export async function updateApplicationStatus(id: string, status: string) {
+	await ensureDbInitialized();
 	try {
 		await db.execute({
 			sql: "UPDATE job_applications SET status = ? WHERE id = ?",
@@ -246,6 +263,7 @@ export async function updateApplicationStatus(id: string, status: string) {
 }
 
 export async function deleteApplication(id: string) {
+	await ensureDbInitialized();
 	try {
 		await db.execute({
 			sql: "DELETE FROM job_applications WHERE id = ?",

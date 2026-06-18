@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Clock, MapPin } from "lucide-react";
+import { ArrowUpRight, Clock, MapPin, Building, UserCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -108,6 +108,18 @@ export default async function CareersPage() {
 													<Clock className="h-3.5 w-3.5" />
 													<span>{job.type}</span>
 												</div>
+												{job.department && (
+													<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
+														<Building className="h-3.5 w-3.5" />
+														<span>{job.department}</span>
+													</div>
+												)}
+												{job.reports_to && (
+													<div className="flex items-center gap-1 bg-muted px-2 py-1 rounded-md">
+														<UserCircle className="h-3.5 w-3.5" />
+														<span>Reports to: {job.reports_to}</span>
+													</div>
+												)}
 											</div>
 										</div>
 

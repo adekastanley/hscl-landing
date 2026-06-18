@@ -52,6 +52,8 @@ export function JobListingsTable() {
 		description: "",
 		location: "",
 		type: "Full-time",
+		department: "",
+		reports_to: "",
 	});
 	const [deleteId, setDeleteId] = useState<string | null>(null);
 	const [isEdit, setIsEdit] = useState(false);
@@ -73,6 +75,8 @@ export function JobListingsTable() {
 			description: "",
 			location: "",
 			type: "Full-time",
+			department: "",
+			reports_to: "",
 		});
 		setIsAddOpen(true);
 	};
@@ -85,6 +89,8 @@ export function JobListingsTable() {
 			description: job.description,
 			location: job.location,
 			type: job.type,
+			department: job.department || "",
+			reports_to: job.reports_to || "",
 		});
 		setIsAddOpen(true);
 	};
@@ -99,6 +105,8 @@ export function JobListingsTable() {
 					description: formData.description,
 					location: formData.location,
 					type: formData.type,
+					department: formData.department,
+					reports_to: formData.reports_to,
 				});
 				toast.success("Job updated successfully");
 			} else {
@@ -107,6 +115,8 @@ export function JobListingsTable() {
 					description: formData.description,
 					location: formData.location,
 					type: formData.type,
+					department: formData.department,
+					reports_to: formData.reports_to,
 				});
 				toast.success("Job created successfully");
 			}
@@ -170,6 +180,8 @@ export function JobListingsTable() {
 							<TableHead>Title</TableHead>
 							<TableHead>Type</TableHead>
 							<TableHead>Location</TableHead>
+							<TableHead>Department</TableHead>
+							<TableHead>Reports To</TableHead>
 							<TableHead>Status</TableHead>
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
@@ -177,7 +189,7 @@ export function JobListingsTable() {
 					<TableBody>
 						{jobs.length === 0 ? (
 							<TableRow>
-								<TableCell colSpan={5} className="h-24 text-center">
+								<TableCell colSpan={7} className="h-24 text-center">
 									No job listings found.
 								</TableCell>
 							</TableRow>
@@ -187,6 +199,8 @@ export function JobListingsTable() {
 									<TableCell className="font-medium">{job.title}</TableCell>
 									<TableCell>{job.type}</TableCell>
 									<TableCell>{job.location}</TableCell>
+									<TableCell>{job.department || "-"}</TableCell>
+									<TableCell>{job.reports_to || "-"}</TableCell>
 									<TableCell>
 										<Select
 											value={job.status}
@@ -267,16 +281,38 @@ export function JobListingsTable() {
 									</Select>
 								</div>
 							</div>
-							<div className="space-y-2">
-								<Label>Location</Label>
-								<Input
-									required
-									placeholder="e.g. Abuja, Remote"
-									value={formData.location}
-									onChange={(e) =>
-										setFormData({ ...formData, location: e.target.value })
-									}
-								/>
+							<div className="grid grid-cols-3 gap-4">
+								<div className="space-y-2">
+									<Label>Location</Label>
+									<Input
+										required
+										placeholder="e.g. Abuja, Remote"
+										value={formData.location}
+										onChange={(e) =>
+											setFormData({ ...formData, location: e.target.value })
+										}
+									/>
+								</div>
+								<div className="space-y-2">
+									<Label>Unit/Department</Label>
+									<Input
+										placeholder="e.g. Engineering"
+										value={formData.department}
+										onChange={(e) =>
+											setFormData({ ...formData, department: e.target.value })
+										}
+									/>
+								</div>
+								<div className="space-y-2">
+									<Label>Reports To</Label>
+									<Input
+										placeholder="e.g. CTO"
+										value={formData.reports_to}
+										onChange={(e) =>
+											setFormData({ ...formData, reports_to: e.target.value })
+										}
+									/>
+								</div>
 							</div>
 							<div className="space-y-2">
 								<Label>Description</Label>

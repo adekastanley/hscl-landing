@@ -4,7 +4,7 @@ import { JobApplicationForm } from "@/components/careers/JobApplicationForm";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, Building, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -56,6 +56,18 @@ export default async function JobPage({ params }: PageProps) {
 							<Clock className="h-4 w-4" />
 							<span>{job.type}</span>
 						</div>
+						{job.department && (
+							<div className="flex items-center gap-1.5">
+								<Building className="h-4 w-4" />
+								<span>{job.department}</span>
+							</div>
+						)}
+						{job.reports_to && (
+							<div className="flex items-center gap-1.5">
+								<UserCircle className="h-4 w-4" />
+								<span>Reports to: {job.reports_to}</span>
+							</div>
+						)}
 						<div className="text-sm">
 							Posted {format(new Date(job.created_at), "dd MMM yyyy")}
 						</div>

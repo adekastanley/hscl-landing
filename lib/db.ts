@@ -155,6 +155,18 @@ const initDb = async () => {
 			// Column likely exists
 		}
 
+		// Migration for job_listings
+		try {
+			await db.execute("ALTER TABLE job_listings ADD COLUMN department TEXT");
+		} catch (e) {
+			// Column likely exists
+		}
+		try {
+			await db.execute("ALTER TABLE job_listings ADD COLUMN reports_to TEXT");
+		} catch (e) {
+			// Column likely exists
+		}
+
 		// Migration for 'people_story' type in content_items
 		// This requires recreating the table because of the CHECK constraint
 		try {
